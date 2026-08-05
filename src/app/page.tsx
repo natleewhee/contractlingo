@@ -55,7 +55,7 @@ export default function Home() {
           ))}
         </div>
 
-        <Button3D tone="gold" className="mt-6">
+        <Button3D tone="gold" href="/session" className="mt-6">
           FACE THEM ALL
         </Button3D>
 

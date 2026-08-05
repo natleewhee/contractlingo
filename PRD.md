@@ -144,6 +144,7 @@ The real bottleneck is content, not code. V1 workflow:
 - Additional frameworks: FIDIC, NEC, Energy/PPP contracts
 - AI mentor features (explain a clause, challenge my position, review my draft reply)
 - Multi-user support, if/when there's a reason to share this beyond yourself
+- Avatar customization — cosmetic accessories (hats, capes, held items) for the defender avatar, unlocked as more cases get cleared. Purely cosmetic, never gates content or changes the core loop; picked at onboarding and expanded over time.
 
 ---
 

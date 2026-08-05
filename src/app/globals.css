@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f7f4ea;
+  --ink: #21284a;
+  --ink-soft: #5b6180;
+  --card: #ffffff;
+  --gold: #ffc93c;
+  --gold-dark: #e6a600;
+  --coral: #ff8a5b;
+  --coral-dark: #e85a3b;
+  --mint: #34c77b;
+  --mint-dark: #1e9c5a;
+  --minion: #9089d6;
+  --minion-dark: #6d66b3;
+  --grey: #dad5c8;
+  --grey-dark: #b7b2a4;
+  --frame-border: #ece6d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151a2c;
+    --ink: #f2f0e6;
+    --ink-soft: #a7acc8;
+    --card: #212847;
+    --gold: #ffce52;
+    --gold-dark: #d89a00;
+    --coral: #ff9a70;
+    --coral-dark: #db5b3b;
+    --mint: #3fdb8e;
+    --mint-dark: #1c8c51;
+    --minion: #a69de8;
+    --minion-dark: #7d74c4;
+    --grey: #363d63;
+    --grey-dark: #252b48;
+    --frame-border: #2b3157;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-card: var(--card);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-coral: var(--coral);
+  --color-coral-dark: var(--coral-dark);
+  --color-mint: var(--mint);
+  --color-mint-dark: var(--mint-dark);
+  --color-minion: var(--minion);
+  --color-minion-dark: var(--minion-dark);
+  --color-grey: var(--grey);
+  --color-grey-dark: var(--grey-dark);
+  --color-frame-border: var(--frame-border);
+  --font-display: var(--font-fredoka);
+  --font-body: var(--font-nunito);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.08, 0.94) rotate(-3deg);
+  }
+  60% {
+    transform: scale(0.95, 1.06) rotate(3deg);
+  }
+}
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.12);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-flicker {
+  animation: flicker 1.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+.animate-blink-eyes {
+  animation: blink 4.2s ease-in-out infinite;
+  transform-origin: center;
+}
+.animate-bob {
+  animation: bob 2.4s ease-in-out infinite;
+}
+.animate-pop {
+  animation: pop 0.4s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-flicker,
+  .animate-blink-eyes,
+  .animate-bob,
+  .animate-pop {
+    animation: none;
+  }
+}

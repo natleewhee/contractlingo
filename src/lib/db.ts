@@ -43,6 +43,16 @@ function ensureSchema(): Promise<void> {
   return schemaReady;
 }
 
+// Unlike getProgress()/recordFlag(), this deliberately does NOT swallow
+// errors - it's for the /api/debug diagnostic route, where the whole point
+// is surfacing the real failure reason instead of a graceful fallback.
+export async function checkConnection(): Promise<{ time: string }> {
+  await ensureSchema();
+  const db = getSql();
+  const rows = await db`SELECT now() as time`;
+  return { time: String((rows[0] as { time: string }).time) };
+}
+
 export type Progress = {
   streak: number;
   totalCleared: number;

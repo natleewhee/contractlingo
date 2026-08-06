@@ -94,6 +94,12 @@ function yesterdayKey(): string {
   return d.toISOString().slice(0, 10);
 }
 
+function twoDaysAgoKey(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 2);
+  return d.toISOString().slice(0, 10);
+}
+
 // The Neon driver returns `date` columns as JS Date objects, not strings -
 // String(dateObject) gives Date's default toString() ("Thu Aug 06 2026 ..."),
 // NOT an ISO string, so naively slicing that produces "Thu Aug 06" instead
@@ -130,19 +136,28 @@ export async function getProgress(): Promise<Progress> {
   }
 }
 
+export type SessionCompleteResult = Progress & { frozeStreak: boolean };
+
 // Bumps the streak by one calendar day (never more than once per day) and
-// adds to the running total of cases faced.
-export async function recordSessionComplete(clearedCount: number): Promise<Progress> {
+// adds to the running total of cases faced. Missing a single day doesn't
+// reset the streak - it's forgiven once (the freeze), so a two-day-old
+// last-completed-date still counts as a continuation. A gap of two or more
+// full missed days still resets to 1.
+export async function recordSessionComplete(clearedCount: number): Promise<SessionCompleteResult> {
   await ensureSchema();
   const db = getSql();
   const current = await getProgress();
   const today = todayKey();
 
   let streak = current.streak;
+  let frozeStreak = false;
   if (current.lastCompletedDate === today) {
     // Already logged a session today - streak doesn't move twice in a day.
   } else if (current.lastCompletedDate === yesterdayKey()) {
     streak += 1;
+  } else if (current.lastCompletedDate === twoDaysAgoKey()) {
+    streak += 1;
+    frozeStreak = true;
   } else {
     streak = 1;
   }
@@ -159,7 +174,7 @@ export async function recordSessionComplete(clearedCount: number): Promise<Progr
       updated_at = now()
   `;
 
-  return { streak, totalCleared, lastCompletedDate: today };
+  return { streak, totalCleared, lastCompletedDate: today, frozeStreak };
 }
 
 // Best-effort - "report this case" should never break the session flow.

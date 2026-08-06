@@ -20,6 +20,7 @@ export function SessionView({ initialPool }: { initialPool: Question[] }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSent, setReportSent] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [frozeStreak, setFrozeStreak] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const total = pool.length;
@@ -50,6 +51,7 @@ export function SessionView({ initialPool }: { initialPool: Question[] }) {
     try {
       const result = await recordSessionComplete(total);
       setStreak(result.streak);
+      setFrozeStreak(result.frozeStreak);
     } catch (err) {
       console.error("Failed to record session completion", err);
     } finally {
@@ -208,6 +210,14 @@ export function SessionView({ initialPool }: { initialPool: Question[] }) {
               </svg>
               {streak} day streak
             </div>
+            {frozeStreak && (
+              <div className="mt-1.5 flex items-center gap-1 font-display text-[0.65rem] font-semibold text-white/90">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                  <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" />
+                </svg>
+                Missed a day, but your streak is protected
+              </div>
+            )}
             <HeroAvatar size={70} className="mt-3" />
             <div className="mt-4 w-full max-w-[200px]">
               <Button3D tone="white" href="/">

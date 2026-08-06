@@ -56,6 +56,15 @@ function ensureSchema(): Promise<void> {
           created_at timestamptz NOT NULL DEFAULT now()
         )
       `;
+      await db`
+        CREATE TABLE IF NOT EXISTS answer_log (
+          id bigserial PRIMARY KEY,
+          question_id text NOT NULL,
+          topic text NOT NULL,
+          correct boolean NOT NULL,
+          created_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
     })();
   }
   return schemaReady;
@@ -219,10 +228,11 @@ export async function getDueQuestionIds(allIds: string[]): Promise<string[]> {
 // interval * ease from there); any miss resets the question to come back
 // tomorrow. Best-effort, matching recordFlag - a scheduling hiccup should
 // never break the session.
-export async function recordAnswer(questionId: string, correct: boolean): Promise<void> {
+export async function recordAnswer(questionId: string, correct: boolean, topic: string): Promise<void> {
   try {
     await ensureSchema();
     const db = getSql();
+    await db`INSERT INTO answer_log (question_id, topic, correct) VALUES (${questionId}, ${topic}, ${correct})`;
     const rows = await db`
       SELECT interval_days, ease_factor, reps FROM question_progress WHERE question_id = ${questionId}
     `;
@@ -299,4 +309,39 @@ export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
   const db = getSql();
   const rows = await db`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
   return rows as PushSubscriptionRecord[];
+}
+
+export type TopicStat = {
+  topic: string;
+  attempts: number;
+  correct: number;
+  accuracy: number; // 0-100
+};
+
+// Powers the PRD's "weak topics" progress view. Fails open to an empty list
+// on error - the progress page just shows no weak-topic callouts rather than
+// crashing.
+export async function getTopicStats(): Promise<TopicStat[]> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT topic, COUNT(*) as attempts, COUNT(*) FILTER (WHERE correct) as correct
+      FROM answer_log
+      GROUP BY topic
+    `;
+    return (rows as { topic: string; attempts: string | number; correct: string | number }[]).map((row) => {
+      const attempts = Number(row.attempts);
+      const correct = Number(row.correct);
+      return {
+        topic: row.topic,
+        attempts,
+        correct,
+        accuracy: attempts === 0 ? 100 : Math.round((correct / attempts) * 100),
+      };
+    });
+  } catch (err) {
+    console.error("getTopicStats failed", err);
+    return [];
+  }
 }

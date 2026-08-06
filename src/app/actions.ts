@@ -10,8 +10,8 @@ export async function recordFlag(questionId: string, reason: string) {
   await db.recordFlag(questionId, reason);
 }
 
-export async function recordAnswer(questionId: string, correct: boolean) {
-  await db.recordAnswer(questionId, correct);
+export async function recordAnswer(questionId: string, correct: boolean, topic: string) {
+  await db.recordAnswer(questionId, correct, topic);
 }
 
 export async function subscribeToPush(sub: db.PushSubscriptionRecord) {

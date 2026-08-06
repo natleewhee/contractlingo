@@ -282,6 +282,19 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "Time and money are assessed differently for concurrent delay. Even where the Employer-caused event might still support an EOT to protect the completion date, you generally can't recover costs for a period you'd have been delayed anyway because of your own concurrent cause.",
   },
+  {
+    id: "concurrent-delay-02",
+    topic: "Concurrent Delay",
+    scenario:
+      "The programme shows the contractor was already going to miss the completion date due to its own critical-path delay, when an unrelated Employer-caused event also hits the critical path on the same days. The contractor argues this is 'true concurrency' entitling a full EOT.",
+    options: [
+      "True concurrency requires both delays to independently affect the critical path at the same time — verify this before granting a full EOT",
+      "Any overlap in dates is enough to call it concurrent delay",
+    ],
+    correctIndex: 0,
+    explanation:
+      "'Concurrent delay' has a narrow technical meaning — both causes must independently be critical-path delays happening at the same time, not just two problems that happened to occur in the same week. Loosely calling everything 'concurrent' can hand out EOTs and cost protection that isn't actually earned.",
+  },
 
   // --- Disruption ---
   {
@@ -296,6 +309,19 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "Disruption claims are notoriously easy to assert and hard to prove. A credible claim needs some form of measured comparison — planned vs actual output, or an accepted methodology — not just a narrative that instructions were frequent and annoying.",
+  },
+  {
+    id: "disruption-02",
+    topic: "Disruption",
+    scenario:
+      "The contractor wants to prove lost productivity using a 'measured mile' comparison — output during an unimpacted period of the works versus output during the disrupted period, on comparable work.",
+    options: [
+      "This is a recognised, more credible method than a general disruption assertion",
+      "It's still just as unreliable as any other disruption claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The measured mile approach compares actual performance in an unimpacted period against the disrupted period on similar work — it's one of the more accepted ways to quantify disruption because it's grounded in the contractor's own real productivity, not industry averages or guesswork.",
   },
 
   // --- Acceleration ---
@@ -312,6 +338,19 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "A casual 'speed things up' isn't the same as an instruction to accelerate at the Employer's cost. Get the basis for acceleration — and who's paying for it — agreed and recorded before ramping up resources, not after the invoice arrives.",
   },
+  {
+    id: "acceleration-02",
+    topic: "Acceleration",
+    scenario:
+      "The contractor submits a well-substantiated EOT claim. The Engineer wrongly rejects it without proper grounds, and the contractor accelerates at its own cost to avoid an LD exposure it believes is unjustified.",
+    options: [
+      "This may support a constructive acceleration claim — look at the wrongful rejection, not just the acceleration cost",
+      "Without an express instruction to accelerate, the contractor has no possible claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Constructive acceleration is exactly this pattern: a valid EOT wrongly refused, forcing the contractor to spend money avoiding LDs it shouldn't be exposed to. It's a real, if harder to prove, basis for a claim — don't dismiss it just because there was no explicit 'please accelerate' instruction.",
+  },
 
   // --- Prolongation Costs ---
   {
@@ -327,6 +366,19 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "An EOT extends time; it doesn't automatically fix the cost figure. Prolongation costs should be based on what was actually kept running — or actually incurred — during the extended period, not just multiplied out by the number of days granted.",
   },
+  {
+    id: "prolongation-02",
+    topic: "Prolongation Costs",
+    scenario:
+      "The contractor's prolongation claim includes the full extended preliminaries rate for site management staff, plus a separate claim for the cost of those same staff members' time under a different cost heading.",
+    options: [
+      "Check for double counting — the same cost shouldn't be recovered twice under different headings",
+      "Both claims can run in parallel since they're labelled differently",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A recurring problem in prolongation claims is the same underlying cost showing up more than once, dressed up under different headings. Trace each cost item back to what it's actually for before certifying — the label on the claim line isn't what matters.",
+  },
 
   // --- Valuation ---
   {
@@ -341,6 +393,19 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "Most valuation rules require using existing contract rates where the varied work is of a similar character and conditions to the original. New or 'fair' rates are for genuinely different work, not a chance to reprice similar work at a higher margin.",
+  },
+  {
+    id: "valuation-02",
+    topic: "Valuation",
+    scenario:
+      "A variation involves work with no comparable rate anywhere in the Bill of Quantities, and the parties can't agree a fair new rate. The contractor wants to be paid on a straightforward cost basis instead.",
+    options: [
+      "Falling back to a daywork or cost-based valuation is the normal route when no fair rate can be agreed",
+      "The variation can't be valued at all until a rate is agreed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most standard forms have a valuation hierarchy that ends in a daywork or cost-plus basis precisely for this situation — genuinely unpriced work with no fair comparator. It's not a deadlock; it's the next rung down the ladder.",
   },
 
   // --- Notices ---

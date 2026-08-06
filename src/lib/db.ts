@@ -311,6 +311,17 @@ export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
   return rows as PushSubscriptionRecord[];
 }
 
+// Wipes streak, totals, spaced-repetition state, and answer history back to
+// a clean slate. Deliberately leaves flags (content reports) and push
+// subscriptions alone - those aren't "progress".
+export async function resetProgress(): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`DELETE FROM answer_log`;
+  await db`DELETE FROM question_progress`;
+  await db`DELETE FROM progress WHERE id = 'default'`;
+}
+
 export type TopicStat = {
   topic: string;
   attempts: number;

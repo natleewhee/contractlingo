@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
+import { ResetProgressButton } from "@/components/ResetProgressButton";
 import { getProgress, getTopicStats } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
@@ -100,6 +101,15 @@ export default async function ProgressPage() {
         <Button3D tone="gold" href="/session" className="mt-6">
           FACE MORE CASES
         </Button3D>
+
+        <Link
+          href="/library"
+          className="mt-4 self-center font-display text-[0.68rem] font-semibold text-ink-soft"
+        >
+          Browse all questions
+        </Link>
+
+        <ResetProgressButton />
       </main>
     </div>
   );

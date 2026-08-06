@@ -10,6 +10,10 @@ export async function recordFlag(questionId: string, reason: string) {
   await db.recordFlag(questionId, reason);
 }
 
+export async function resetProgress() {
+  await db.resetProgress();
+}
+
 export async function recordAnswer(questionId: string, correct: boolean, topic: string) {
   await db.recordAnswer(questionId, correct, topic);
 }

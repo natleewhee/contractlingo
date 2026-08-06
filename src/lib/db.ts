@@ -38,6 +38,16 @@ function ensureSchema(): Promise<void> {
           created_at timestamptz NOT NULL DEFAULT now()
         )
       `;
+      await db`
+        CREATE TABLE IF NOT EXISTS question_progress (
+          question_id text PRIMARY KEY,
+          due_date date NOT NULL DEFAULT CURRENT_DATE,
+          interval_days integer NOT NULL DEFAULT 1,
+          ease_factor real NOT NULL DEFAULT 2.5,
+          reps integer NOT NULL DEFAULT 0,
+          updated_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
     })();
   }
   return schemaReady;
@@ -152,5 +162,82 @@ export async function recordFlag(questionId: string, reason: string): Promise<vo
     await db`INSERT INTO flags (question_id, reason) VALUES (${questionId}, ${reason})`;
   } catch (err) {
     console.error("recordFlag failed", err);
+  }
+}
+
+// Filters `allIds` down to the ones due for review today - either never
+// attempted before, or due_date has arrived. Fails open (returns everything)
+// on error, since showing too much is far better than showing nothing.
+export async function getDueQuestionIds(allIds: string[]): Promise<string[]> {
+  if (allIds.length === 0) return [];
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT question_id, due_date FROM question_progress
+      WHERE question_id = ANY(${allIds})
+    `;
+    const dueDateById = new Map<string, string | null>();
+    for (const row of rows as { question_id: string; due_date: unknown }[]) {
+      dueDateById.set(row.question_id, normalizeDateKey(row.due_date));
+    }
+    const today = todayKey();
+    return allIds.filter((id) => {
+      const dueDate = dueDateById.get(id);
+      return dueDate === undefined || dueDate === null || dueDate <= today;
+    });
+  } catch (err) {
+    console.error("getDueQuestionIds failed", err);
+    return allIds;
+  }
+}
+
+// Simplified SM-2: correct answers grow the interval (1 day -> 3 days ->
+// interval * ease from there); any miss resets the question to come back
+// tomorrow. Best-effort, matching recordFlag - a scheduling hiccup should
+// never break the session.
+export async function recordAnswer(questionId: string, correct: boolean): Promise<void> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT interval_days, ease_factor, reps FROM question_progress WHERE question_id = ${questionId}
+    `;
+    const current = rows[0] as
+      | { interval_days: number; ease_factor: number; reps: number }
+      | undefined;
+
+    let intervalDays = current?.interval_days ?? 1;
+    let easeFactor = current?.ease_factor ?? 2.5;
+    let reps = current?.reps ?? 0;
+
+    if (correct) {
+      reps += 1;
+      if (reps === 1) intervalDays = 1;
+      else if (reps === 2) intervalDays = 3;
+      else intervalDays = Math.round(intervalDays * easeFactor);
+      easeFactor = Math.min(easeFactor + 0.1, 3);
+    } else {
+      reps = 0;
+      intervalDays = 1;
+      easeFactor = Math.max(easeFactor - 0.2, 1.3);
+    }
+
+    const due = new Date();
+    due.setDate(due.getDate() + intervalDays);
+    const dueDate = due.toISOString().slice(0, 10);
+
+    await db`
+      INSERT INTO question_progress (question_id, due_date, interval_days, ease_factor, reps, updated_at)
+      VALUES (${questionId}, ${dueDate}, ${intervalDays}, ${easeFactor}, ${reps}, now())
+      ON CONFLICT (question_id) DO UPDATE SET
+        due_date = EXCLUDED.due_date,
+        interval_days = EXCLUDED.interval_days,
+        ease_factor = EXCLUDED.ease_factor,
+        reps = EXCLUDED.reps,
+        updated_at = now()
+    `;
+  } catch (err) {
+    console.error("recordAnswer failed", err);
   }
 }

@@ -1,27 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Button3D } from "@/components/Button3D";
 import { HeroAvatar } from "@/components/HeroAvatar";
 import { MinionAvatar } from "@/components/MinionAvatar";
 import { QueueDots } from "@/components/QueueDots";
-import { recordFlag, recordSessionComplete } from "@/app/actions";
-import { SESSION_QUESTIONS } from "@/lib/questions";
+import { recordAnswer, recordFlag, recordSessionComplete } from "@/app/actions";
+import type { Question } from "@/lib/questions";
 
 type Phase = "incoming" | "battle" | "resolution" | "recap";
 const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
 
-export function SessionView() {
-  const searchParams = useSearchParams();
-  const topic = searchParams.get("topic");
-
-  const pool = useMemo(() => {
-    if (!topic) return SESSION_QUESTIONS;
-    const filtered = SESSION_QUESTIONS.filter((q) => q.topic === topic);
-    return filtered.length > 0 ? filtered : SESSION_QUESTIONS;
-  }, [topic]);
-
+export function SessionView({ initialPool }: { initialPool: Question[] }) {
+  const [pool] = useState(initialPool);
   const [phase, setPhase] = useState<Phase>("incoming");
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<0 | 1 | null>(null);
@@ -37,8 +28,12 @@ export function SessionView() {
 
   function answer(choice: 0 | 1) {
     setSelected(choice);
-    if (choice === question.correctIndex) setCorrectCount((c) => c + 1);
+    const isCorrect = choice === question.correctIndex;
+    if (isCorrect) setCorrectCount((c) => c + 1);
     setPhase("resolution");
+    recordAnswer(question.id, isCorrect).catch((err) => {
+      console.error("Failed to record answer", err);
+    });
   }
 
   async function next() {

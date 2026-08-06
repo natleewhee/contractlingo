@@ -9,3 +9,7 @@ export async function recordSessionComplete(clearedCount: number) {
 export async function recordFlag(questionId: string, reason: string) {
   await db.recordFlag(questionId, reason);
 }
+
+export async function recordAnswer(questionId: string, correct: boolean) {
+  await db.recordAnswer(questionId, correct);
+}

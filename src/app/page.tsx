@@ -2,18 +2,22 @@ import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
-import { getProgress } from "@/lib/db";
+import { getDueQuestionIds, getProgress } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 // Reads live data from Neon on every request - must not be statically
-// prerendered, or the streak shown would freeze at build time.
+// prerendered, or the streak/due-count shown would freeze at build time.
 export const dynamic = "force-dynamic";
 
 const TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
-const DUE_TODAY = SESSION_QUESTIONS.length;
+const ALL_QUESTION_IDS = SESSION_QUESTIONS.map((q) => q.id);
 
 export default async function Home() {
-  const { streak } = await getProgress();
+  const [{ streak }, dueIds] = await Promise.all([
+    getProgress(),
+    getDueQuestionIds(ALL_QUESTION_IDS),
+  ]);
+  const dueToday = dueIds.length;
 
   return (
     <div className="flex flex-1 justify-center px-4 py-6">
@@ -54,7 +58,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <h1 className="mt-4 text-lg font-extrabold">{DUE_TODAY} cases due today</h1>
+        <h1 className="mt-4 text-lg font-extrabold">{dueToday} cases due today</h1>
         <p className="mt-0.5 text-sm text-ink-soft">
           Pick a fight, or take the whole batch
         </p>

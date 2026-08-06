@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Chip } from "@/components/Chip";
-import { HeroAvatar } from "@/components/HeroAvatar";
+import { HeroIdentity } from "@/components/HeroIdentity";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
-import { getDueQuestionIds, getProgress } from "@/lib/db";
+import { getDueQuestionIds, getProfile, getProgress } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 // Reads live data from Neon on every request - must not be statically
@@ -14,11 +14,26 @@ const ALL_QUESTION_IDS = SESSION_QUESTIONS.map((q) => q.id);
 const SESSION_LENGTHS = [5, 10, 15] as const;
 
 export default async function Home() {
-  const [{ streak }, dueIds] = await Promise.all([
+  const [profile, { streak }, dueIds] = await Promise.all([
+    getProfile(),
     getProgress(),
     getDueQuestionIds(ALL_QUESTION_IDS),
   ]);
   const dueToday = dueIds.length;
+
+  if (!profile.displayName) {
+    return (
+      <div className="flex flex-1 justify-center px-4 py-6">
+        <main className="flex w-full max-w-md flex-1 flex-col items-center justify-center text-center">
+          <h1 className="text-lg font-extrabold">Welcome to ContractLingo</h1>
+          <p className="mt-1 text-sm text-ink-soft">Set up your hero before your first case</p>
+          <div className="mt-4 w-full">
+            <HeroIdentity initialName={null} initialScheme={profile.avatarScheme} />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 justify-center px-4 py-6">
@@ -50,15 +65,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="mt-3 flex items-center gap-3">
-          <HeroAvatar size={58} />
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold">Knight-Defender</span>
-            <span className="font-display text-[0.65rem] font-medium text-ink-soft">
-              This is you
-            </span>
-          </div>
-        </div>
+        <HeroIdentity initialName={profile.displayName} initialScheme={profile.avatarScheme} />
 
         <h1 className="mt-4 text-lg font-extrabold">How much time do you have?</h1>
         <p className="mt-0.5 text-sm text-ink-soft">Pick a length and we&apos;ll size the batch to fit</p>

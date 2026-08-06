@@ -1,8 +1,11 @@
+import { getAvatarScheme, type AvatarSchemeId } from "@/lib/avatarSchemes";
+
 type HeroAvatarProps = {
   size?: number;
   cape?: boolean;
   animate?: boolean;
   className?: string;
+  scheme?: AvatarSchemeId | string;
 };
 
 export function HeroAvatar({
@@ -10,7 +13,10 @@ export function HeroAvatar({
   cape = true,
   animate = true,
   className = "",
+  scheme = "coral",
 }: HeroAvatarProps) {
+  const { body, bodyDark, helmet, helmetDark } = getAvatarScheme(scheme);
+
   return (
     <svg
       width={size}
@@ -19,29 +25,10 @@ export function HeroAvatar({
       className={`${animate ? "animate-bob" : ""} ${className}`}
       aria-hidden="true"
     >
-      {cape && (
-        <path
-          d="M30 48 L16 90 Q50 79 84 90 L70 48 Z"
-          fill="var(--coral-dark)"
-          opacity="0.9"
-        />
-      )}
-      <ellipse
-        cx="50"
-        cy="58"
-        rx="30"
-        ry="28"
-        fill="var(--coral)"
-        stroke="var(--ink)"
-        strokeWidth="5"
-      />
-      <ellipse cx="50" cy="34" rx="26" ry="6" fill="var(--gold-dark)" />
-      <path
-        d="M26 32a24 18 0 0148 0z"
-        fill="var(--gold)"
-        stroke="var(--ink)"
-        strokeWidth="5"
-      />
+      {cape && <path d="M30 48 L16 90 Q50 79 84 90 L70 48 Z" fill={bodyDark} opacity="0.9" />}
+      <ellipse cx="50" cy="58" rx="30" ry="28" fill={body} stroke="var(--ink)" strokeWidth="5" />
+      <ellipse cx="50" cy="34" rx="26" ry="6" fill={helmetDark} />
+      <path d="M26 32a24 18 0 0148 0z" fill={helmet} stroke="var(--ink)" strokeWidth="5" />
       <g className="animate-blink-eyes">
         <circle cx="40" cy="58" r="6" fill="#fff" stroke="var(--ink)" strokeWidth="3" />
         <circle cx="62" cy="58" r="6" fill="#fff" stroke="var(--ink)" strokeWidth="3" />
@@ -51,7 +38,7 @@ export function HeroAvatar({
       <g transform="translate(64,66) scale(0.5)">
         <path
           d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"
-          fill="var(--gold)"
+          fill={helmet}
           stroke="var(--ink)"
           strokeWidth="2.5"
         />

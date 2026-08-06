@@ -14,6 +14,10 @@ export async function resetProgress() {
   await db.resetProgress();
 }
 
+export async function saveProfile(displayName: string, avatarScheme: string) {
+  await db.saveProfile(displayName, avatarScheme);
+}
+
 export async function recordAnswer(questionId: string, correct: boolean, topic: string) {
   await db.recordAnswer(questionId, correct, topic);
 }

@@ -102,13 +102,6 @@ export default async function ProgressPage() {
           FACE MORE CASES
         </Button3D>
 
-        <Link
-          href="/library"
-          className="mt-4 self-center font-display text-[0.68rem] font-semibold text-ink-soft"
-        >
-          Browse all questions
-        </Link>
-
         <ResetProgressButton />
       </main>
     </div>

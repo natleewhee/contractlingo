@@ -12,7 +12,13 @@ import type { Question } from "@/lib/questions";
 type Phase = "incoming" | "battle" | "resolution" | "recap";
 const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
 
-export function SessionView({ initialPool }: { initialPool: Question[] }) {
+export function SessionView({
+  initialPool,
+  heroScheme = "coral",
+}: {
+  initialPool: Question[];
+  heroScheme?: string;
+}) {
   const [pool] = useState(initialPool);
   const [phase, setPhase] = useState<Phase>("incoming");
   const [index, setIndex] = useState(0);
@@ -89,7 +95,7 @@ export function SessionView({ initialPool }: { initialPool: Question[] }) {
                 ))}
               </div>
               <div className="[transform:scaleX(-1)]">
-                <HeroAvatar size={46} />
+                <HeroAvatar size={46} scheme={heroScheme} />
               </div>
             </div>
             <Button3D tone="coral" onClick={() => setPhase("battle")}>
@@ -232,7 +238,7 @@ export function SessionView({ initialPool }: { initialPool: Question[] }) {
                 Missed a day, but your streak is protected
               </div>
             )}
-            <HeroAvatar size={70} className="mt-3" />
+            <HeroAvatar size={70} scheme={heroScheme} className="mt-3" />
             <div className="mt-4 w-full max-w-[200px]">
               <Button3D tone="white" href="/">
                 DONE

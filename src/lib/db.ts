@@ -65,6 +65,14 @@ function ensureSchema(): Promise<void> {
           created_at timestamptz NOT NULL DEFAULT now()
         )
       `;
+      await db`
+        CREATE TABLE IF NOT EXISTS profile (
+          id text PRIMARY KEY DEFAULT 'default',
+          display_name text,
+          avatar_scheme text NOT NULL DEFAULT 'coral',
+          updated_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
     })();
   }
   return schemaReady;
@@ -309,6 +317,42 @@ export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
   const db = getSql();
   const rows = await db`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
   return rows as PushSubscriptionRecord[];
+}
+
+export type Profile = {
+  displayName: string | null;
+  avatarScheme: string;
+};
+
+const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: "coral" };
+
+// A null displayName means onboarding hasn't happened yet - the home page
+// uses that to gate the dashboard behind the name/avatar picker.
+export async function getProfile(): Promise<Profile> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`SELECT display_name, avatar_scheme FROM profile WHERE id = 'default'`;
+    if (rows.length === 0) return DEFAULT_PROFILE;
+    const row = rows[0] as { display_name: string | null; avatar_scheme: string };
+    return { displayName: row.display_name, avatarScheme: row.avatar_scheme };
+  } catch (err) {
+    console.error("getProfile failed", err);
+    return DEFAULT_PROFILE;
+  }
+}
+
+export async function saveProfile(displayName: string, avatarScheme: string): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`
+    INSERT INTO profile (id, display_name, avatar_scheme, updated_at)
+    VALUES ('default', ${displayName}, ${avatarScheme}, now())
+    ON CONFLICT (id) DO UPDATE SET
+      display_name = EXCLUDED.display_name,
+      avatar_scheme = EXCLUDED.avatar_scheme,
+      updated_at = now()
+  `;
 }
 
 // Wipes streak, totals, spaced-repetition state, and answer history back to

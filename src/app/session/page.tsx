@@ -1,4 +1,4 @@
-import { getDueQuestionIds } from "@/lib/db";
+import { getDueQuestionIds, getProfile } from "@/lib/db";
 import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
 import { SessionView } from "./SessionView";
 
@@ -22,6 +22,7 @@ export default async function SessionPage({
   searchParams: Promise<{ topic?: string; minutes?: string }>;
 }) {
   const { topic, minutes } = await searchParams;
+  const profile = await getProfile();
 
   let pool = topic ? SESSION_QUESTIONS.filter((q) => q.topic === topic) : SESSION_QUESTIONS;
   if (pool.length === 0) pool = SESSION_QUESTIONS;
@@ -43,5 +44,5 @@ export default async function SessionPage({
     pool = shuffle(pool).slice(0, cap);
   }
 
-  return <SessionView initialPool={pool} />;
+  return <SessionView initialPool={pool} heroScheme={profile.avatarScheme} />;
 }

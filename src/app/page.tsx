@@ -1,10 +1,17 @@
+"use client";
+
 import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
+import { useProgress } from "@/lib/progress";
+import { SESSION_QUESTIONS } from "@/lib/questions";
 
-const TOPICS = ["Variations", "Payment", "LD", "EOT", "Notices", "Delay"];
+const TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
+const DUE_TODAY = SESSION_QUESTIONS.length;
 
 export default function Home() {
+  const { streak } = useProgress();
+
   return (
     <div className="flex flex-1 justify-center px-4 py-6">
       <main className="flex w-full max-w-md flex-col">
@@ -21,7 +28,7 @@ export default function Home() {
                 fill="var(--coral)"
               />
             </svg>
-            <span className="font-display text-sm font-bold">14</span>
+            <span className="font-display text-sm font-bold">{streak}</span>
           </div>
           <span
             className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-ink-soft shadow-[0_2px_0_var(--frame-border)]"
@@ -44,7 +51,7 @@ export default function Home() {
           </div>
         </div>
 
-        <h1 className="mt-4 text-lg font-extrabold">12 cases due today</h1>
+        <h1 className="mt-4 text-lg font-extrabold">{DUE_TODAY} cases due today</h1>
         <p className="mt-0.5 text-sm text-ink-soft">
           Pick a fight, or take the whole batch
         </p>

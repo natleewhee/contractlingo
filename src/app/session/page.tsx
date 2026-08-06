@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button3D } from "@/components/Button3D";
 import { HeroAvatar } from "@/components/HeroAvatar";
 import { MinionAvatar } from "@/components/MinionAvatar";
 import { QueueDots } from "@/components/QueueDots";
+import { recordSessionComplete, useProgress } from "@/lib/progress";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 type Phase = "incoming" | "battle" | "resolution" | "recap";
@@ -17,9 +18,21 @@ export default function Session() {
   const [correctCount, setCorrectCount] = useState(0);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSent, setReportSent] = useState(false);
+  const hasRecorded = useRef(false);
+  const { streak } = useProgress();
 
   const total = SESSION_QUESTIONS.length;
   const question = SESSION_QUESTIONS[index];
+
+  // Recording is a genuine side effect (writes to localStorage) - the
+  // `streak` value itself is read separately via useProgress above, which
+  // re-renders automatically once recordSessionComplete writes and emits.
+  useEffect(() => {
+    if (phase === "recap" && !hasRecorded.current) {
+      hasRecorded.current = true;
+      recordSessionComplete(total);
+    }
+  }, [phase, total]);
 
   function answer(choice: 0 | 1) {
     setSelected(choice);
@@ -180,7 +193,7 @@ export default function Session() {
                   fill="#fff"
                 />
               </svg>
-              15 day streak
+              {streak} day streak
             </div>
             <HeroAvatar size={70} className="mt-3" />
             <div className="mt-4 w-full max-w-[200px]">

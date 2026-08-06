@@ -296,6 +296,20 @@ export const SESSION_QUESTIONS: Question[] = [
       "'Concurrent delay' has a narrow technical meaning — both causes must independently be critical-path delays happening at the same time, not just two problems that happened to occur in the same week. Loosely calling everything 'concurrent' can hand out EOTs and cost protection that isn't actually earned.",
   },
 
+  {
+    id: "concurrent-delay-03",
+    topic: "Concurrent Delay",
+    scenario:
+      "The contract doesn't say anything about how to handle concurrent delay. The contractor argues that, since courts are divided on the point, it should get the benefit of the doubt and a full EOT.",
+    options: [
+      "Treat this as a genuinely unsettled area and check the specific contract mechanism/jurisdiction rather than assuming a default rule",
+      "There's a single universal rule for concurrent delay that applies regardless of contract wording",
+    ],
+    correctIndex: 0,
+    explanation:
+      "How concurrent delay is actually treated varies by jurisdiction and by what the contract itself says — some contracts define it expressly. Assuming one 'default' answer applies everywhere is the trap. This is a genuine grey area to get specific advice on, not a case with an obvious universal answer.",
+  },
+
   // --- Disruption ---
   {
     id: "disruption-01",
@@ -322,6 +336,20 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "The measured mile approach compares actual performance in an unimpacted period against the disrupted period on similar work — it's one of the more accepted ways to quantify disruption because it's grounded in the contractor's own real productivity, not industry averages or guesswork.",
+  },
+
+  {
+    id: "disruption-03",
+    topic: "Disruption",
+    scenario:
+      "The contractor claims a disruption cost, but part of the lost productivity clearly overlaps with periods where its own crew was under-resourced for reasons unrelated to the Employer.",
+    options: [
+      "Isolate and exclude the contractor's own-caused inefficiency before valuing the claim",
+      "Award the whole claimed amount since some disruption was genuinely Employer-caused",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A disruption claim only covers the portion actually caused by the compensable event — mixing in the contractor's own inefficiency inflates the claim. Strip out what isn't attributable to the Employer before valuing what's left.",
   },
 
   // --- Acceleration ---
@@ -352,6 +380,20 @@ export const SESSION_QUESTIONS: Question[] = [
       "Constructive acceleration is exactly this pattern: a valid EOT wrongly refused, forcing the contractor to spend money avoiding LDs it shouldn't be exposed to. It's a real, if harder to prove, basis for a claim — don't dismiss it just because there was no explicit 'please accelerate' instruction.",
   },
 
+  {
+    id: "acceleration-03",
+    topic: "Acceleration",
+    scenario:
+      "The contractor decides on its own to bring in extra crews and finish two weeks early, hoping to impress the Employer for future work. It later invoices the Employer for the extra cost as 'acceleration.'",
+    options: [
+      "Voluntary acceleration the Employer never asked for or agreed to isn't recoverable as a claim",
+      "Any acceleration effort, even self-initiated, is billable to the Employer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Acceleration costs are only recoverable where there's some basis tying them to the Employer — an instruction, an agreement, or a wrongful EOT refusal (constructive acceleration). Choosing to speed up unprompted is a commercial decision the contractor pays for itself.",
+  },
+
   // --- Prolongation Costs ---
   {
     id: "prolongation-01",
@@ -378,6 +420,19 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "A recurring problem in prolongation claims is the same underlying cost showing up more than once, dressed up under different headings. Trace each cost item back to what it's actually for before certifying — the label on the claim line isn't what matters.",
+  },
+  {
+    id: "prolongation-03",
+    topic: "Prolongation Costs",
+    scenario:
+      "The contractor claims head office overheads for the EOT period using a standard formula, without showing that head office resources were actually stretched or that other work was turned away because of this project's extension.",
+    options: [
+      "A formula alone is a starting point, not proof — look for some evidence the head office was actually affected",
+      "The formula result is conclusive proof of loss on its own",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Formula-based overhead claims are common but contested precisely because they assume, rather than prove, an actual loss. They're more persuasive alongside some real evidence — turned-away work, stretched resources — than as a bare calculation.",
   },
 
   // --- Valuation ---
@@ -406,6 +461,19 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "Most standard forms have a valuation hierarchy that ends in a daywork or cost-plus basis precisely for this situation — genuinely unpriced work with no fair comparator. It's not a deadlock; it's the next rung down the ladder.",
+  },
+  {
+    id: "valuation-03",
+    topic: "Valuation",
+    scenario:
+      "The Employer instructs an omission (deleting scope) from the contractor's works, then has the same work carried out by a different, cheaper contractor shortly after.",
+    options: [
+      "This is a legitimate concern — omitting work just to hand it to someone else can be an improper use of the variation power",
+      "Omissions are always valid regardless of what happens to the work afterward",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuine omission removes work from the contract entirely. Using the omission power to strip work from the contractor purely to re-award it elsewhere more cheaply is a well-recognised abuse of the mechanism, not a normal variation.",
   },
 
   // --- Notices ---

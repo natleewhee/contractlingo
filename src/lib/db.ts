@@ -1,4 +1,5 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
+import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
 
 // Constructed lazily (not at module load) so a missing DATABASE_URL only
 // throws when actually queried, never during build/static analysis.
@@ -72,6 +73,43 @@ function ensureSchema(): Promise<void> {
           avatar_scheme text NOT NULL DEFAULT 'coral',
           updated_at timestamptz NOT NULL DEFAULT now()
         )
+      `;
+      await db`
+        CREATE TABLE IF NOT EXISTS questions (
+          id text PRIMARY KEY,
+          topic text NOT NULL,
+          scenario text NOT NULL,
+          options jsonb NOT NULL,
+          correct_index integer NOT NULL,
+          explanation text NOT NULL,
+          updated_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
+      // The question bank is still authored in code (src/lib/questions.ts) -
+      // reviewable via git, no risk of DB/code drift - but synced into Neon
+      // here on every cold start so it's genuinely queryable there too, and
+      // getAllQuestions() below reads from this table. One bulk upsert via
+      // jsonb_to_recordset, not one round trip per question.
+      const seedRows = SESSION_QUESTIONS.map((q) => ({
+        id: q.id,
+        topic: q.topic,
+        scenario: q.scenario,
+        options: q.options,
+        correct_index: q.correctIndex,
+        explanation: q.explanation,
+      }));
+      await db`
+        INSERT INTO questions (id, topic, scenario, options, correct_index, explanation)
+        SELECT id, topic, scenario, options, correct_index, explanation
+        FROM jsonb_to_recordset(${JSON.stringify(seedRows)}::jsonb)
+          AS x(id text, topic text, scenario text, options jsonb, correct_index integer, explanation text)
+        ON CONFLICT (id) DO UPDATE SET
+          topic = EXCLUDED.topic,
+          scenario = EXCLUDED.scenario,
+          options = EXCLUDED.options,
+          correct_index = EXCLUDED.correct_index,
+          explanation = EXCLUDED.explanation,
+          updated_at = now()
       `;
     })();
   }
@@ -317,6 +355,42 @@ export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
   const db = getSql();
   const rows = await db`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
   return rows as PushSubscriptionRecord[];
+}
+
+// Reads the live question bank from Neon (kept in sync from
+// src/lib/questions.ts by ensureSchema's seed step). Falls back to the
+// code copy on any DB error, same fail-open pattern as the rest of this
+// file - a Neon hiccup should never leave the app with no questions.
+export async function getAllQuestions(): Promise<Question[]> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT id, topic, scenario, options, correct_index, explanation
+      FROM questions ORDER BY id
+    `;
+    if (rows.length === 0) return SESSION_QUESTIONS;
+    return (
+      rows as {
+        id: string;
+        topic: string;
+        scenario: string;
+        options: [string, string];
+        correct_index: 0 | 1;
+        explanation: string;
+      }[]
+    ).map((row) => ({
+      id: row.id,
+      topic: row.topic,
+      scenario: row.scenario,
+      options: row.options,
+      correctIndex: row.correct_index,
+      explanation: row.explanation,
+    }));
+  } catch (err) {
+    console.error("getAllQuestions failed", err);
+    return SESSION_QUESTIONS;
+  }
 }
 
 export type Profile = {

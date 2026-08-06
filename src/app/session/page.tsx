@@ -1,5 +1,5 @@
-import { getDueQuestionIds, getProfile } from "@/lib/db";
-import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
+import { getAllQuestions, getDueQuestionIds, getProfile } from "@/lib/db";
+import type { Question } from "@/lib/questions";
 import { SessionView } from "./SessionView";
 
 // Reads live due-question state from Neon on every request.
@@ -22,10 +22,10 @@ export default async function SessionPage({
   searchParams: Promise<{ topic?: string; minutes?: string }>;
 }) {
   const { topic, minutes } = await searchParams;
-  const profile = await getProfile();
+  const [profile, allQuestions] = await Promise.all([getProfile(), getAllQuestions()]);
 
-  let pool = topic ? SESSION_QUESTIONS.filter((q) => q.topic === topic) : SESSION_QUESTIONS;
-  if (pool.length === 0) pool = SESSION_QUESTIONS;
+  let pool = topic ? allQuestions.filter((q) => q.topic === topic) : allQuestions;
+  if (pool.length === 0) pool = allQuestions;
 
   if (!topic) {
     // "Face them all" narrows to what's actually due for spaced-repetition

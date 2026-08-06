@@ -1,14 +1,12 @@
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
-import { getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
-import { SESSION_QUESTIONS } from "@/lib/questions";
+import { getAllQuestions, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
 
 // Reads live data from Neon on every request - must not be statically
 // prerendered, same reasoning as the home page.
 export const dynamic = "force-dynamic";
 
-const ALL_TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
 const WEAK_THRESHOLD = 70;
 const MIN_ATTEMPTS_TO_JUDGE = 3;
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -24,15 +22,17 @@ function last7Days(): string[] {
 }
 
 export default async function ProgressPage() {
-  const [{ streak, totalCleared }, topicStats, weekly] = await Promise.all([
+  const [{ streak, totalCleared }, topicStats, weekly, questions] = await Promise.all([
     getProgress(),
     getTopicStats(),
     getWeeklyStats(),
+    getAllQuestions(),
   ]);
   const week = last7Days();
+  const allTopics = [...new Set(questions.map((q) => q.topic))];
 
   const statsByTopic = new Map(topicStats.map((s) => [s.topic, s]));
-  const rows = ALL_TOPICS.map((topic) => statsByTopic.get(topic) ?? { topic, attempts: 0, correct: 0, accuracy: 100 })
+  const rows = allTopics.map((topic) => statsByTopic.get(topic) ?? { topic, attempts: 0, correct: 0, accuracy: 100 })
     .sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts);
 
   const weakTopics = rows.filter(

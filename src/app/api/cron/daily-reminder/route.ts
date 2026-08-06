@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
-import { getAllSubscriptions, getDueQuestionIds, removeSubscription } from "@/lib/db";
-import { SESSION_QUESTIONS } from "@/lib/questions";
-
-const ALL_QUESTION_IDS = SESSION_QUESTIONS.map((q) => q.id);
+import { getAllQuestions, getAllSubscriptions, getDueQuestionIds, removeSubscription } from "@/lib/db";
 
 // Triggered daily by Vercel Cron (see vercel.json). Vercel sends
 // `Authorization: Bearer $CRON_SECRET` automatically when that env var is
@@ -27,7 +24,8 @@ export async function GET(req: NextRequest) {
   }
   webpush.setVapidDetails(subject, publicKey, privateKey);
 
-  const dueIds = await getDueQuestionIds(ALL_QUESTION_IDS);
+  const allQuestions = await getAllQuestions();
+  const dueIds = await getDueQuestionIds(allQuestions.map((q) => q.id));
   if (dueIds.length === 0) {
     return NextResponse.json({ sent: 0, skipped: "nothing due today" });
   }

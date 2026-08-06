@@ -1374,4 +1374,428 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "Whether 'possession' includes functioning utilities depends on what the contract actually requires — for works genuinely dependent on power or water to start, their absence can mean possession wasn't properly given in a way that lets work begin, not just an unrelated inconvenience.",
   },
+
+  // --- Force Majeure ---
+  {
+    id: "force-majeure-01",
+    topic: "Force Majeure",
+    scenario:
+      "The Contractor invokes force majeure to excuse delay caused by a general shortage of skilled labour in the market, not tied to any specific catastrophic event.",
+    options: [
+      "A general market shortage usually doesn't meet the threshold for force majeure — check the clause's actual definition before relying on it",
+      "Any external factor making performance harder qualifies as force majeure",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Force majeure clauses typically require a specific, extraordinary, unforeseeable event beyond the party's control — a general market condition like a labour shortage usually falls short of that threshold, even if it genuinely makes things harder.",
+  },
+  {
+    id: "force-majeure-02",
+    topic: "Force Majeure",
+    scenario:
+      "A force majeure clause requires prompt notice of the triggering event. The Contractor waits months before notifying, then tries to invoke it retroactively.",
+    options: [
+      "Late notice is a real risk here too — many force majeure clauses treat prompt notice as a precondition to relief",
+      "Force majeure relief applies automatically once a qualifying event occurs, regardless of when notice is given",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is the same notice discipline that matters throughout construction contracts — even a genuinely qualifying event may not give relief if the required notice wasn't given within the time the clause specifies.",
+  },
+  {
+    id: "force-majeure-03",
+    topic: "Force Majeure",
+    scenario:
+      "An event is genuinely beyond either party's control, but the contract has no force majeure clause at all.",
+    options: [
+      "Check what general legal doctrines (like frustration) might apply instead — the absence of a clause doesn't necessarily mean there's no relief at all, but it's a different and often higher bar",
+      "No clause means there's automatically no possible relief regardless of the circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Without a contractual force majeure clause, a party may still look to general legal doctrines like frustration, but those are typically much harder to satisfy than a contractual clause — this is a genuine grey area to get advice on rather than assume closed off.",
+  },
+  {
+    id: "force-majeure-04",
+    topic: "Force Majeure",
+    scenario:
+      "The Contractor claims force majeure for a delay that it could reasonably have mitigated (for example, by sourcing from an alternate supplier) but didn't attempt to.",
+    options: [
+      "Check whether the clause requires reasonable mitigation — many do, and failing to attempt it can undermine the claim",
+      "Once a qualifying event occurs, there's no obligation to attempt any mitigation at all",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many force majeure clauses require the affected party to use reasonable efforts to mitigate the impact — a claim can be weakened or defeated if an obvious, reasonable workaround was available and simply wasn't tried.",
+  },
+  {
+    id: "force-majeure-05",
+    topic: "Force Majeure",
+    scenario:
+      "A force majeure event ends, but the Contractor is slow to remobilise and wants the extended delay treated as still covered by the same event.",
+    options: [
+      "The relief generally covers the event's actual duration and its direct effects, not an open-ended extension for unrelated remobilisation delay",
+      "Any delay that happens after a force majeure event, however caused, is automatically still covered by it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Force majeure relief is tied to the impact of the qualifying event itself — once the event ends, further delay needs its own justification, and slow remobilisation caused by the contractor's own inefficiency isn't automatically swept in.",
+  },
+  {
+    id: "force-majeure-06",
+    topic: "Force Majeure",
+    scenario:
+      "The Contractor assumes a force majeure clause automatically excuses both time and cost, without checking what the clause actually provides.",
+    options: [
+      "Check the clause specifically — many force majeure provisions excuse time (via an EOT) but not cost, leaving the Contractor to bear standing costs itself",
+      "Force majeure clauses always excuse both time and cost together as a package",
+    ],
+    correctIndex: 0,
+    explanation:
+      "It's a common misconception that force majeure automatically covers cost the same way it covers time — many clauses are deliberately limited to time relief only, so this needs to be checked rather than assumed.",
+  },
+  {
+    id: "force-majeure-07",
+    topic: "Force Majeure",
+    scenario:
+      "The parties dispute whether a specific event, such as a sudden regulatory shutdown, actually falls within the contract's defined list of force majeure events.",
+    options: [
+      "Check the clause's actual wording closely — many force majeure clauses use a specific defined list, and events outside it may not qualify even if they feel similar in spirit",
+      "Any event that feels similar in nature to the listed examples automatically qualifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Force majeure clauses are often drafted as a specific, sometimes exhaustive list of events — whether a new or unlisted event fits depends on the precise wording (and whether there's a general 'catch-all' phrase), not just a similar-in-spirit comparison.",
+  },
+  {
+    id: "force-majeure-08",
+    topic: "Force Majeure",
+    scenario:
+      "A force majeure event makes performance significantly more expensive but not literally impossible.",
+    options: [
+      "Check the clause's actual threshold — many force majeure clauses require genuine impossibility or prevention, not just increased difficulty or cost",
+      "Increased cost or difficulty alone is always enough to trigger force majeure relief",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most force majeure clauses are drafted around genuine prevention or impossibility of performance, not mere hardship — a much higher bar than 'this has become more expensive than expected,' which is a commercial risk usually left where it falls.",
+  },
+
+  // --- Latent Site Conditions ---
+  {
+    id: "latent-conditions-01",
+    topic: "Latent Site Conditions",
+    scenario:
+      "The Contractor encounters unexpected soft ground and contamination not shown in the site investigation reports provided by the Employer.",
+    options: [
+      "Check the contract's specific risk allocation for ground conditions before assuming either party bears it automatically",
+      "Unexpected ground conditions are always automatically the Contractor's risk to absorb",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Ground conditions risk allocation varies significantly by contract — some place it squarely on the contractor, others give relief for conditions that couldn't reasonably have been foreseen. This needs checking, not assuming.",
+  },
+  {
+    id: "latent-conditions-02",
+    topic: "Latent Site Conditions",
+    scenario:
+      "A contract places 'ground conditions' risk entirely on the Contractor via broad wording. The Contractor argues this can't override a genuinely latent, unforeseeable condition.",
+    options: [
+      "This is worth checking carefully — broad risk-allocation wording is sometimes still read subject to a genuine latent-condition standard, but not always, depending on the exact drafting and jurisdiction",
+      "Broad wording always means the Contractor bears absolutely any ground condition no matter how extreme or unforeseeable",
+    ],
+    correctIndex: 0,
+    explanation:
+      "How far broadly worded risk-allocation clauses actually go — and whether truly extraordinary, unforeseeable conditions can still support relief — is a genuinely contested area that depends heavily on specific wording and jurisdiction, not a settled universal answer.",
+  },
+  {
+    id: "latent-conditions-03",
+    topic: "Latent Site Conditions",
+    scenario:
+      "The Contractor proceeds to deal with an unexpected ground condition without notifying the Employer or Engineer first, then submits a claim afterward.",
+    options: [
+      "Notify first, before or as soon as proceeding — most latent condition clauses require notice before or promptly upon encountering the condition, not just an after-the-fact claim",
+      "As long as the claim is eventually submitted, the timing of notification doesn't really matter",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Like most claim mechanisms, latent condition clauses typically require prompt notice so the Engineer/Employer can inspect and instruct before the condition is dealt with — submitting a claim only after the fact undermines that and risks the claim being challenged.",
+  },
+  {
+    id: "latent-conditions-04",
+    topic: "Latent Site Conditions",
+    scenario:
+      "A condition is arguably foreseeable by an experienced contractor doing proper due diligence, such as from publicly available geological records.",
+    options: [
+      "This matters — a condition that a reasonably diligent, experienced contractor should have anticipated is generally treated differently from a genuinely latent one",
+      "Foreseeability by an experienced contractor never affects whether a condition counts as latent",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The core of most 'latent condition' tests is genuine unforeseeability by a competent, diligent contractor — something that reasonable due diligence and available public information should have revealed generally doesn't qualify as latent.",
+  },
+  {
+    id: "latent-conditions-05",
+    topic: "Latent Site Conditions",
+    scenario:
+      "The Employer argues the site investigation reports provided were for information only, with a disclaimer of reliance, and therefore bear no responsibility for their accuracy.",
+    options: [
+      "This is worth scrutinising rather than accepted at face value — disclaimers of reliance on provided information don't always hold up, especially where the Employer's own reports were reasonably relied on in practice",
+      "A disclaimer in the documents always fully protects the Employer from any responsibility for inaccurate information",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether an 'information only, no reliance' disclaimer actually shields the Employer from responsibility for genuinely inaccurate information it provided is a real area of dispute, not a settled given — worth challenging rather than accepting outright.",
+  },
+  {
+    id: "latent-conditions-06",
+    topic: "Latent Site Conditions",
+    scenario:
+      "The Contractor discovers a latent condition mid-excavation and stops all work entirely without seeking instructions, causing further delay beyond the discovery itself.",
+    options: [
+      "Seek instructions promptly rather than unilaterally stopping everything — an overreaction can create its own additional, harder-to-recover delay",
+      "Stopping all work entirely is always the correct and fully recoverable response to any latent condition",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The right move is usually to notify and seek instructions on how to proceed, not necessarily halt everything indefinitely — delay caused by an overcautious blanket stoppage, beyond what was actually necessary, may not be fully recoverable.",
+  },
+  {
+    id: "latent-conditions-07",
+    topic: "Latent Site Conditions",
+    scenario:
+      "A latent condition claim is submitted months after the condition was actually discovered, without contemporaneous records of the extra time or cost incurred.",
+    options: [
+      "This weakens the claim significantly — contemporaneous records are usually essential to substantiate what was actually encountered and what it actually cost",
+      "A claim can always be reconstructed accurately from memory well after the fact without needing contemporaneous records",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Like most construction claims, credibility and provability depend heavily on contemporaneous records — photos, dayworks sheets, correspondence at the time. A late, unsubstantiated claim is much easier to challenge or reject.",
+  },
+  {
+    id: "latent-conditions-08",
+    topic: "Latent Site Conditions",
+    scenario:
+      "Ground conditions differ from those described in the contract documents, but only marginally.",
+    options: [
+      "Check whether the deviation is actually material enough to matter under the clause — minor, expected variation usually isn't enough on its own",
+      "Any deviation at all from what was described automatically triggers a claim regardless of how minor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most latent condition clauses require a materially different condition, not just any deviation — some variation from indicative site information is normal and expected, and doesn't by itself support a claim.",
+  },
+
+  // --- Design Responsibility ---
+  {
+    id: "design-responsibility-01",
+    topic: "Design Responsibility",
+    scenario:
+      "In a design-and-build contract, the Contractor is bound by the Employer's Requirements, but discovers an error within those Requirements during design development.",
+    options: [
+      "Raise it formally with the Employer rather than silently designing around it or ignoring it — an error in the Employer's Requirements is something to flag, not just absorb",
+      "The Contractor must simply follow the Employer's Requirements exactly as written even if an error is spotted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even where the Contractor takes on design responsibility, discovering an error in the Employer's own Requirements is worth formally raising — how the cost and time consequences of correcting it get allocated is exactly the kind of thing that depends on the specific contract, so silence isn't the safe move.",
+  },
+  {
+    id: "design-responsibility-02",
+    topic: "Design Responsibility",
+    scenario:
+      "The Contractor's design fails to comply with a building code requirement that was already in force at contract signing.",
+    options: [
+      "Using the Employer's Requirements as a starting point doesn't excuse a design that fails to meet applicable code — that's generally still the Contractor's responsibility to get right",
+      "If the Employer's Requirements didn't flag the code requirement, the Contractor isn't responsible for missing it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Compliance with applicable law and codes is typically a baseline design obligation on the party doing the design, independent of whether the Employer's Requirements happened to mention it — 'the brief didn't say' isn't usually a valid excuse for a code failure.",
+  },
+  {
+    id: "design-responsibility-03",
+    topic: "Design Responsibility",
+    scenario:
+      "The Employer approves the Contractor's design submission, and a defect later emerges that's traceable to that design.",
+    options: [
+      "Check what the contract says 'approval' actually means — in many design-and-build contracts, Employer approval or comment doesn't shift design liability away from the Contractor",
+      "Employer approval of a design submission always fully transfers design liability to the Employer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many contracts specifically preserve the point that Employer review/approval doesn't relieve the Contractor of design responsibility — it's a check, not a liability transfer. But this depends on the exact wording, so it's worth confirming rather than assuming either way.",
+  },
+  {
+    id: "design-responsibility-04",
+    topic: "Design Responsibility",
+    scenario:
+      "The Contractor engages a specialist subcontractor to design a specific system, such as the façade. A defect later arises in that specific design.",
+    options: [
+      "The main Contractor generally remains responsible to the Employer regardless of which subcontractor actually did the design work — the same principle as subcontracted construction work",
+      "Design responsibility passes automatically to whichever specialist actually did the design",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This mirrors the general subcontracting principle — delegating design work to a specialist doesn't delegate the Contractor's responsibility to the Employer under the main contract, whatever recourse the Contractor separately has against that specialist.",
+  },
+  {
+    id: "design-responsibility-05",
+    topic: "Design Responsibility",
+    scenario:
+      "Design changes requested by the Employer mid-project cause knock-on redesign costs elsewhere. The Contractor treats this the same as a normal construction variation claim.",
+    options: [
+      "It generally is treated similarly — a genuine change in scope or requirements, including design changes, should typically follow the same instructed-variation process and valuation approach",
+      "Design changes can never be claimed the same way as ordinary construction variations",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuine Employer-instructed change to design requirements is usually just another form of variation, and should go through the same instruction, substantiation, and valuation process as any other change in scope.",
+  },
+  {
+    id: "design-responsibility-06",
+    topic: "Design Responsibility",
+    scenario:
+      "The Contractor's design technically meets the performance specification but not really what the Employer intended functionally, due to genuine ambiguity in the Employer's Requirements.",
+    options: [
+      "This is a real dispute area worth resolving carefully — genuine ambiguity in the brief is different from a straightforward design failure, and how it's resolved often depends on which party's interpretation was more reasonable",
+      "Meeting the literal wording of the specification is always sufficient regardless of what the Employer actually intended",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Genuinely ambiguous requirements create real interpretive disputes rather than a clear-cut breach — this is worth working through carefully (and often needs advice) rather than assuming the literal reading always wins.",
+  },
+  {
+    id: "design-responsibility-07",
+    topic: "Design Responsibility",
+    scenario:
+      "The Contractor isn't sure whether its design obligation is 'fit for purpose' or 'reasonable skill and care,' and hasn't checked which standard the contract actually specifies.",
+    options: [
+      "Check the contract specifically — these are materially different standards, and 'fit for purpose' is generally a more onerous, stricter obligation than 'reasonable skill and care'",
+      "The two standards are essentially interchangeable in practice",
+    ],
+    correctIndex: 0,
+    explanation:
+      "'Fit for purpose' is a stricter, outcome-based obligation (the design must actually work for its intended purpose, regardless of how carefully it was done), while 'reasonable skill and care' is a conduct-based standard — which one applies materially changes the Contractor's exposure, so it's worth confirming rather than assuming.",
+  },
+  {
+    id: "design-responsibility-08",
+    topic: "Design Responsibility",
+    scenario:
+      "The Employer's consultant reviews and comments on the Contractor's design using language like 'noted' rather than formal 'approved' wording.",
+    options: [
+      "Check what the contract says this specific wording actually means — the distinction between 'noted' and 'approved' can be contractually significant and is worth clarifying, not assumed to be equivalent",
+      "Any form of review comment, regardless of wording, always has the exact same contractual effect",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contracts sometimes deliberately distinguish between different review outcomes ('noted,' 'no objection,' 'approved') with different consequences for each — worth clarifying exactly what a specific comment means under this contract rather than treating all review language as equivalent.",
+  },
+
+  // --- Time-Bar Provisions ---
+  {
+    id: "time-bar-01",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "A contract requires an EOT claim to be made within 28 days 'or the claim is barred.' The Contractor misses this by a few days, even though the underlying delay was genuine and serious.",
+    options: [
+      "Treat the time bar as a real risk — many contracts and jurisdictions enforce strict time bars even against genuine, serious claims",
+      "A genuine and serious delay always overrides a missed notice deadline",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Strict time-bar clauses are specifically designed to apply even to real claims — that's the whole point of a hard deadline. Whether a specific missed deadline is fatal depends on the exact wording and jurisdiction, but it's a real risk, not something to assume away because the claim is genuine.",
+  },
+  {
+    id: "time-bar-02",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "The Contractor argues the strict time bar shouldn't apply because the Employer was actually aware of the delay anyway through informal site discussions.",
+    options: [
+      "This is the same trap as informal notice generally — actual awareness through informal channels often doesn't satisfy a strict formal notice requirement",
+      "Actual awareness through any means always satisfies a formal notice requirement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This echoes a recurring theme — formal notice requirements exist precisely to create a clear, documented trigger point, and informal awareness usually doesn't substitute for it, however reasonable that argument might feel.",
+  },
+  {
+    id: "time-bar-03",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "A time-bar clause requires notice 'as soon as possible.' The Contractor treats this as a soft guideline rather than a real deadline with consequences.",
+    options: [
+      "Treat it as a real requirement with teeth — even a flexible-sounding standard like 'as soon as possible' can still be enforced strictly depending on the clause and jurisdiction",
+      "Flexible wording like 'as soon as possible' never carries any real enforceable consequence",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Flexible-sounding language doesn't necessarily mean a soft deadline — whether it's still enforced strictly (and what 'as soon as possible' actually means in practice) depends on the specific clause and legal context, so it shouldn't be treated casually.",
+  },
+  {
+    id: "time-bar-04",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "Two time-bar provisions in the same contract appear to conflict — one for EOT notices, one for payment claims — with different deadlines.",
+    options: [
+      "Read the specific clauses carefully to work out which applies to which type of claim, rather than assuming one overrides the other",
+      "Where clauses seem to conflict, the longer deadline always automatically applies to everything",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Apparently conflicting time-bar clauses are often actually addressing different types of claims (time versus money) rather than genuinely conflicting — work out which specific provision governs which specific claim before assuming either deadline controls.",
+  },
+  {
+    id: "time-bar-05",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "The Contractor gives timely notice of the delay event itself, but is late submitting the detailed substantiation required afterward.",
+    options: [
+      "Check the clause carefully — late substantiation doesn't necessarily bar the claim the same way a late initial notice would, but it depends on exactly how the clause is drafted",
+      "Any lateness anywhere in the claims process, including substantiation, always fully bars the claim the same way",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some clauses treat the initial notice as the hard time bar and treat later substantiation more flexibly (affecting assessment rather than barring the claim entirely) — but this varies by clause, so it needs checking rather than assuming the harshest reading.",
+  },
+  {
+    id: "time-bar-06",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "The Employer never raises a time-bar defence until well into a dispute or adjudication, long after receiving the late notice without any objection at the time.",
+    options: [
+      "This may matter — depending on the jurisdiction, a party's conduct (like not objecting at the time) can sometimes affect its ability to later rely on a strict time bar",
+      "A time-bar defence can always be raised at any point regardless of prior conduct, with no effect from earlier silence",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Doctrines like waiver or estoppel can, in some circumstances, affect whether a party that didn't object at the time can later insist on a strict time bar — this is genuinely fact- and jurisdiction-specific, worth raising as an argument rather than assuming it has no effect.",
+  },
+  {
+    id: "time-bar-07",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "A time-bar clause is triggered by when the Contractor 'ought reasonably to have known' of the delay, not just actual knowledge. The Contractor assumes only actual knowledge starts the clock.",
+    options: [
+      "Read the clause's actual trigger carefully — an 'ought to have known' standard can start the clock earlier than the date of genuine actual knowledge",
+      "Only literal actual knowledge can ever start a notice clock, regardless of how the clause is worded",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An objective 'ought reasonably to have known' trigger is a materially different (and often earlier) starting point than pure subjective actual knowledge — assuming the more generous reading without checking the clause's actual wording is a good way to miss a deadline.",
+  },
+  {
+    id: "time-bar-08",
+    topic: "Time-Bar Provisions",
+    scenario:
+      "The Contractor treats a time-bar deadline as informally extendable by a quick agreement over email with the Employer's representative, without checking if the contract requires a formal written variation to change its own procedural deadlines.",
+    options: [
+      "Check what the contract requires to actually vary its own terms — an informal email exchange may not be sufficient if formal variation procedures are required",
+      "Any informal email agreement between representatives is always sufficient to validly extend a contractual deadline",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contracts often require their own terms — including procedural deadlines — to be varied only through a formal mechanism (e.g., a signed written variation). An informal email, however well-intentioned, may not actually be effective to change the contractual deadline if that mechanism isn't followed.",
+  },
 ];

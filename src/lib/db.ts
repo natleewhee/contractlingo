@@ -400,3 +400,39 @@ export async function getTopicStats(): Promise<TopicStat[]> {
     return [];
   }
 }
+
+export type WeeklyStats = {
+  activeDays: string[]; // YYYY-MM-DD dates with at least one answer, within the last 7 days
+  casesThisWeek: number;
+  accuracyThisWeek: number; // 0-100
+};
+
+const EMPTY_WEEKLY_STATS: WeeklyStats = { activeDays: [], casesThisWeek: 0, accuracyThisWeek: 100 };
+
+// Powers the home screen's weekly recap - ties directly to the PRD's stated
+// success metric (7-day streak retention), not just vanity accuracy stats.
+export async function getWeeklyStats(): Promise<WeeklyStats> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT created_at, correct FROM answer_log
+      WHERE created_at >= now() - interval '7 days'
+    `;
+    const activeDays = new Set<string>();
+    let correct = 0;
+    for (const row of rows as { created_at: unknown; correct: boolean }[]) {
+      const day = normalizeDateKey(row.created_at);
+      if (day) activeDays.add(day);
+      if (row.correct) correct += 1;
+    }
+    return {
+      activeDays: [...activeDays],
+      casesThisWeek: rows.length,
+      accuracyThisWeek: rows.length === 0 ? 100 : Math.round((correct / rows.length) * 100),
+    };
+  } catch (err) {
+    console.error("getWeeklyStats failed", err);
+    return EMPTY_WEEKLY_STATS;
+  }
+}

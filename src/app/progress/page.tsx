@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
-import { getProgress, getTopicStats } from "@/lib/db";
+import { getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 // Reads live data from Neon on every request - must not be statically
@@ -11,12 +11,25 @@ export const dynamic = "force-dynamic";
 const ALL_TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
 const WEAK_THRESHOLD = 70;
 const MIN_ATTEMPTS_TO_JUDGE = 3;
+const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
+
+function last7Days(): string[] {
+  const days: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  return days;
+}
 
 export default async function ProgressPage() {
-  const [{ streak, totalCleared }, topicStats] = await Promise.all([
+  const [{ streak, totalCleared }, topicStats, weekly] = await Promise.all([
     getProgress(),
     getTopicStats(),
+    getWeeklyStats(),
   ]);
+  const week = last7Days();
 
   const statsByTopic = new Map(topicStats.map((s) => [s.topic, s]));
   const rows = ALL_TOPICS.map((topic) => statsByTopic.get(topic) ?? { topic, attempts: 0, correct: 0, accuracy: 100 })
@@ -53,6 +66,36 @@ export default async function ProgressPage() {
           </div>
         </div>
 
+        <h2 className="mt-6 text-sm font-extrabold">This week</h2>
+        <div className="mt-2 rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]">
+          <div className="flex justify-between">
+            {week.map((day) => {
+              const active = weekly.activeDays.includes(day);
+              const isToday = day === week[week.length - 1];
+              const dayOfWeek = new Date(day + "T00:00:00").getDay();
+              return (
+                <div key={day} className="flex flex-col items-center gap-1">
+                  <span className="font-display text-[0.6rem] font-semibold text-ink-soft">
+                    {DAY_LABELS[dayOfWeek]}
+                  </span>
+                  <span
+                    className={`h-6 w-6 rounded-full ${
+                      active
+                        ? "bg-mint shadow-[0_2px_0_var(--mint-dark)]"
+                        : "bg-bg shadow-[0_1px_0_var(--frame-border)]"
+                    } ${isToday ? "outline outline-2 outline-offset-2 outline-[var(--gold)]" : ""}`}
+                    aria-label={active ? "Practiced" : "No session"}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs text-ink-soft">
+            {weekly.activeDays.length}/7 days active · {weekly.casesThisWeek} case
+            {weekly.casesThisWeek === 1 ? "" : "s"} · {weekly.accuracyThisWeek}% accuracy
+          </p>
+        </div>
+
         <h2 className="mt-6 text-sm font-extrabold">Needs practice</h2>
         {weakTopics.length === 0 ? (
           <p className="mt-1.5 text-xs text-ink-soft">
@@ -74,7 +117,7 @@ export default async function ProgressPage() {
                   </p>
                 </div>
                 <Link href={`/session?topic=${encodeURIComponent(r.topic)}`}>
-                  <span className="rounded-full bg-coral px-3 py-1.5 font-display text-[0.65rem] font-bold text-white">
+                  <span className="rounded-full bg-coral px-3 py-1.5 font-display text-[0.65rem] font-bold text-[#21284A]">
                     Practice
                   </span>
                 </Link>

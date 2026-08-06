@@ -48,6 +48,14 @@ function ensureSchema(): Promise<void> {
           updated_at timestamptz NOT NULL DEFAULT now()
         )
       `;
+      await db`
+        CREATE TABLE IF NOT EXISTS push_subscriptions (
+          endpoint text PRIMARY KEY,
+          p256dh text NOT NULL,
+          auth text NOT NULL,
+          created_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
     })();
   }
   return schemaReady;
@@ -240,4 +248,40 @@ export async function recordAnswer(questionId: string, correct: boolean): Promis
   } catch (err) {
     console.error("recordAnswer failed", err);
   }
+}
+
+export type PushSubscriptionRecord = {
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+};
+
+export async function saveSubscription(sub: PushSubscriptionRecord): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`
+    INSERT INTO push_subscriptions (endpoint, p256dh, auth)
+    VALUES (${sub.endpoint}, ${sub.p256dh}, ${sub.auth})
+    ON CONFLICT (endpoint) DO UPDATE SET p256dh = EXCLUDED.p256dh, auth = EXCLUDED.auth
+  `;
+}
+
+export async function removeSubscription(endpoint: string): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`DELETE FROM push_subscriptions WHERE endpoint = ${endpoint}`;
+}
+
+export async function getSubscription(endpoint: string): Promise<boolean> {
+  await ensureSchema();
+  const db = getSql();
+  const rows = await db`SELECT 1 FROM push_subscriptions WHERE endpoint = ${endpoint}`;
+  return rows.length > 0;
+}
+
+export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
+  await ensureSchema();
+  const db = getSql();
+  const rows = await db`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
+  return rows as PushSubscriptionRecord[];
 }

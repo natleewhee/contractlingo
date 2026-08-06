@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
+import { NotificationPrompt } from "@/components/NotificationPrompt";
 import { getDueQuestionIds, getProgress } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
@@ -74,6 +75,8 @@ export default async function Home() {
         <Button3D tone="gold" href="/session" className="mt-6">
           FACE THEM ALL
         </Button3D>
+
+        <NotificationPrompt />
 
         <div className="mt-8 flex justify-around border-t border-frame-border pt-3">
           <span className="h-2 w-2 rounded-full bg-coral" aria-hidden="true" />

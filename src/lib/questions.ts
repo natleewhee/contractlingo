@@ -165,6 +165,58 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "You generally can't withhold payment for properly certified work just because there's a dispute about something else — most regimes require a specific, notified right of set-off, not a general 'we'll hold this until we sort out that other thing.'",
   },
+  {
+    id: "payment-05",
+    topic: "Payment",
+    scenario:
+      "The Contractor's payment claim includes provisional sums at their full stated value, even though the actual work covered by them hasn't been carried out yet.",
+    options: [
+      "Certify provisional sums based on what's actually been expended or executed, not the full nominal amount regardless of progress",
+      "Provisional sums should always be certified in full from the first claim onward",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Provisional sums are a budgetary allowance for work not yet fully defined or executed — they should be certified against actual progress and expenditure, the same as any other line item, not paid out in full ahead of the work being done.",
+  },
+  {
+    id: "payment-06",
+    topic: "Payment",
+    scenario:
+      "The Engineer issues a payment certificate later than the contractual certification period allows, with no real explanation for the delay.",
+    options: [
+      "This matters — late certification can itself trigger consequences (like when the Employer's payment obligation and any interest exposure starts running)",
+      "The certification period is purely administrative and has no real consequence if missed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Certification deadlines are often tied to when the Employer's payment obligation itself starts running — an unexplained late certificate isn't just a paperwork delay, it can have real knock-on effects worth tracking.",
+  },
+  {
+    id: "payment-07",
+    topic: "Payment",
+    scenario:
+      "The Employer pays a certified amount later than the contractual payment period requires. The Contractor wants to know if interest or finance charges are automatically owed.",
+    options: [
+      "Check what the contract (or applicable statute) actually provides for late payment — it's not a given, but it's often expressly addressed",
+      "Late payment never carries any additional financial consequence beyond the amount originally certified",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many contracts and payment statutes specifically provide for interest on late payment, precisely to discourage it — check the actual entitlement rather than assuming either that it's automatic or that it doesn't exist.",
+  },
+  {
+    id: "payment-08",
+    topic: "Payment",
+    scenario:
+      "At final account stage, the Contractor includes costs that were never previously notified or substantiated at any point during the works.",
+    options: [
+      "This is a weak way to recover them — costs not raised contemporaneously are much easier for the Employer to dispute or reject at final account stage",
+      "The final account is the right and safe place to first raise any costs, regardless of whether they were mentioned earlier",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Surfacing costs for the first time at final account, with no contemporaneous notice or record, is one of the easiest kinds of claim to challenge — the same discipline about timely notice and substantiation that applies throughout the project applies here too.",
+  },
 
   // --- LD ---
   {

@@ -50,7 +50,8 @@ export async function checkConnection(): Promise<{ time: string }> {
   await ensureSchema();
   const db = getSql();
   const rows = await db`SELECT now() as time`;
-  return { time: String((rows[0] as { time: string }).time) };
+  const raw = (rows[0] as { time: unknown }).time;
+  return { time: raw instanceof Date ? raw.toISOString() : String(raw) };
 }
 
 export type Progress = {
@@ -75,6 +76,16 @@ function yesterdayKey(): string {
   return d.toISOString().slice(0, 10);
 }
 
+// The Neon driver returns `date` columns as JS Date objects, not strings -
+// String(dateObject) gives Date's default toString() ("Thu Aug 06 2026 ..."),
+// NOT an ISO string, so naively slicing that produces "Thu Aug 06" instead
+// of "2026-08-06". Route through toISOString() when it's an actual Date.
+function normalizeDateKey(value: unknown): string | null {
+  if (!value) return null;
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+}
+
 // Single-user app, single row - no auth/user id needed for V1.
 export async function getProgress(): Promise<Progress> {
   try {
@@ -88,12 +99,12 @@ export async function getProgress(): Promise<Progress> {
     const row = rows[0] as {
       streak: number;
       total_cleared: number;
-      last_completed_date: string | null;
+      last_completed_date: unknown;
     };
     return {
       streak: row.streak,
       totalCleared: row.total_cleared,
-      lastCompletedDate: row.last_completed_date ? String(row.last_completed_date).slice(0, 10) : null,
+      lastCompletedDate: normalizeDateKey(row.last_completed_date),
     };
   } catch (err) {
     console.error("getProgress failed", err);

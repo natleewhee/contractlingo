@@ -268,6 +268,81 @@ export const SESSION_QUESTIONS: Question[] = [
       "An EOT protects the completion date from events that aren't the contractor's fault — it isn't meant to also erase delay the contractor already caused itself. Isolate the actual critical-path impact of the compensable event.",
   },
 
+  // --- Concurrent Delay ---
+  {
+    id: "concurrent-delay-01",
+    topic: "Concurrent Delay",
+    scenario:
+      "Two events delay completion in the same period: an Employer-caused variation, and the contractor's own subcontractor failing to mobilise. The contractor claims prolongation costs for the whole period.",
+    options: [
+      "Only the Employer-caused portion may support a costs claim — concurrent delay doesn't automatically entitle full recovery",
+      "Full prolongation costs are recoverable since an Employer-caused delay was present",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Time and money are assessed differently for concurrent delay. Even where the Employer-caused event might still support an EOT to protect the completion date, you generally can't recover costs for a period you'd have been delayed anyway because of your own concurrent cause.",
+  },
+
+  // --- Disruption ---
+  {
+    id: "disruption-01",
+    topic: "Disruption",
+    scenario:
+      "The contractor claims a lump sum for 'general disruption' to productivity caused by frequent Employer instructions, without showing how output actually dropped compared to what was planned.",
+    options: [
+      "Ask for a measured comparison of planned vs actual productivity, not just an assertion",
+      "Accept the lump sum — frequent instructions are self-evidently disruptive",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Disruption claims are notoriously easy to assert and hard to prove. A credible claim needs some form of measured comparison — planned vs actual output, or an accepted methodology — not just a narrative that instructions were frequent and annoying.",
+  },
+
+  // --- Acceleration ---
+  {
+    id: "acceleration-01",
+    topic: "Acceleration",
+    scenario:
+      "The Employer verbally tells the contractor to 'speed things up' after a delay, without agreeing to pay acceleration costs or issuing a formal instruction. The contractor accelerates and later claims the extra cost.",
+    options: [
+      "Get instructed acceleration confirmed and costed before incurring it, not after",
+      "Any request to speed up automatically entitles the contractor to be paid for accelerating",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A casual 'speed things up' isn't the same as an instruction to accelerate at the Employer's cost. Get the basis for acceleration — and who's paying for it — agreed and recorded before ramping up resources, not after the invoice arrives.",
+  },
+
+  // --- Prolongation Costs ---
+  {
+    id: "prolongation-01",
+    topic: "Prolongation Costs",
+    scenario:
+      "The contractor claims prolongation costs (extended preliminaries) for the full EOT period granted, without adjusting for the fact that some site resources were stood down during part of that period.",
+    options: [
+      "Prolongation costs should reflect what was actually incurred during the period, not just the length of the EOT",
+      "The full preliminaries rate automatically applies for the entire EOT period granted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An EOT extends time; it doesn't automatically fix the cost figure. Prolongation costs should be based on what was actually kept running — or actually incurred — during the extended period, not just multiplied out by the number of days granted.",
+  },
+
+  // --- Valuation ---
+  {
+    id: "valuation-01",
+    topic: "Valuation",
+    scenario:
+      "The contractor values a variation using rates well above the contract's Bill of Quantities rates for very similar work, arguing the varied work is 'different enough' to justify new rates.",
+    options: [
+      "Check whether the work is genuinely similar before accepting rates outside the contract — similar work should generally use contract rates",
+      "Accept whatever rate the contractor proposes for varied work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most valuation rules require using existing contract rates where the varied work is of a similar character and conditions to the original. New or 'fair' rates are for genuinely different work, not a chance to reprice similar work at a higher margin.",
+  },
+
   // --- Notices ---
   {
     id: "notices-01",

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
@@ -12,6 +11,7 @@ export const dynamic = "force-dynamic";
 
 const TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
 const ALL_QUESTION_IDS = SESSION_QUESTIONS.map((q) => q.id);
+const SESSION_LENGTHS = [5, 10, 15] as const;
 
 export default async function Home() {
   const [{ streak }, dueIds] = await Promise.all([
@@ -60,22 +60,41 @@ export default async function Home() {
           </div>
         </div>
 
-        <h1 className="mt-4 text-lg font-extrabold">{dueToday} cases due today</h1>
-        <p className="mt-0.5 text-sm text-ink-soft">
-          Pick a fight, or take the whole batch
-        </p>
+        <h1 className="mt-4 text-lg font-extrabold">How much time do you have?</h1>
+        <p className="mt-0.5 text-sm text-ink-soft">Pick a length and we&apos;ll size the batch to fit</p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {SESSION_LENGTHS.map((minutes) => (
+            <Link
+              key={minutes}
+              href={`/session?minutes=${minutes}`}
+              className="flex flex-col items-center justify-center gap-0.5 rounded-2xl bg-card py-3 shadow-[0_3px_0_var(--frame-border)] transition-transform active:translate-y-[2px] active:shadow-[0_1px_0_var(--frame-border)]"
+            >
+              <span className="font-display text-xl font-extrabold">{minutes}</span>
+              <span className="font-display text-[0.6rem] font-semibold tracking-wide text-ink-soft">
+                MIN
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {dueToday > 0 && (
+          <Link
+            href="/session"
+            className="mt-2 self-center font-display text-[0.68rem] font-semibold text-ink-soft"
+          >
+            or clear everything due ({dueToday})
+          </Link>
+        )}
+
+        <p className="mt-6 text-sm font-extrabold">Or pick a topic</p>
+        <div className="mt-2 flex flex-wrap gap-2">
           {TOPICS.map((topic) => (
             <Link key={topic} href={`/session?topic=${encodeURIComponent(topic)}`}>
               <Chip>{topic}</Chip>
             </Link>
           ))}
         </div>
-
-        <Button3D tone="gold" href="/session" className="mt-6">
-          FACE THEM ALL
-        </Button3D>
 
         <NotificationPrompt />
 

@@ -1,16 +1,27 @@
 import { getDueQuestionIds } from "@/lib/db";
-import { SESSION_QUESTIONS } from "@/lib/questions";
+import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
 import { SessionView } from "./SessionView";
 
 // Reads live due-question state from Neon on every request.
 export const dynamic = "force-dynamic";
 
+const ALLOWED_MINUTES = [5, 10, 15];
+
+function shuffle(questions: Question[]): Question[] {
+  const copy = [...questions];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 export default async function SessionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ topic?: string }>;
+  searchParams: Promise<{ topic?: string; minutes?: string }>;
 }) {
-  const { topic } = await searchParams;
+  const { topic, minutes } = await searchParams;
 
   let pool = topic ? SESSION_QUESTIONS.filter((q) => q.topic === topic) : SESSION_QUESTIONS;
   if (pool.length === 0) pool = SESSION_QUESTIONS;
@@ -22,6 +33,14 @@ export default async function SessionPage({
     const dueIds = await getDueQuestionIds(pool.map((q) => q.id));
     const due = pool.filter((q) => dueIds.includes(q.id));
     if (due.length > 0) pool = due;
+  }
+
+  // A picked session length (5/10/15 min) caps the batch to roughly one
+  // question per minute, shuffled so a big due pile doesn't always hand
+  // back the same first N questions every day.
+  const cap = Number(minutes);
+  if (ALLOWED_MINUTES.includes(cap) && pool.length > cap) {
+    pool = shuffle(pool).slice(0, cap);
   }
 
   return <SessionView initialPool={pool} />;

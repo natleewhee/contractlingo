@@ -137,7 +137,7 @@ export function SessionView({
 
                 let tone = "bg-card text-ink-soft shadow-[0_3px_0_var(--frame-border)]";
                 if (isAnswered && isCorrectOpt) {
-                  tone = "bg-mint text-white shadow-[0_3px_0_var(--mint-dark)]";
+                  tone = "bg-mint text-[#21284A] shadow-[0_3px_0_var(--mint-dark)]";
                 } else if (isAnswered && isChosen && !isCorrectOpt) {
                   tone = "bg-card text-coral shadow-[0_3px_0_var(--coral)] outline outline-2 outline-[var(--coral)]";
                 }
@@ -161,16 +161,16 @@ export function SessionView({
             </div>
 
             {phase === "resolution" && (
-              <div className="mt-auto rounded-t-2xl bg-mint px-4 py-4 text-white">
+              <div className="mt-auto rounded-t-2xl bg-mint px-4 py-4 text-[#21284A]">
                 <p className="font-display text-sm font-bold">
                   {selected === question.correctIndex ? "Nice! That's correct." : "Not quite."}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-white/90">{question.explanation}</p>
+                <p className="mt-1 text-xs leading-relaxed">{question.explanation}</p>
 
                 {!reportOpen && !reportSent && (
                   <button
                     onClick={() => setReportOpen(true)}
-                    className="mt-2 flex items-center gap-1 font-display text-[0.65rem] font-semibold text-white/85"
+                    className="mt-2 flex items-center gap-1 font-display text-[0.65rem] font-semibold"
                   >
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                       <path d="M5 3v18M5 4h13l-3 4 3 4H5" />
@@ -198,9 +198,7 @@ export function SessionView({
                   </div>
                 )}
 
-                {reportSent && (
-                  <p className="mt-2 text-xs text-white/85">Flagged — thanks, I&apos;ll take a look.</p>
-                )}
+                {reportSent && <p className="mt-2 text-xs">Flagged — thanks, I&apos;ll take a look.</p>}
 
                 <Button3D tone="white" className="mt-3" onClick={next} disabled={submitting}>
                   {submitting ? "..." : "CONTINUE"}
@@ -212,26 +210,24 @@ export function SessionView({
 
         {phase === "recap" && (
           <div
-            className="relative flex flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl px-4 py-16 text-center"
+            className="relative flex flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl px-4 py-16 text-center text-[#21284A]"
             style={{ background: "linear-gradient(180deg, var(--coral), var(--gold))" }}
           >
-            <span className="font-display text-4xl font-bold text-white [text-shadow:0_3px_0_rgba(0,0,0,0.12)]">
+            <span className="font-display text-4xl font-bold [text-shadow:0_3px_0_rgba(0,0,0,0.08)]">
               {correctCount}/{total}
             </span>
-            <span className="font-display text-xs font-semibold tracking-wide text-white uppercase">
-              Defended
-            </span>
-            <div className="mt-2 flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 font-display text-xs font-semibold text-white">
+            <span className="font-display text-xs font-semibold tracking-wide uppercase">Defended</span>
+            <div className="mt-2 flex items-center gap-1.5 rounded-full bg-white/40 px-3 py-1 font-display text-xs font-semibold">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2c1 3-3 4-3 7.5A3.5 3.5 0 0012 13a3.5 3.5 0 003-5.3c1.5 1 2.5 3 2.5 5a5.5 5.5 0 11-11 0C6.5 8 9 5.5 12 2z"
-                  fill="#fff"
+                  fill="currentColor"
                 />
               </svg>
               {streak} day streak
             </div>
             {frozeStreak && (
-              <div className="mt-1.5 flex items-center gap-1 font-display text-[0.65rem] font-semibold text-white/90">
+              <div className="mt-1.5 flex items-center gap-1 font-display text-[0.65rem] font-semibold">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                   <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" />
                 </svg>

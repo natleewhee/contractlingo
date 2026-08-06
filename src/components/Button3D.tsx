@@ -9,15 +9,16 @@ type Button3DProps = {
   disabled?: boolean;
 };
 
-// Button backgrounds (gold/white) don't flip with the page's light/dark
-// theme, so their text can't use the `--ink` token — it flips to a light
-// colour in dark mode and would go near-invisible against a still-bright
-// gold or white background. These use a fixed dark navy instead.
+// None of these backgrounds flip with the page's light/dark theme, so their
+// text can't use the `--ink` token — it flips to a light colour in dark
+// mode and would go near-invisible (or, for white text on these already-
+// bright backgrounds, fail contrast in both themes — measured ~2:1 against
+// WCAG's 4.5:1 minimum). All tones use a fixed dark navy instead.
 const TONE_CLASSES: Record<NonNullable<Button3DProps["tone"]>, string> = {
   gold: "bg-gold text-[#21284A] shadow-[0_4px_0_var(--gold-dark)] active:shadow-[0_1px_0_var(--gold-dark)]",
   coral:
-    "bg-coral text-white shadow-[0_4px_0_var(--coral-dark)] active:shadow-[0_1px_0_var(--coral-dark)]",
-  mint: "bg-mint text-white shadow-[0_4px_0_var(--mint-dark)] active:shadow-[0_1px_0_var(--mint-dark)]",
+    "bg-coral text-[#21284A] shadow-[0_4px_0_var(--coral-dark)] active:shadow-[0_1px_0_var(--coral-dark)]",
+  mint: "bg-mint text-[#21284A] shadow-[0_4px_0_var(--mint-dark)] active:shadow-[0_1px_0_var(--mint-dark)]",
   white:
     "bg-white text-[#21284A] shadow-[0_3px_0_rgba(0,0,0,0.15)] active:shadow-[0_1px_0_rgba(0,0,0,0.15)]",
 };

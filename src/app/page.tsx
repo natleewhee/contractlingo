@@ -2,24 +2,18 @@ import Link from "next/link";
 import { Chip } from "@/components/Chip";
 import { HeroIdentity } from "@/components/HeroIdentity";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
-import { getDueQuestionIds, getProfile, getProgress } from "@/lib/db";
+import { getProfile, getProgress } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 // Reads live data from Neon on every request - must not be statically
-// prerendered, or the streak/due-count shown would freeze at build time.
+// prerendered, or the streak shown would freeze at build time.
 export const dynamic = "force-dynamic";
 
 const TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
-const ALL_QUESTION_IDS = SESSION_QUESTIONS.map((q) => q.id);
 const SESSION_LENGTHS = [5, 10, 15] as const;
 
 export default async function Home() {
-  const [profile, { streak }, dueIds] = await Promise.all([
-    getProfile(),
-    getProgress(),
-    getDueQuestionIds(ALL_QUESTION_IDS),
-  ]);
-  const dueToday = dueIds.length;
+  const [profile, { streak }] = await Promise.all([getProfile(), getProgress()]);
 
   if (!profile.displayName) {
     return (
@@ -84,15 +78,6 @@ export default async function Home() {
             </Link>
           ))}
         </div>
-
-        {dueToday > 0 && (
-          <Link
-            href="/session"
-            className="mt-2 self-center font-display text-[0.68rem] font-semibold text-ink-soft"
-          >
-            or clear everything due ({dueToday})
-          </Link>
-        )}
 
         <p className="mt-6 text-sm font-extrabold">Or pick a topic</p>
         <div className="mt-2 flex flex-wrap gap-2">

@@ -950,4 +950,428 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "This is the flip side of the earlier point — indemnities that would make a contractor responsible for the employer's own fault are exactly the kind of clause that gets scrutinised or restricted. Don't assume the broadest possible reading is the enforceable one.",
   },
+
+  // --- Assignment & Subcontracting ---
+  {
+    id: "assignment-01",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The Contractor wants to assign its right to receive payment under the contract to a bank as security for financing, where the contract requires the Employer's consent for any assignment.",
+    options: [
+      "Get the Employer's consent first — a consent requirement applies to assigning payment rights too, not just the whole contract",
+      "Assigning just the right to receive money doesn't need consent since it doesn't affect the Employer's obligations",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Consent-to-assignment clauses typically catch assignment of contractual rights generally, including the right to payment, not only a full transfer of the contract. Treat it as needing consent unless the clause clearly says otherwise.",
+  },
+  {
+    id: "assignment-02",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The Contractor subcontracts a significant portion of the works without notifying the Employer, where the contract requires the Employer's approval of subcontractors.",
+    options: [
+      "Get approval before engaging the subcontractor — proceeding without it breaches the contract regardless of the subcontractor's quality",
+      "As long as the subcontractor does good work, skipping the approval step doesn't really matter",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An approval requirement is a procedural obligation independent of how the subcontractor actually performs — skipping it is a breach in itself, and it also means the Employer never got the chance to raise concerns before the work started.",
+  },
+  {
+    id: "assignment-03",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The Employer wants to assign the benefit of the contract (including its warranties) to a purchaser of the building, without following the contract's own assignment provisions.",
+    options: [
+      "Follow the contract's assignment mechanism — warranties and rights don't automatically transfer to a purchaser without it",
+      "Selling the building automatically carries all contractual rights and warranties with it regardless of process",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contractual rights, including warranties, generally need a proper assignment (often with the other party's consent) to transfer to a new owner — a sale of the building alone doesn't automatically carry them across.",
+  },
+  {
+    id: "assignment-04",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "A subcontractor's poor workmanship causes a defect. The main contractor argues it isn't responsible since it wasn't the party that actually did the defective work.",
+    options: [
+      "The main contractor is generally still responsible to the Employer for subcontracted work — that's a matter for the main contractor to pursue against its subcontractor separately",
+      "Responsibility passes entirely to whichever party physically did the work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Subcontracting work doesn't subcontract away the main contractor's responsibility to the Employer under the main contract. Any recourse against the subcontractor is a separate matter between contractor and subcontractor.",
+  },
+  {
+    id: "assignment-05",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The contract prohibits subletting of the whole works, but the Contractor sublets the entire scope to a single subcontractor while remaining the named contractor on paper.",
+    options: [
+      "This likely breaches the prohibition in substance, even if the Contractor's name stays on the contract",
+      "As long as the original Contractor's name stays on the contract, subletting everything is fine",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A prohibition on subletting the whole works is aimed at substance, not just formal naming — subletting effectively everything while keeping a nominal role is exactly the arrangement this kind of clause is meant to prevent.",
+  },
+  {
+    id: "assignment-06",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The Employer wants to deal directly with a nominated subcontractor and pay them directly, bypassing the main contractor.",
+    options: [
+      "Check the contract structure first — direct payment arrangements need a specific mechanism, not just informal convenience",
+      "Direct dealing with subcontractors is always fine since they're ultimately doing the work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The normal structure runs Employer to main contractor to subcontractor — bypassing that without an agreed mechanism (like a direct payment or novation arrangement) can create confusion about who owes what to whom, and undermine the main contractor's overall responsibility.",
+  },
+  {
+    id: "assignment-07",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "The Contractor argues that an assignment happening 'by operation of law' (such as a corporate merger) doesn't need Employer consent, even though the assignment clause doesn't specifically address that scenario.",
+    options: [
+      "This is worth checking carefully rather than assumed — how assignment-by-operation-of-law interacts with a consent clause varies and can genuinely go either way",
+      "Assignment by operation of law is always automatically exempt from any consent requirement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether a merger or similar corporate event counts as an 'assignment' requiring consent under a specific clause is a real point of legal nuance that depends on the clause's exact wording and applicable law — not something to assume either way without checking.",
+  },
+  {
+    id: "assignment-08",
+    topic: "Assignment & Subcontracting",
+    scenario:
+      "A named subcontractor becomes insolvent mid-project. The main contractor wants to simply substitute another firm without any Employer involvement.",
+    options: [
+      "Check whether the contract requires Employer approval for subcontractor changes — insolvency doesn't automatically waive that requirement",
+      "Insolvency of the original subcontractor means the main contractor can substitute freely without approval",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An emergency situation like a subcontractor's insolvency is understandable, but if the contract requires approval for subcontractor changes, that requirement doesn't disappear just because the substitution feels urgent or obviously necessary.",
+  },
+
+  // --- Security of Payment / Adjudication ---
+  {
+    id: "adjudication-01",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "The Contractor lodges a payment claim under the Security of Payment framework, and the Employer fails to respond with a payment response within the statutory timeframe.",
+    options: [
+      "Check the statute — missing the response deadline often means the Employer is deemed to accept the claimed amount in full",
+      "Silence has no particular consequence and the claim can simply be assessed normally later",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Security of Payment regimes are typically strict on timing precisely to force quick engagement — missing the payment response deadline commonly results in the claimed amount becoming payable as if agreed, which is a serious consequence to be aware of.",
+  },
+  {
+    id: "adjudication-02",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "At adjudication, the Employer wants to raise a brand-new defence that was never included in its original payment response.",
+    options: [
+      "Check the statute's rules on this — many regimes restrict a respondent to the reasons already given in its payment response",
+      "New defences can always be raised for the first time at adjudication regardless of what was in the payment response",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A common feature of these regimes is limiting the adjudication to the grounds already raised in the payment response, precisely to stop respondents from ambushing the claimant with new reasons late in the process.",
+  },
+  {
+    id: "adjudication-03",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "An adjudication determination goes against the Employer. The Employer wants to simply ignore it and keep withholding payment pending a future court case.",
+    options: [
+      "Adjudication determinations are typically binding and enforceable on an interim basis — ignoring one carries real enforcement risk even if a later court challenge is planned",
+      "A determination can simply be ignored until a court makes a final ruling",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Adjudication is generally designed to be 'pay now, argue later' — determinations are enforceable in the interim regardless of an intended later challenge, and ignoring one can lead to direct enforcement action.",
+  },
+  {
+    id: "adjudication-04",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "The Contractor's payment claim doesn't reference the statute or use the exact prescribed wording, and the Employer wants to argue it's automatically invalid on that basis.",
+    options: [
+      "Check whether substance matters more than form under the specific statute — many regimes look at whether the claim substantively meets the requirements, not exact wording",
+      "Missing the exact prescribed wording always automatically invalidates a payment claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This mirrors the general 'substance over form' principle for notices — some regimes are strict on form, others focus on whether the claim substantively identifies the work and amount claimed. Check the specific statute rather than assuming either way.",
+  },
+  {
+    id: "adjudication-05",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "The Employer argues a 'pay when paid' clause excuses it from paying the Contractor, because the Employer's own client hasn't paid the Employer yet.",
+    options: [
+      "Check whether 'pay when paid' clauses are actually enforceable under the applicable Security of Payment statute — many jurisdictions render them void",
+      "'Pay when paid' clauses are always enforceable exactly as written",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A number of Security of Payment regimes specifically outlaw 'pay when paid' clauses to protect contractors from upstream payment risk they have no control over — this is exactly the kind of clause that needs checking against the statute, not assumed valid.",
+  },
+  {
+    id: "adjudication-06",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "An adjudicator's determination contains an obvious arithmetic error. The Employer wants to simply refuse payment entirely rather than address the specific error.",
+    options: [
+      "Raise the specific error through the proper channel (correction/review mechanism if available) rather than refusing payment outright",
+      "Any error in a determination is grounds to ignore the whole thing and withhold payment entirely",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An obvious clerical or arithmetic error is usually something that can be corrected through a specific mechanism, if the statute provides one — it doesn't generally justify wholesale non-compliance with an otherwise valid determination.",
+  },
+  {
+    id: "adjudication-07",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "Having lost an adjudication, the Contractor wants to lodge a second adjudication application on substantially the same payment claim.",
+    options: [
+      "Check the statute's rules on repeat applications — many regimes restrict re-adjudicating the same claim",
+      "A losing party can always simply try again with a fresh adjudication application on the same claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most regimes limit re-litigating the same payment claim through successive adjudications, to preserve the process's speed and finality at the interim stage — check the specific rules rather than assuming an open-ended right to retry.",
+  },
+  {
+    id: "adjudication-08",
+    topic: "Security of Payment / Adjudication",
+    scenario:
+      "The Employer is unhappy with an adjudication determination and wants to understand what its actual options are.",
+    options: [
+      "Comply with the determination for now (it's typically an interim, 'pay now, argue later' outcome) while pursuing whatever final-resolution avenue the statute or contract provides",
+      "Adjudication determinations are always final and can never be revisited by any other process",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Adjudication determinations are usually binding on an interim basis but not necessarily the final word — the practical move is to comply now and pursue litigation, arbitration, or another final-resolution route if genuinely warranted, rather than either ignoring it or assuming there's no recourse at all.",
+  },
+
+  // --- Practical Completion ---
+  {
+    id: "practical-completion-01",
+    topic: "Practical Completion",
+    scenario:
+      "The Contractor claims practical completion despite a long list of outstanding minor defects, arguing 'practical completion doesn't mean perfect.'",
+    options: [
+      "Assess whether the outstanding items are genuinely minor and don't prevent the Employer from using the works for their intended purpose — that's the real test, not a fixed checklist",
+      "Any outstanding item at all, however minor, automatically means practical completion hasn't occurred",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Practical completion generally tolerates minor outstanding items that don't prevent beneficial use — the judgement call is whether the works are genuinely fit for their intended purpose despite them, not whether the punch list is empty.",
+  },
+  {
+    id: "practical-completion-02",
+    topic: "Practical Completion",
+    scenario:
+      "The Employer refuses to certify practical completion citing missing as-built drawings and O&M manuals, even though the physical works are functionally complete.",
+    options: [
+      "Check what the contract actually makes a precondition to practical completion — if documentation is expressly required, withholding certification may be justified",
+      "Documentation never affects practical completion since it's separate from the physical works",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some contracts expressly tie practical completion to specific deliverables like as-built documentation, not just physical readiness — check the actual definition in the contract rather than assuming documentation is irrelevant.",
+  },
+  {
+    id: "practical-completion-03",
+    topic: "Practical Completion",
+    scenario:
+      "The Employer takes beneficial occupation of the building and starts using it without any formal certificate of practical completion ever being issued.",
+    options: [
+      "This is worth flagging — occupying without a certificate can create disputes later about when practical completion actually occurred and what liabilities shifted",
+      "Occupation without a certificate has no real consequences as long as everyone is generally happy with the building",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The certificate matters because it typically triggers key consequences — start of the defects liability period, retention release, risk transfer. Occupying without one leaves genuine ambiguity about exactly when those things started.",
+  },
+  {
+    id: "practical-completion-04",
+    topic: "Practical Completion",
+    scenario:
+      "The Contractor argues that because the Employer has been using part of the building for weeks, practical completion must be deemed to have occurred by conduct.",
+    options: [
+      "This is a genuinely contested area — some contracts and jurisdictions recognise deemed practical completion by conduct, others require the formal certificate regardless",
+      "Occupation for any length of time always automatically equals deemed practical completion everywhere",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether occupation without a certificate can amount to 'deemed' practical completion varies by contract wording and jurisdiction — it's a real argument worth making, but not a guaranteed automatic outcome.",
+  },
+  {
+    id: "practical-completion-05",
+    topic: "Practical Completion",
+    scenario:
+      "A dispute arises over whether certain outstanding items are 'minor defects' (compatible with practical completion) or 'incomplete works' (not compatible).",
+    options: [
+      "The practical test is usually whether the Employer can take beneficial use of the works despite the outstanding items, not just their number or nature in the abstract",
+      "There's a fixed, universal list of what counts as 'minor' regardless of the specific project",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This distinction is fact-specific — the same item might be minor on one project and a genuine barrier to use on another. The consistent test is functional: can the works actually be used for their intended purpose despite what's outstanding.",
+  },
+  {
+    id: "practical-completion-06",
+    topic: "Practical Completion",
+    scenario:
+      "The certifier delays issuing the practical completion certificate for weeks after the works are actually ready, without real explanation.",
+    options: [
+      "Follow up formally and check the contract's timeframe for certification — an unexplained, prolonged delay in certifying is worth challenging",
+      "There's nothing that can be done about certification timing since it's entirely at the certifier's discretion",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Certifiers usually have to act within a reasonable time or a stated period, and shouldn't unreasonably withhold certification once the substantive test is met — an unexplained delay is a legitimate thing to push back on, not something to just wait out.",
+  },
+  {
+    id: "practical-completion-07",
+    topic: "Practical Completion",
+    scenario:
+      "Practical completion is certified with a schedule of outstanding minor items attached. The Contractor isn't sure whether that schedule creates a binding deadline to finish them.",
+    options: [
+      "Check the contract — many require outstanding items to be completed within a specific period after practical completion, sometimes tied to the defects liability period",
+      "A schedule of outstanding items attached to the certificate is purely informational and never creates any deadline",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Outstanding-items schedules often aren't just a record — many contracts require them to be cleared within a set timeframe, sometimes with consequences (like against retention) if they aren't. Check what the contract actually requires rather than assuming it's purely informational.",
+  },
+  {
+    id: "practical-completion-08",
+    topic: "Practical Completion",
+    scenario:
+      "The Employer wants to withhold the retention release that's triggered by practical completion, citing unrelated commercial disputes with the Contractor.",
+    options: [
+      "Check for a proper contractual right of set-off — withholding a practical-completion-triggered release over an unrelated matter generally isn't supported without one",
+      "Any ongoing dispute between the parties justifies withholding whatever is currently due",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is the same set-off principle that comes up elsewhere — a release genuinely triggered by practical completion shouldn't be held back for a separate, unrelated dispute without an actual contractual right to do so.",
+  },
+
+  // --- Site Possession ---
+  {
+    id: "site-possession-01",
+    topic: "Site Possession",
+    scenario:
+      "The contract specifies a site possession date, but the Employer hands over the site three weeks late, treating it as a minor administrative delay with no compensation offered.",
+    options: [
+      "Late possession is usually a compensable Employer-caused delay, not a minor administrative matter to be waved through",
+      "A few weeks' delay in handing over the site is never significant enough to matter contractually",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Access to the site by the agreed date is normally a fundamental Employer obligation — late possession is typically treated the same as any other Employer-caused delay, supporting an EOT and potentially cost, not dismissed as trivial.",
+  },
+  {
+    id: "site-possession-02",
+    topic: "Site Possession",
+    scenario:
+      "The Contractor is given possession of only part of the site (a phased handover), but the contract assumed possession of the whole site at once.",
+    options: [
+      "This is a real programme issue worth raising formally — a phased handover that wasn't contractually agreed can affect sequencing and completion",
+      "Partial possession is functionally the same as full possession as long as some work can start somewhere",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract programme assumed full-site access, a phased handover that wasn't agreed can genuinely disrupt planned sequencing — this is worth raising and assessing for EOT purposes, not treated as equivalent to what was actually promised.",
+  },
+  {
+    id: "site-possession-03",
+    topic: "Site Possession",
+    scenario:
+      "Site access is granted, but part of it remains occupied by existing tenants or utilities not yet cleared, restricting what the Contractor can actually do there.",
+    options: [
+      "This is worth documenting and raising — 'access' that doesn't allow actual work to proceed isn't the same as genuine possession",
+      "Once access is technically granted, any remaining restrictions are the Contractor's problem to work around",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Possession generally needs to be unrestricted enough to actually let the contracted work proceed — nominal access blocked by unresolved occupiers or utilities isn't the same as the possession the contract actually requires the Employer to give.",
+  },
+  {
+    id: "site-possession-04",
+    topic: "Site Possession",
+    scenario:
+      "The Contractor wants to claim an EOT for late site possession without demonstrating which specific programme activities were actually blocked by it.",
+    options: [
+      "Substantiate the claim against the actual programme impact — a claim needs to show what was genuinely delayed, not just assert lateness in principle",
+      "Late possession alone is automatically sufficient without needing to show programme impact",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Like any delay claim, late possession needs to be linked to an actual effect on the critical path — the fact of lateness supports the claim in principle, but the extension granted should reflect demonstrated impact.",
+  },
+  {
+    id: "site-possession-05",
+    topic: "Site Possession",
+    scenario:
+      "The Employer argues that because access was 'technically' given on the possession date, any practical inability to actually start work is the Contractor's problem.",
+    options: [
+      "This distinction matters — access that exists on paper but doesn't allow real work to start likely doesn't satisfy the Employer's possession obligation",
+      "Technical access on the correct date always satisfies the obligation regardless of practical usability",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The obligation is generally to give possession sufficient to allow the works to proceed, not just a nominal, technical access that doesn't functionally enable anything — this is a substance-over-form question, same as several other areas.",
+  },
+  {
+    id: "site-possession-06",
+    topic: "Site Possession",
+    scenario:
+      "A right-of-way needed for site access is delayed by a third party entirely outside either party's control.",
+    options: [
+      "Check what the contract says about this specific risk — third-party delays affecting the Employer's possession obligation are often still treated as an Employer risk unless expressly carved out",
+      "A third party being the actual cause automatically means neither party bears any risk or consequence",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even where a delay is caused by someone outside the contract entirely, the risk allocation between the two contracting parties still needs to be worked out from what the contract says — 'nobody's fault' doesn't automatically mean 'nobody's contractual risk.'",
+  },
+  {
+    id: "site-possession-07",
+    topic: "Site Possession",
+    scenario:
+      "The Contractor mobilises to site early, before the formal possession date, at the Employer's informal request, then later wants to treat the earlier date as the contractual start.",
+    options: [
+      "Get early access and its implications confirmed in writing at the time — an informal request shouldn't quietly become a formal contractual date without being agreed as such",
+      "Any early access automatically and retroactively becomes the new contractual possession date",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Informal accommodations shouldn't be assumed to carry formal contractual weight — if early access is meant to shift the contractual programme, that needs to be agreed and recorded, not just inferred after the fact.",
+  },
+  {
+    id: "site-possession-08",
+    topic: "Site Possession",
+    scenario:
+      "Site possession is given, but essential utilities (power, water) needed for the works aren't yet connected.",
+    options: [
+      "Check whether the contract's possession obligation is meant to include working utilities — if so, this may not be proper possession yet",
+      "Utilities are always a separate matter from possession and never affect whether possession was properly given",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether 'possession' includes functioning utilities depends on what the contract actually requires — for works genuinely dependent on power or water to start, their absence can mean possession wasn't properly given in a way that lets work begin, not just an unrelated inconvenience.",
+  },
 ];

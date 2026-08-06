@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button3D } from "@/components/Button3D";
 import { HeroAvatar } from "@/components/HeroAvatar";
 import { MinionAvatar } from "@/components/MinionAvatar";
 import { QueueDots } from "@/components/QueueDots";
-import { recordFlag } from "@/lib/flags";
-import { recordSessionComplete, useProgress } from "@/lib/progress";
+import { recordFlag, recordSessionComplete } from "@/app/actions";
 import { SESSION_QUESTIONS } from "@/lib/questions";
 
 type Phase = "incoming" | "battle" | "resolution" | "recap";
@@ -29,22 +28,12 @@ export function SessionView() {
   const [correctCount, setCorrectCount] = useState(0);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSent, setReportSent] = useState(false);
-  const hasRecorded = useRef(false);
-  const { streak } = useProgress();
+  const [streak, setStreak] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   const total = pool.length;
   const question = pool[index];
   const caseWord = total === 1 ? "case" : "cases";
-
-  // Recording is a genuine side effect (writes to localStorage) - the
-  // `streak` value itself is read separately via useProgress above, which
-  // re-renders automatically once recordSessionComplete writes and emits.
-  useEffect(() => {
-    if (phase === "recap" && !hasRecorded.current) {
-      hasRecorded.current = true;
-      recordSessionComplete(total);
-    }
-  }, [phase, total]);
 
   function answer(choice: 0 | 1) {
     setSelected(choice);
@@ -52,22 +41,34 @@ export function SessionView() {
     setPhase("resolution");
   }
 
-  function next() {
+  async function next() {
     setReportOpen(false);
     setReportSent(false);
     if (index + 1 < total) {
       setIndex((i) => i + 1);
       setSelected(null);
       setPhase("battle");
-    } else {
-      setPhase("recap");
+      return;
     }
+
+    setSubmitting(true);
+    try {
+      const result = await recordSessionComplete(total);
+      setStreak(result.streak);
+    } catch (err) {
+      console.error("Failed to record session completion", err);
+    } finally {
+      setSubmitting(false);
+    }
+    setPhase("recap");
   }
 
   function flag(reason: string) {
-    recordFlag(question.id, reason);
     setReportOpen(false);
     setReportSent(true);
+    recordFlag(question.id, reason).catch((err) => {
+      console.error("Failed to record flag", err);
+    });
   }
 
   return (
@@ -184,8 +185,8 @@ export function SessionView() {
                   <p className="mt-2 text-xs text-white/85">Flagged — thanks, I&apos;ll take a look.</p>
                 )}
 
-                <Button3D tone="white" className="mt-3" onClick={next}>
-                  CONTINUE
+                <Button3D tone="white" className="mt-3" onClick={next} disabled={submitting}>
+                  {submitting ? "..." : "CONTINUE"}
                 </Button3D>
               </div>
             )}

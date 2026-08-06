@@ -1,17 +1,19 @@
-"use client";
-
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
-import { useProgress } from "@/lib/progress";
+import { getProgress } from "@/lib/db";
 import { SESSION_QUESTIONS } from "@/lib/questions";
+
+// Reads live data from Neon on every request - must not be statically
+// prerendered, or the streak shown would freeze at build time.
+export const dynamic = "force-dynamic";
 
 const TOPICS = [...new Set(SESSION_QUESTIONS.map((q) => q.topic))];
 const DUE_TODAY = SESSION_QUESTIONS.length;
 
-export default function Home() {
-  const { streak } = useProgress();
+export default async function Home() {
+  const { streak } = await getProgress();
 
   return (
     <div className="flex flex-1 justify-center px-4 py-6">

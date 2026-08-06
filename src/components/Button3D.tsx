@@ -6,6 +6,7 @@ type Button3DProps = {
   className?: string;
   onClick?: () => void;
   href?: string;
+  disabled?: boolean;
 };
 
 // Button backgrounds (gold/white) don't flip with the page's light/dark
@@ -27,8 +28,9 @@ export function Button3D({
   className = "",
   onClick,
   href,
+  disabled = false,
 }: Button3DProps) {
-  const classes = `block w-full rounded-2xl px-4 py-3 text-center font-display text-sm font-semibold tracking-wide transition-transform active:translate-y-[3px] ${TONE_CLASSES[tone]} ${className}`;
+  const classes = `block w-full rounded-2xl px-4 py-3 text-center font-display text-sm font-semibold tracking-wide transition-transform active:translate-y-[3px] disabled:opacity-60 disabled:active:translate-y-0 ${TONE_CLASSES[tone]} ${className}`;
 
   if (href) {
     return (
@@ -39,7 +41,7 @@ export function Button3D({
   }
 
   return (
-    <button onClick={onClick} className={classes}>
+    <button onClick={onClick} disabled={disabled} className={classes}>
       {children}
     </button>
   );

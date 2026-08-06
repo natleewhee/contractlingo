@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { Chip } from "@/components/Chip";
 import { HeroAvatar } from "@/components/HeroAvatar";
@@ -58,7 +59,9 @@ export default function Home() {
 
         <div className="mt-4 flex flex-wrap gap-2">
           {TOPICS.map((topic) => (
-            <Chip key={topic}>{topic}</Chip>
+            <Link key={topic} href={`/session?topic=${encodeURIComponent(topic)}`}>
+              <Chip>{topic}</Chip>
+            </Link>
           ))}
         </div>
 

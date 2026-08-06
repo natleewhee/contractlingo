@@ -180,7 +180,7 @@ export function SessionView({
                 )}
 
                 {reportOpen && (
-                  <div className="mt-3 rounded-xl bg-white p-3 text-ink">
+                  <div className="mt-3 rounded-xl bg-white p-3 text-[#21284A]">
                     <p className="text-center font-display text-xs font-semibold">
                       What&apos;s wrong with this one?
                     </p>
@@ -189,7 +189,7 @@ export function SessionView({
                         <button
                           key={reason}
                           onClick={() => flag(reason)}
-                          className="rounded-full border border-frame-border px-2.5 py-1 font-display text-[0.6rem] font-semibold text-ink-soft"
+                          className="rounded-full border border-[#d8d4c4] px-2.5 py-1 font-display text-[0.6rem] font-semibold text-[#5b6180]"
                         >
                           {reason}
                         </button>

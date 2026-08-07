@@ -1850,4 +1850,428 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "Contracts often require their own terms — including procedural deadlines — to be varied only through a formal mechanism (e.g., a signed written variation). An informal email, however well-intentioned, may not actually be effective to change the contractual deadline if that mechanism isn't followed.",
   },
+
+  // --- Bonds & Guarantees ---
+  {
+    id: "bonds-01",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Employer wants to call an on-demand performance bond immediately after a dispute arises, without first assessing whether it has actually suffered any loss.",
+    options: [
+      "Check whether the call is genuine and made in good faith under the bond's terms — on-demand bonds are largely payable on demand, but calls made in bad faith or for an improper purpose can be challenged",
+      "On-demand bonds can never be challenged once called, regardless of the circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "On-demand bonds are deliberately designed to be paid quickly with minimal underlying proof — that's their commercial value. But that doesn't put every call beyond challenge; calls made in bad faith or for a purpose the bond wasn't meant to cover can still be restrained in genuinely clear cases.",
+  },
+  {
+    id: "bonds-02",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A performance bond is due to expire at practical completion, but the Employer wants the Contractor to extend it to also cover the entire defects liability period.",
+    options: [
+      "Check what the contract actually requires — bond duration and coverage should match the contractual security period specified, not be extended informally",
+      "Bond duration can always be unilaterally extended by the Employer regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The bond's required duration and coverage is a specific contractual term — align it to what's actually agreed rather than either party informally deciding to extend or shorten it.",
+  },
+  {
+    id: "bonds-03",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Contractor's performance bond issuer becomes financially distressed, and there are real doubts about whether it could actually pay out if called.",
+    options: [
+      "This is worth raising and checking — a bond is only as good as the issuer's ability to pay, and some contracts require bonds from institutions meeting minimum credit criteria",
+      "The identity and financial strength of the bond issuer never matters once the bond document itself is in hand",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A bond is a promise to pay, and that promise is only as strong as the issuer behind it — many contracts specifically require bonds from banks or insurers meeting certain criteria for exactly this reason.",
+  },
+  {
+    id: "bonds-04",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A parent company guarantee is provided in place of a performance bond. The Contractor's parent company is later sold to a new, unrelated owner.",
+    options: [
+      "Check what happens to the guarantee's validity and enforceability after a change of ownership — this is worth verifying, not assumed to continue seamlessly",
+      "A parent company guarantee always continues in force exactly the same way regardless of who owns the parent company afterward",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether a parent company guarantee survives a change in the parent's own ownership depends on how it's drafted — a real question to check rather than assume, given how much can change in a corporate sale.",
+  },
+  {
+    id: "bonds-05",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Employer wants to call the bond for its full face value to cover a claim that's actually much smaller than that amount.",
+    options: [
+      "A bond call should still generally reflect the actual entitlement, not simply extract the maximum available regardless of the underlying claim",
+      "The full bond amount is always fair game once any valid claim exists, however small",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even where a bond is easily callable, calling for more than the genuine underlying entitlement can itself be challenged as an improper call — the bond secures actual loss, not a windfall.",
+  },
+  {
+    id: "bonds-06",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Contractor assumes a bond automatically reduces in value as the project nears completion, without checking the bond document itself.",
+    options: [
+      "Check the bond's actual terms — some bonds do step down or reduce at defined milestones, but this isn't automatic or universal",
+      "All performance bonds automatically reduce in value as work progresses",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Bond reduction or step-down mechanisms are a specific negotiated feature, not a universal default — some bonds hold their full face value throughout, so this needs checking rather than assuming.",
+  },
+  {
+    id: "bonds-07",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A retention bond is provided in lieu of cash retention. The Employer wants to also deduct cash retention on top of it from payments.",
+    options: [
+      "Check the contract — a retention bond is typically meant to substitute for cash retention, not sit alongside it as an additional deduction",
+      "Deducting both cash retention and holding a retention bond simultaneously is always fine",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The whole point of a retention bond is to free up the contractor's cash flow by substituting for cash retention — deducting both would effectively double the security, which isn't what these arrangements are meant to do.",
+  },
+  {
+    id: "bonds-08",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The project reaches final completion, and the Employer is slow to release the performance bond even though all conditions for release appear to have been met.",
+    options: [
+      "Follow up formally and check the contract's release trigger — bonds shouldn't be held indefinitely past the point they're due for release",
+      "Bonds can be held indefinitely at the Employer's discretion with no real trigger for release",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Bonds are usually tied to a specific release trigger and timeframe — an unreasonable delay past that point is worth chasing, the same as any other contractual entitlement that's become due.",
+  },
+
+  // --- Health & Safety ---
+  {
+    id: "safety-01",
+    topic: "Health & Safety",
+    scenario:
+      "A subcontractor's unsafe work practice is spotted by the main contractor's site supervisor, but nothing is done because it's 'the subcontractor's own responsibility.'",
+    options: [
+      "The main contractor generally retains overall site safety responsibility and should act on it, even for subcontracted work",
+      "Safety on a specific task is always solely the subcontractor's problem once work is subcontracted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Overall responsibility for site safety typically sits with the main contractor (or a designated principal contractor) regardless of who's doing the specific task — spotting an unsafe practice and doing nothing is a real exposure, not just the subcontractor's issue.",
+  },
+  {
+    id: "safety-02",
+    topic: "Health & Safety",
+    scenario:
+      "An accident occurs on site. The Contractor is unsure whether it needs to report it to the relevant authority or can just handle it internally.",
+    options: [
+      "Check the applicable regulations — many jurisdictions require statutory reporting of certain incidents regardless of how the parties want to handle it internally",
+      "Any incident can always be handled purely internally without external reporting",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Workplace safety incidents are often subject to mandatory statutory reporting thresholds independent of what the parties would prefer — check the applicable regulation rather than assuming internal handling is sufficient.",
+  },
+  {
+    id: "safety-03",
+    topic: "Health & Safety",
+    scenario:
+      "The Employer's own instructed method of work creates a safety risk the Contractor flags, but the Employer insists the Contractor proceed as instructed.",
+    options: [
+      "Raise the safety concern formally and don't proceed with something genuinely unsafe just because it was instructed — safety obligations aren't overridden by an instruction",
+      "An Employer instruction always overrides the Contractor's own safety judgement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contractual instructions don't override independent safety obligations — a contractor generally can't be compelled to carry out work it genuinely believes is unsafe, and should escalate rather than silently comply or silently refuse without documenting why.",
+  },
+  {
+    id: "safety-04",
+    topic: "Health & Safety",
+    scenario:
+      "A safety non-compliance results in a stop-work order from a regulator. The Contractor wants to claim the resulting delay as an EOT, treating it like any other Employer-caused delay.",
+    options: [
+      "Check the actual cause — a stop-work order resulting from the Contractor's own non-compliance generally wouldn't qualify as an excusable, compensable delay",
+      "Any regulatory stop-work order automatically qualifies for an EOT regardless of the underlying cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether a delay is excusable depends on why it happened — a stop-work order caused by the contractor's own safety failure is generally treated as the contractor's own risk, not an Employer-caused or neutral event.",
+  },
+  {
+    id: "safety-05",
+    topic: "Health & Safety",
+    scenario:
+      "The Contractor assumes that having generic, project-wide safety documentation is sufficient, without task-specific method statements for higher-risk activities.",
+    options: [
+      "Check what's actually required — many regimes and contracts require specific method statements or risk assessments for defined higher-risk activities, not just generic documentation",
+      "Generic project-wide safety documentation is always sufficient for every activity on site",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Generic safety documentation often isn't enough on its own — higher-risk activities typically need their own specific method statements and risk assessments, both as good practice and often as a regulatory requirement.",
+  },
+  {
+    id: "safety-06",
+    topic: "Health & Safety",
+    scenario:
+      "A worker is injured due to a genuine third party's negligence (for example, a delivery driver unrelated to either party). The Contractor assumes it bears no responsibility at all since it wasn't directly at fault.",
+    options: [
+      "Check the site safety and insurance obligations regardless of direct fault — the Contractor's overall site safety duties can still be relevant even where a third party was the immediate cause",
+      "No responsibility ever attaches to the Contractor if a third party was the immediate cause of an injury",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Overall site safety management duties can still be engaged even when a third party is the immediate cause — worth assessing properly (and exactly what site insurance is meant to cover) rather than assuming zero responsibility.",
+  },
+  {
+    id: "safety-07",
+    topic: "Health & Safety",
+    scenario:
+      "The Employer's representative regularly visits site without following the Contractor's site safety induction and PPE requirements.",
+    options: [
+      "Enforce the same safety requirements on all site visitors, including the Employer's representative — safety compliance shouldn't have exceptions based on seniority or relationship",
+      "Employer representatives are generally exempt from the Contractor's site safety rules",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Site safety rules generally need to apply uniformly to anyone entering the site — making informal exceptions, even for the Employer's own people, undermines the whole system and creates real liability exposure.",
+  },
+  {
+    id: "safety-08",
+    topic: "Health & Safety",
+    scenario:
+      "The Contractor treats safety training records as optional paperwork, since 'the workers already know what they're doing.'",
+    options: [
+      "Keep proper training and induction records regardless of actual competence — documentation is often what's actually checked in an audit or after an incident, not just genuine skill",
+      "Documentation of safety training is a formality that doesn't really matter if workers are actually competent",
+    ],
+    correctIndex: 0,
+    explanation:
+      "In practice, safety compliance is heavily judged on documented evidence — genuine competence without proper records can still leave a contractor exposed in an audit, inspection, or after an incident, so the paperwork matters in its own right.",
+  },
+
+  // --- Nominated Subcontractors ---
+  {
+    id: "nominated-subcontractors-01",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The Employer nominates a subcontractor for specialist work. That nominated subcontractor turns out to be persistently late, and the main Contractor wants to claim an EOT for the resulting delay.",
+    options: [
+      "This is often treated differently from an ordinary subcontractor's default — check the contract's specific provisions on nominated subcontractor delay, which can shift more risk to the Employer",
+      "Delay caused by any subcontractor, nominated or otherwise, is always entirely the main Contractor's risk",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Because nominated subcontractors are effectively imposed on the main contractor by the Employer, many standard forms treat their default differently from an ordinary, freely-chosen subcontractor's default — worth checking the specific clause rather than assuming it's treated the same.",
+  },
+  {
+    id: "nominated-subcontractors-02",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A nominated subcontractor becomes insolvent mid-project. The main Contractor isn't sure who bears responsibility for finding and engaging a replacement.",
+    options: [
+      "Check the contract's renomination mechanism — many contracts require the Employer or Engineer to nominate a replacement, rather than leaving it entirely to the main Contractor",
+      "The main Contractor is always solely responsible for finding a replacement, the same as with any subcontractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Nomination provisions often include a renomination process specifically because the Employer chose the original subcontractor — leaving the main contractor to sort it out entirely alone may not match what the contract actually provides for.",
+  },
+  {
+    id: "nominated-subcontractors-03",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The main Contractor objects to a proposed nominated subcontractor on reasonable grounds, such as known poor performance on a similar project, but the Employer insists on proceeding anyway.",
+    options: [
+      "A genuine, reasonable objection is worth raising formally and pursuing — many nomination clauses give the main Contractor some right to object to a nomination on reasonable grounds",
+      "The main Contractor has no right to object to any nomination under any circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most nomination mechanisms give the main contractor some ability to raise reasonable objections, precisely because the main contractor still carries overall responsibility for the works — a blanket 'no right to object' assumption is usually wrong.",
+  },
+  {
+    id: "nominated-subcontractors-04",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "Payment to a nominated subcontractor is meant to flow through the main Contractor, but the main Contractor is having cash flow problems and delays passing on payment already received for that subcontractor's work.",
+    options: [
+      "This is a real risk area — some contracts include direct payment mechanisms letting the Employer pay a nominated subcontractor directly if the main Contractor doesn't pass on payment properly",
+      "There's never any mechanism for the Employer to pay a nominated subcontractor directly, regardless of circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Because of exactly this risk, some standard forms provide for direct payment to nominated subcontractors if the main contractor fails to pass on payment — worth checking whether that mechanism exists in this contract.",
+  },
+  {
+    id: "nominated-subcontractors-05",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A defect is traced to a nominated subcontractor's work. The main Contractor argues it shouldn't be liable since it didn't choose that subcontractor.",
+    options: [
+      "Check the specific contract wording — the main Contractor's liability for a nominated subcontractor's work varies by contract and isn't automatically excused just because the subcontractor was nominated",
+      "Nomination automatically and completely excuses the main Contractor from any liability for that subcontractor's work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is genuinely contract-specific — some forms preserve the main contractor's full responsibility even for nominated work, others provide some relief given the lack of choice. Check the actual wording rather than assuming either extreme.",
+  },
+  {
+    id: "nominated-subcontractors-06",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The Employer wants to nominate a subcontractor for work that was originally priced and included in the main Contractor's own scope and rates.",
+    options: [
+      "This is worth querying — nominating a subcontractor for work already priced in the main Contractor's scope can create a real commercial and coordination issue worth raising before proceeding",
+      "The Employer can always nominate a subcontractor for any part of the works with no commercial consequence to the main Contractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Nominating a subcontractor for work the main contractor already priced and planned to do itself can genuinely disrupt the commercial basis of the contract — worth flagging and resolving (often via adjustment of the contract sum) rather than silently absorbed.",
+  },
+  {
+    id: "nominated-subcontractors-07",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A nomination instruction doesn't specify the price or terms the main Contractor is meant to contract with the nominated subcontractor on.",
+    options: [
+      "Clarify the commercial terms before proceeding — a bare nomination without agreed terms creates real risk of dispute later about what the main Contractor is bound to accept",
+      "Any nomination is automatically binding on whatever commercial terms the nominated subcontractor happens to propose",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A nomination needs to come with clear terms, or a clear process for agreeing them, for the main contractor to actually contract on — proceeding on an undefined basis just defers a dispute rather than avoiding one.",
+  },
+  {
+    id: "nominated-subcontractors-08",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The main Contractor wants to pass through a nominated subcontractor's exact delay and EOT claims to the Employer without independently checking whether they're actually justified.",
+    options: [
+      "Independently assess the claim's merits before passing it through — the main Contractor's own position with the Employer shouldn't just mirror whatever the nominated subcontractor claims",
+      "Claims from a nominated subcontractor should always be passed through to the Employer exactly as received, without any independent check",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even with a nominated subcontractor, the main contractor still stands between the subcontractor and the Employer commercially — passing through unverified claims can create liability if they turn out to be unjustified.",
+  },
+
+  // --- Testing & Commissioning ---
+  {
+    id: "testing-commissioning-01",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A system fails its first commissioning test. The Contractor wants to know whether this alone constitutes a breach entitling the Employer to reject the works.",
+    options: [
+      "Check the contract's testing and retest provisions — most contracts allow for retesting after remedial work rather than treating a single failed test as an automatic breach",
+      "Any single failed test automatically constitutes a breach entitling rejection of the works",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Testing regimes are usually built around an iterative test-fail-fix-retest cycle, not a single pass/fail moment — a first failure is normal and expected to be followed by rectification and retesting, not an automatic default.",
+  },
+  {
+    id: "testing-commissioning-02",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Employer wants to take over and start using a system before it has actually passed its commissioning tests, citing operational urgency.",
+    options: [
+      "This is worth flagging as a real risk — using an unproven system before passing tests can create ambiguity about liability if something later goes wrong",
+      "Early use before passing tests has no bearing on liability or risk allocation either way",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Putting a system into use before it's actually demonstrated to work through proper testing blurs the line on who's responsible if it fails afterward — worth documenting and agreeing on explicitly, not just proceeding informally.",
+  },
+  {
+    id: "testing-commissioning-03",
+    topic: "Testing & Commissioning",
+    scenario:
+      "Test results are recorded informally in a notebook rather than through the contract's specified test certificate process.",
+    options: [
+      "Follow the contract's actual test certification process — informal records may not be sufficient to establish that testing requirements were properly met",
+      "Any record of testing, however informal, is equally sufficient regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract specifies a particular test certification process, that's what actually establishes compliance — informal records can create real disputes later about whether proper testing genuinely occurred.",
+  },
+  {
+    id: "testing-commissioning-04",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A commissioning delay is caused by the Employer's late supply of operational data or connection to their own systems needed to complete testing.",
+    options: [
+      "This is likely an Employer-caused delay to commissioning, worth raising as such rather than absorbed as the Contractor's own testing delay",
+      "Any commissioning delay is always treated as the Contractor's own responsibility regardless of its actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Commissioning often depends on inputs only the Employer can provide — a delay genuinely caused by late Employer input is a different situation from the Contractor's own testing being behind schedule, and should be treated accordingly.",
+  },
+  {
+    id: "testing-commissioning-05",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Contractor wants to skip a specified test because it's confident the system will pass anyway, to save time.",
+    options: [
+      "Follow the specified testing procedure regardless of confidence in the outcome — skipping a required test isn't a decision to make unilaterally",
+      "Skipping a specified test is fine as long as the Contractor is confident about the result",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Specified tests exist to create an objective, agreed record of performance — confidence in the outcome doesn't substitute for actually running the required test, and skipping it can undermine the contractor's own later claim that the system works.",
+  },
+  {
+    id: "testing-commissioning-06",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A test is passed, but months later the same system fails in actual operation. The Employer wants to argue the original test was somehow invalid.",
+    options: [
+      "This needs proper investigation — a later failure doesn't automatically invalidate an earlier genuinely passed test, though it's worth checking what actually changed or degraded since then",
+      "A later failure always proves retroactively that the original test must have been improperly conducted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Equipment can genuinely degrade or fail after a valid initial pass for reasons unrelated to the original test's validity — a later failure raises a real question worth investigating, not an automatic conclusion that the earlier test was flawed.",
+  },
+  {
+    id: "testing-commissioning-07",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The commissioning specification is ambiguous about what performance threshold counts as a 'pass.' The parties disagree on the interpretation.",
+    options: [
+      "This is a genuine interpretive dispute worth resolving carefully (and often needing technical input) rather than either party unilaterally deciding its own reading is correct",
+      "Ambiguous specifications should always be read in whichever way is more favorable to the Contractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuinely ambiguous performance threshold is a real dispute to work through — using objective technical criteria and the parties' actual intent, not simply defaulting to whichever reading favors one side.",
+  },
+  {
+    id: "testing-commissioning-08",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Contractor's own commissioning engineer signs off on tests without the Employer's representative being present, even though the contract requires the Employer's witness.",
+    options: [
+      "Follow the contract's witnessing requirement — self-certified tests without the required witness may not be accepted as valid compliance",
+      "Self-certification by the Contractor's own engineer is always equally valid regardless of any witnessing requirement in the contract",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract specifically requires the Employer to witness testing, self-certifying without that witness present doesn't satisfy the requirement — exactly the kind of procedural step that can undermine an otherwise legitimate test result if later disputed.",
+  },
 ];

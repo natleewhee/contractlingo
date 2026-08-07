@@ -253,6 +253,36 @@ export async function recordFlag(questionId: string, reason: string): Promise<vo
   }
 }
 
+export type Flag = {
+  id: number;
+  questionId: string;
+  reason: string;
+  createdAt: string; // ISO
+};
+
+// Powers /flags - the only way to see reported content is otherwise a
+// direct Neon query, which defeats the point of the in-app report button.
+export async function getFlags(): Promise<Flag[]> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT id, question_id, reason, created_at FROM flags ORDER BY created_at DESC
+    `;
+    return (rows as { id: number; question_id: string; reason: string; created_at: unknown }[]).map(
+      (row) => ({
+        id: row.id,
+        questionId: row.question_id,
+        reason: row.reason,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : String(row.created_at),
+      })
+    );
+  } catch (err) {
+    console.error("getFlags failed", err);
+    return [];
+  }
+}
+
 // Filters `allIds` down to the ones due for review today - either never
 // attempted before, or due_date has arrived. Fails open (returns everything)
 // on error, since showing too much is far better than showing nothing.

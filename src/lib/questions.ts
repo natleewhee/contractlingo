@@ -2698,4 +2698,428 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "The same practical-completion logic applies at the section level — the real question is whether the section can be beneficially used despite minor outstanding items, not whether it's mechanically 100% finished down to the last item.",
   },
+
+  // --- Confidentiality & Intellectual Property ---
+  {
+    id: "confidentiality-ip-01",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor wants to reuse a bespoke design created for this project on a future unrelated project for a different client, without checking who owns the IP.",
+    options: [
+      "Check the contract's IP ownership and licence terms first — bespoke project designs are often owned by or exclusively licensed to the Employer, not freely reusable",
+      "Any design created by the Contractor is automatically free to reuse on future projects regardless of contract terms",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Who owns the intellectual property in project-specific design work is a specific contractual question — many contracts vest ownership, or an exclusive licence, in the Employer for exactly this project, meaning reuse elsewhere needs separate permission.",
+  },
+  {
+    id: "confidentiality-ip-02",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "An employee who worked on a confidential project moves to a competing contractor shortly after, taking detailed knowledge of the Employer's proprietary processes with them.",
+    options: [
+      "Check what confidentiality obligations actually survive and apply here — a genuine risk area worth addressing through contract terms and internal controls, not assumed to sort itself out",
+      "Confidentiality obligations always automatically end the moment an employee changes company",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Confidentiality obligations are often deliberately drafted to survive the underlying relationship and bind individuals, not just companies — a real risk that needs proactive management, not an assumption that it stops mattering once someone moves on.",
+  },
+  {
+    id: "confidentiality-ip-03",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor wants to include photos of the completed project in its own marketing materials, without checking if there are any confidentiality restrictions in the contract.",
+    options: [
+      "Check the contract for confidentiality or publicity restrictions before using project photos in marketing — some contracts specifically limit this",
+      "Using project photos in marketing is always fine regardless of what the contract says about confidentiality",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some contracts include specific confidentiality or non-disclosure provisions that would restrict even something as seemingly harmless as marketing photos — worth checking rather than assuming it's unrestricted.",
+  },
+  {
+    id: "confidentiality-ip-04",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Employer wants access to the Contractor's proprietary internal cost breakdowns and methodology as part of a value engineering exercise.",
+    options: [
+      "Consider what's actually necessary to share versus genuinely proprietary and confidential — full disclosure isn't automatically required just because it would be helpful to the Employer",
+      "The Contractor must always disclose all of its internal proprietary information whenever the Employer requests it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "There's a difference between what's needed to properly evaluate a proposal and a contractor's genuinely proprietary internal methodology — worth navigating carefully rather than either party assuming full access is automatic.",
+  },
+  {
+    id: "confidentiality-ip-05",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "A dispute arises, and one party wants to use confidential project information obtained during the works as evidence in an unrelated matter against the other party.",
+    options: [
+      "Check the confidentiality clause's scope — using confidential information obtained under this contract for an unrelated purpose may breach the confidentiality obligation itself",
+      "Information obtained during a project can always be freely used for any other purpose once the project relationship exists",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Confidentiality obligations often apply broadly to how information can be used, not just whether it can be shared with third parties — repurposing it for an unrelated dispute can itself raise a separate breach issue.",
+  },
+  {
+    id: "confidentiality-ip-06",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor develops a novel construction technique while working on this project and wants to patent it, unsure whether the Employer has any claim to it.",
+    options: [
+      "Check the contract's IP provisions specifically — ownership of innovations developed during the works can be allocated either way depending on what's agreed",
+      "Any innovation developed during a project automatically belongs entirely to whichever party physically invented it, regardless of contract terms",
+    ],
+    correctIndex: 0,
+    explanation:
+      "IP ownership for innovations developed during a project is a specific negotiated term, not a default rule — check what the contract actually says rather than assuming inventorship alone settles ownership.",
+  },
+  {
+    id: "confidentiality-ip-07",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Employer shares confidential commercial information with the Contractor during negotiations, but no formal confidentiality agreement was ever signed before the contract itself.",
+    options: [
+      "Check whether pre-contract information sharing was covered by an implied or separate confidentiality obligation, or whether it's genuinely unprotected",
+      "Information shared before a formal contract is signed is never subject to any confidentiality obligation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Pre-contract confidentiality can sometimes be protected through other means, like a standalone NDA or in some cases implied obligations, even without formal contract terms yet in place — worth checking rather than assuming zero protection existed.",
+  },
+  {
+    id: "confidentiality-ip-08",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "A subcontractor is given access to confidential Employer information necessary to do its work, but the subcontract doesn't include any confidentiality obligations mirroring the main contract's requirements.",
+    options: [
+      "This is a real gap worth fixing — confidentiality obligations should generally flow down to subcontractors who have access to the same sensitive information",
+      "Confidentiality obligations in the main contract automatically bind subcontractors without needing to be separately included in the subcontract",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contractual obligations generally don't automatically bind third parties like subcontractors — if subcontractors need access to confidential information, matching confidentiality terms need to be deliberately flowed down into the subcontract.",
+  },
+
+  // --- Change in Law ---
+  {
+    id: "change-in-law-01",
+    topic: "Change in Law",
+    scenario:
+      "A new building code requirement comes into force after the contract is signed but before completion, requiring the Contractor to change its already-designed approach.",
+    options: [
+      "Check the contract's change-in-law provisions — genuine post-contract legal changes are often treated as a compensable event distinct from an ordinary design change",
+      "Any legal change, whenever it occurs, is automatically the Contractor's own risk to absorb",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many contracts specifically address 'change in law' as its own category, recognising that genuinely new legal requirements arising after contract signature are outside either party's original pricing assumptions — worth checking whether this contract does the same.",
+  },
+  {
+    id: "change-in-law-02",
+    topic: "Change in Law",
+    scenario:
+      "A change in law affects only a small, non-critical part of the works, and the Contractor wants to claim it as a major compensable event regardless of actual impact.",
+    options: [
+      "The claim should be scaled to the actual impact — a change-in-law claim still needs to be substantiated against what genuinely changed, not treated as a blanket windfall",
+      "Any change in law automatically entitles the Contractor to a major claim regardless of its actual scope of impact",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Change-in-law relief is generally proportionate to actual impact, the same as any other compensable event — a minor legal change affecting a small part of the works doesn't automatically justify treating the whole claim as major.",
+  },
+  {
+    id: "change-in-law-03",
+    topic: "Change in Law",
+    scenario:
+      "A change in law was actually publicly announced and known well before the contract was signed, but the Contractor claims it as an unforeseen change-in-law event anyway.",
+    options: [
+      "Check the timing carefully — a change that was reasonably foreseeable or already known at contract signing generally wouldn't qualify as an unforeseen change-in-law event",
+      "Any change in law that comes into legal force after signing qualifies for relief regardless of whether it was actually known about beforehand",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The key distinction in most change-in-law clauses is genuine unforeseeability at the time of contracting, not simply the formal effective date — a change already publicly known and pricable at signing generally doesn't qualify.",
+  },
+  {
+    id: "change-in-law-04",
+    topic: "Change in Law",
+    scenario:
+      "A change in law reduces the scope or cost of compliance needed, for example relaxing a previous requirement, but the Contractor doesn't mention this and continues billing as if the old requirement still applied.",
+    options: [
+      "Change-in-law provisions typically work both ways — a cost-reducing change should also be reflected, not just cost-increasing ones",
+      "Change-in-law relief only ever applies when costs increase, never when they decrease",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most well-drafted change-in-law clauses are symmetrical — they adjust for both cost increases and cost decreases resulting from legal changes. Only reporting the increases and staying quiet about decreases isn't consistent with how the mechanism is meant to work.",
+  },
+  {
+    id: "change-in-law-05",
+    topic: "Change in Law",
+    scenario:
+      "A change in law requires a permit or approval process that takes significantly longer than expected, delaying the works. The Contractor wants to claim this delay.",
+    options: [
+      "This is worth raising as a genuine change-in-law delay if the process itself is new or changed — substantiate the actual time impact of the new legal requirement",
+      "Delays caused by permit or approval processes are never eligible for any kind of relief regardless of cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If a new legal or regulatory requirement genuinely adds time to the process — a new permit step, a new approval body — that delay can be a legitimate consequence of the change in law, worth substantiating properly as such.",
+  },
+  {
+    id: "change-in-law-06",
+    topic: "Change in Law",
+    scenario:
+      "The parties disagree about whether a new local authority guideline, not a formal law or regulation, counts as a 'change in law' under the contract's specific definition.",
+    options: [
+      "Check the contract's actual defined scope of 'change in law' — some definitions are narrow (only binding legislation) while others are broader (including binding guidelines or codes)",
+      "Any guidance from any authority, however informal, always automatically counts as a change in law",
+    ],
+    correctIndex: 0,
+    explanation:
+      "'Change in law' clauses often have a precisely defined scope — some are narrow and limited to actual legislation or regulation, others are drafted more broadly. This needs checking against the actual defined term, not assumed either way.",
+  },
+  {
+    id: "change-in-law-07",
+    topic: "Change in Law",
+    scenario:
+      "A change in law happens mid-project, and the Contractor wants to apply it retroactively to work already completed and accepted before the change came into force.",
+    options: [
+      "This generally doesn't apply retroactively — a change-in-law claim would typically only affect work still to be done, not work already properly completed under the prior requirements",
+      "Any change in law automatically applies retroactively to all project work regardless of when it was completed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Change-in-law relief is generally forward-looking from the date the change takes effect — work validly completed under the requirements that applied at the time wouldn't typically need to be redone or reclaimed retroactively.",
+  },
+  {
+    id: "change-in-law-08",
+    topic: "Change in Law",
+    scenario:
+      "The Contractor assumes a change in tax law, such as a new levy, is automatically covered by the general change-in-law clause without checking if tax changes are specifically excluded.",
+    options: [
+      "Check the clause carefully — some change-in-law provisions specifically exclude tax changes, which may be dealt with separately or left as the Contractor's own risk",
+      "Tax law changes are always automatically covered by any general change-in-law clause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Tax is often carved out and dealt with separately, or explicitly excluded, in change-in-law clauses, precisely because tax risk is sometimes meant to sit differently from general regulatory risk — check the specific wording rather than assuming blanket coverage.",
+  },
+
+  // --- Dispute Resolution (Arbitration/Litigation) ---
+  {
+    id: "dispute-resolution-01",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute arises, and one party wants to go straight to arbitration without first following the contract's required mediation or negotiation steps.",
+    options: [
+      "Follow the contract's tiered dispute resolution process in order — skipping required preliminary steps can be challenged and may delay or complicate the actual arbitration",
+      "Any party can always go straight to arbitration or litigation regardless of what preliminary steps the contract requires",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Multi-tiered dispute resolution clauses — negotiation, then mediation, then arbitration — are common precisely to encourage earlier resolution. Skipping a required step can be raised as a jurisdictional or procedural objection, creating its own delay.",
+  },
+  {
+    id: "dispute-resolution-02",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The contract specifies arbitration in a particular seat or location, but one party wants to commence court litigation in a more convenient jurisdiction instead.",
+    options: [
+      "Follow the contract's chosen dispute resolution forum — commencing proceedings in a different forum than agreed can be challenged and is often unsuccessful",
+      "A party can always choose whatever forum is most convenient regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Arbitration clauses, and forum or jurisdiction clauses generally, are usually enforced according to what was actually agreed — courts frequently decline jurisdiction or stay proceedings where a valid arbitration agreement specifies a different forum.",
+  },
+  {
+    id: "dispute-resolution-03",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A party wants to introduce new evidence at arbitration that wasn't disclosed during the earlier mandatory mediation stage.",
+    options: [
+      "Check the arbitration's procedural rules on evidence — generally new evidence can be introduced at arbitration itself, but check for any specific restrictions this contract or tribunal imposes",
+      "No new evidence can ever be introduced at arbitration if it wasn't first raised during mediation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Mediation and arbitration are generally distinct processes with different evidentiary rules — arbitration typically allows a fuller evidentiary process, though it's worth checking the specific rules governing this arbitration for any unusual restrictions.",
+  },
+  {
+    id: "dispute-resolution-04",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The losing party at arbitration wants to appeal the arbitrator's decision to a court purely because they disagree with the outcome.",
+    options: [
+      "Check the very limited grounds for challenging an arbitral award — awards are generally final and binding, with only narrow grounds like serious procedural irregularity for court intervention",
+      "Any arbitration award can always be appealed to a court simply because a party disagrees with the result",
+    ],
+    correctIndex: 0,
+    explanation:
+      "One of arbitration's core features is finality — awards are generally not appealable on the merits, and courts will only intervene on narrow, specific grounds like a serious procedural defect, not just because a party thinks the outcome was wrong.",
+  },
+  {
+    id: "dispute-resolution-05",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute resolution clause requires disputes to be referred to a Dispute Adjudication Board first, but the Contractor wants to skip straight to arbitration to save time.",
+    options: [
+      "Follow the contractual sequence — bypassing a required Dispute Adjudication Board step can be a valid objection to the arbitration's jurisdiction at this stage",
+      "Any intermediate dispute resolution step required by the contract can always be skipped if a party feels it would be faster to go straight to arbitration",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same principle as skipping mediation applies here — a required Dispute Adjudication Board (or similar) step is a genuine precondition in many contracts, and skipping it risks the whole arbitration being challenged as premature.",
+  },
+  {
+    id: "dispute-resolution-06",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The parties want to keep the dispute proceedings and outcome confidential, but haven't checked whether their chosen dispute resolution method actually supports that.",
+    options: [
+      "Check this specifically — arbitration is generally private and can be more readily kept confidential, while court litigation is typically a matter of public record",
+      "Confidentiality of dispute proceedings is identical regardless of whether arbitration or litigation is used",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is a genuine practical difference between the two — arbitration proceedings are typically private, while litigation generally becomes part of the public court record, which matters a lot if confidentiality of the dispute itself is a priority.",
+  },
+  {
+    id: "dispute-resolution-07",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute resolution clause names a specific arbitral institution and rules, but the parties want to use a different set of rules informally because they're more familiar with them.",
+    options: [
+      "Follow what's actually specified in the contract — using different rules than what's agreed can create real questions about the validity of the whole process",
+      "The parties can always informally agree to use different arbitration rules than the ones specified in the contract without any consequence",
+    ],
+    correctIndex: 0,
+    explanation:
+      "While parties can generally agree to vary their arbitration agreement, doing so needs proper mutual agreement, often written confirmation, not an informal assumption — proceeding on the wrong rules can create real challenges to the resulting award's validity.",
+  },
+  {
+    id: "dispute-resolution-08",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "One party wants to enforce a foreign arbitration award in a different country where the other party's assets are located, and isn't sure how straightforward that will be.",
+    options: [
+      "This is generally more straightforward than enforcing a foreign court judgment, thanks to widely-adopted international arbitration enforcement treaties — but still worth confirming based on the specific countries involved",
+      "Enforcing a foreign arbitration award is always exactly as difficult as enforcing a foreign court judgment, with no meaningful difference",
+    ],
+    correctIndex: 0,
+    explanation:
+      "One of arbitration's practical advantages is broader international enforceability through widely-adopted treaties, generally making cross-border enforcement smoother than enforcing a foreign court judgment — though the specifics still depend on the countries involved.",
+  },
+
+  // --- Value Engineering ---
+  {
+    id: "value-engineering-01",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor proposes a value engineering change that reduces cost but also reduces the specified quality or performance standard, without clearly flagging the trade-off to the Employer.",
+    options: [
+      "Clearly disclose the trade-off before proceeding — a value engineering proposal that quietly lowers standards without flagging it isn't a fair or transparent proposal",
+      "Any cost-saving proposal is automatically acceptable as long as it saves money, regardless of quality trade-offs",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Genuine value engineering is about finding better value, not just cutting cost at the expense of undisclosed quality reduction — any trade-off needs to be made transparent so the Employer can make an informed decision.",
+  },
+  {
+    id: "value-engineering-02",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering saving is proposed and accepted by the Employer, and the Contractor wants to keep 100% of the savings without any agreed sharing mechanism.",
+    options: [
+      "Check what the contract or the specific VE proposal agreement says about how savings are shared — this varies and isn't automatically 100% to either party",
+      "Value engineering savings always automatically belong entirely to whichever party proposed the change",
+    ],
+    correctIndex: 0,
+    explanation:
+      "How VE savings are shared between the parties is a specific commercial term, sometimes split, sometimes fully to one party, that should be clearly agreed as part of accepting the proposal — not defaulted to either extreme without agreement.",
+  },
+  {
+    id: "value-engineering-03",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor's value engineering proposal changes a specified material to a cheaper alternative without checking whether it still meets the underlying performance specification.",
+    options: [
+      "Verify the alternative genuinely meets the performance specification before proposing it — a cheaper substitute that doesn't actually perform equivalently isn't real value engineering",
+      "Any cheaper alternative material is an acceptable value engineering proposal as long as it's cheaper",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A valid value engineering proposal needs to still meet the actual performance requirements — proposing something cheaper that doesn't functionally perform the same job just shifts risk onto the Employer rather than creating genuine value.",
+  },
+  {
+    id: "value-engineering-04",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering change is implemented without formal instruction or variation documentation, based on a verbal agreement in a meeting.",
+    options: [
+      "Get it formally documented as a variation or instruction before implementing — an undocumented change, even if verbally agreed, creates real risk about what was actually approved",
+      "Verbal agreement in a meeting is always sufficient to implement a value engineering change without further documentation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same formal-documentation discipline that applies to variations generally applies to value engineering changes — implementing based on an undocumented verbal agreement risks disputes later about exactly what was approved and on what basis.",
+  },
+  {
+    id: "value-engineering-05",
+    topic: "Value Engineering",
+    scenario:
+      "The Employer rejects a value engineering proposal without giving any reason, and the Contractor assumes this means the proposal was inadequate.",
+    options: [
+      "Ask for the actual reason rather than assuming — value engineering proposals can be rejected for many reasons unrelated to the proposal's technical adequacy, such as aesthetic preference or risk appetite",
+      "A rejected value engineering proposal always means the proposal itself was technically deficient",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Employers might reject a perfectly sound VE proposal for reasons that have nothing to do with its technical merit — understanding the actual reason helps determine whether it's worth refining and resubmitting or genuinely a closed door.",
+  },
+  {
+    id: "value-engineering-06",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering change reduces upfront cost but increases the building's long-term operating or maintenance cost significantly.",
+    options: [
+      "Flag the whole-life cost impact clearly, not just the upfront saving — a proposal that shifts cost to the operational phase isn't automatically a net benefit to the Employer",
+      "Only the upfront capital cost saving matters when evaluating a value engineering proposal",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuinely good value engineering proposal should consider whole-life cost, not just capital cost — a change that saves money now but costs more to operate and maintain over time may not actually represent better value overall.",
+  },
+  {
+    id: "value-engineering-07",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor proposes a value engineering change to a system designed by a specialist consultant, without involving that consultant in reviewing whether the change is sound.",
+    options: [
+      "Involve the original design consultant in reviewing the proposed change — bypassing the specialist who designed the system risks missing something the original design was specifically addressing",
+      "Value engineering changes to a specialist-designed system never need input from the original designer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A specialist design often addresses considerations that aren't obvious from the outside — proposing a change without the original consultant's input risks unintentionally undermining something the design was specifically solving for.",
+  },
+  {
+    id: "value-engineering-08",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering proposal is accepted, but its impact on the project programme, positive or negative, is never assessed before implementation.",
+    options: [
+      "Assess programme impact as part of evaluating any VE proposal — a change that saves cost but disrupts the programme isn't a straightforward win without weighing that trade-off too",
+      "Programme impact is irrelevant to evaluating a value engineering proposal, which should be judged on cost alone",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Cost isn't the only variable — a VE change that inadvertently delays the programme, or alternatively could also accelerate it, needs to be assessed as part of the overall picture, not evaluated purely on cost saving in isolation.",
+  },
 ];

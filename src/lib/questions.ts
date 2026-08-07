@@ -2274,4 +2274,428 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "If the contract specifically requires the Employer to witness testing, self-certifying without that witness present doesn't satisfy the requirement — exactly the kind of procedural step that can undermine an otherwise legitimate test result if later disputed.",
   },
+
+  // --- Programme & Scheduling ---
+  {
+    id: "programme-01",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor submits a programme that shows an unrealistically compressed schedule just to satisfy contractual submission requirements, without genuinely planning to work to it.",
+    options: [
+      "Push back and require a realistic, achievable programme — a nominally compliant but unrealistic programme undermines the whole point of having one",
+      "Any submitted programme satisfies the contractual requirement regardless of whether it's realistic",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A programme is meant to be a genuine planning and monitoring tool — accepting an unrealistic one just to tick a submission box defeats its purpose and makes later delay analysis far harder.",
+  },
+  {
+    id: "programme-02",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor updates its programme monthly but never actually revises the critical path logic, just shifts the same bars later each time.",
+    options: [
+      "This is a red flag worth challenging — a genuine programme update should re-examine logic and critical path, not just mechanically slide dates",
+      "Shifting dates without revisiting logic is a perfectly adequate way to update a programme",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A programme update that never re-examines its own logic isn't really tracking reality — it's just recording slippage. A credible programme update reflects genuine replanning, not a mechanical date shift.",
+  },
+  {
+    id: "programme-03",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Employer's representative informally suggests resequencing part of the works during a site meeting, and the Contractor proceeds without any formal instruction or programme revision.",
+    options: [
+      "Get it confirmed formally and reflected in a revised programme before proceeding — informal suggestions shouldn't quietly become the working programme",
+      "Any informal suggestion from the Employer's representative can be treated as a binding programme change",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same discipline about formal instructions applies to programme changes — an informal suggestion, even from the right person, should be confirmed and properly reflected before it becomes the basis for how work proceeds.",
+  },
+  {
+    id: "programme-04",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor's programme shows significant float on a particular activity. The Employer argues that any delay to that activity can never support an EOT because of the float.",
+    options: [
+      "Check who owns the float and how the contract treats it — float ownership is a genuinely contested area, not a settled default in the Employer's favor",
+      "Float always belongs to the Employer, so any delay absorbed by float can never support an EOT",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Who 'owns' float — and therefore whether using it up defeats an EOT claim — is a genuinely unsettled and contract-specific question. Don't assume a default answer either way without checking the contract and the facts.",
+  },
+  {
+    id: "programme-05",
+    topic: "Programme & Scheduling",
+    scenario:
+      "A subcontractor's programme conflicts with the main programme's sequencing, but the main Contractor hasn't reconciled the two before issuing instructions to the subcontractor.",
+    options: [
+      "Reconcile the subcontractor's programme with the main programme before issuing instructions — proceeding on conflicting programmes is a recipe for disputes and inefficiency",
+      "Subcontractor programmes never need to be reconciled with the main programme as long as the subcontractor manages its own work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An unreconciled conflict between the main and subcontractor programmes is exactly the kind of coordination failure that causes real delay and disruption — worth resolving proactively, not discovered mid-execution.",
+  },
+  {
+    id: "programme-06",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor wants to claim an EOT based on a theoretical, unbuilt 'what-if' programme rather than the actual as-built progress and the accepted baseline programme.",
+    options: [
+      "Base the claim on the accepted baseline and actual as-built progress — a purely theoretical programme is a much weaker basis for a real claim",
+      "Any programme, theoretical or actual, is an equally valid basis for an EOT claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "EOT claims are strongest when tied to what was actually agreed as the baseline and what actually happened on site — a hypothetical programme constructed after the fact to support a claim is far more vulnerable to challenge.",
+  },
+  {
+    id: "programme-07",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Employer wants to reject a Contractor's programme submission outright without giving any specific reasons, just calling it 'unsatisfactory.'",
+    options: [
+      "Request specific reasons — a vague rejection without substantive grounds is hard to act on and may not be a valid rejection under the contract's actual requirements",
+      "A programme submission can always be rejected without any reason given",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract requires programme approval, a rejection generally needs to be on some substantive, communicable basis — an unexplained 'unsatisfactory' doesn't give the contractor anything to actually respond to or fix.",
+  },
+  {
+    id: "programme-08",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor treats the baseline programme as fixed and never revisited, even after multiple approved variations that clearly change the sequence and duration of the works.",
+    options: [
+      "Update and re-baseline the programme to reflect approved changes — an outdated baseline makes it much harder to properly track and prove delay later",
+      "The original baseline programme should never be revised regardless of subsequent approved changes",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A baseline that no longer reflects the actual agreed scope and sequence stops being a useful reference point — it should be revised, with proper agreement, to keep delay analysis meaningful as the project evolves.",
+  },
+
+  // --- Novation ---
+  {
+    id: "novation-01",
+    topic: "Novation",
+    scenario:
+      "A design consultant is novated from the Employer to the Contractor partway through design development. The Contractor assumes it now has zero exposure for any design work already done before novation.",
+    options: [
+      "Check the novation agreement's actual terms — liability for pre-novation design work depends on how the novation is specifically drafted, not assumed automatically",
+      "Novation always completely erases any responsibility for work done before the novation date, automatically",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation agreements vary in how they treat pre-novation liability — some transfer full responsibility including for prior work, others don't. This needs checking in the specific agreement, not assumed either way.",
+  },
+  {
+    id: "novation-02",
+    topic: "Novation",
+    scenario:
+      "After novation, the newly-novated consultant continues receiving informal instructions directly from the original Employer, bypassing the Contractor who is now technically their client.",
+    options: [
+      "This should be raised and stopped — post-novation, instructions should properly flow through the new contractual relationship, not the old one informally continuing",
+      "Continuing the old informal reporting lines after novation is harmless and doesn't need addressing",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation is meant to genuinely shift the contractual relationship — old habits of direct informal instruction undermine that and can create confusion about who's actually responsible for what going forward.",
+  },
+  {
+    id: "novation-03",
+    topic: "Novation",
+    scenario:
+      "The novation agreement is silent on what happens to fees already invoiced but unpaid by the consultant to the Employer before the novation date.",
+    options: [
+      "This is a genuine gap worth resolving explicitly before signing — don't assume it's automatically covered by the novation agreement's other terms",
+      "Unpaid pre-novation fees are always automatically absorbed into the new arrangement without needing separate resolution",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A gap in the novation agreement about historic unpaid fees is a real loose end — leaving it unresolved just defers a dispute about who's actually responsible for that amount.",
+  },
+  {
+    id: "novation-04",
+    topic: "Novation",
+    scenario:
+      "The Contractor wants to hold the newly-novated consultant to the same standard of care that applied under the original Employer-consultant agreement, without checking if the novation preserved those exact terms.",
+    options: [
+      "Check the novation agreement to confirm what terms actually carried over — assuming automatic continuity of every original term isn't safe without verifying",
+      "All terms of the original consultant agreement always automatically carry over identically upon novation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation can either preserve the original terms or introduce new ones, depending on how it's drafted — confirm what actually survived the novation rather than assuming full continuity.",
+  },
+  {
+    id: "novation-05",
+    topic: "Novation",
+    scenario:
+      "A consultant refuses to be novated, preferring to keep its direct contract with the Employer, even though the Employer and Contractor have already agreed novation should happen.",
+    options: [
+      "The consultant's own consent is generally required for a valid novation — this needs to be resolved with the consultant directly, not assumed automatic",
+      "Novation can be forced on a consultant without its consent as long as the Employer and Contractor agree",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation is a three-party arrangement requiring the consent of all three parties, including the party being novated — the Employer and Contractor agreeing between themselves isn't enough on its own.",
+  },
+  {
+    id: "novation-06",
+    topic: "Novation",
+    scenario:
+      "Design errors are discovered that trace back to work done by the consultant before novation, but the defect only becomes apparent after novation and well into construction.",
+    options: [
+      "This needs careful analysis of the novation agreement's liability allocation — timing of discovery doesn't necessarily determine which party bears responsibility for a pre-novation design error",
+      "Responsibility always automatically follows whoever currently holds the consultant's contract at the time the defect is actually discovered",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Liability typically attaches to when the error was actually made, not when it happens to be discovered — but how the novation agreement allocates responsibility for pre-novation errors is the real thing to check.",
+  },
+  {
+    id: "novation-07",
+    topic: "Novation",
+    scenario:
+      "The Contractor wants to novate a consultant it never chose and has concerns about, purely because the Employer originally engaged them.",
+    options: [
+      "Raise concerns and review the consultant's track record before proceeding — accepting a novation doesn't have to be a rubber stamp if there are genuine concerns",
+      "A proposed novation must always be accepted exactly as presented, regardless of any concerns about the consultant",
+    ],
+    correctIndex: 0,
+    explanation:
+      "While novation is often a standard part of a design-and-build arrangement, genuine concerns about the specific consultant are worth raising and addressing before accepting — it's not purely a formality to wave through.",
+  },
+  {
+    id: "novation-08",
+    topic: "Novation",
+    scenario:
+      "Insurance coverage for the consultant's professional liability is not addressed at all in the novation agreement.",
+    options: [
+      "This is a real gap worth resolving — confirm whether the consultant's professional indemnity insurance continues to respond to pre- and post-novation work appropriately",
+      "Insurance coverage is never affected by novation and doesn't need any specific attention",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation can have real implications for how professional indemnity insurance responds to claims, particularly for errors that straddle the novation date — this is worth explicitly confirming, not left as an assumption.",
+  },
+
+  // --- Contra Charges / Back-Charging ---
+  {
+    id: "contra-charges-01",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor wants to deduct a contra charge from a subcontractor's payment for alleged extra costs caused by the subcontractor's delay, without any prior notice to the subcontractor.",
+    options: [
+      "Check the subcontract for the required notice or process before deducting — an undocumented, unnotified deduction is easy for the subcontractor to successfully challenge",
+      "Contra charges can always be deducted unilaterally without any notice requirement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Like most deductions, contra charges typically need to follow a specific contractual process — notifying the other party and giving it a chance to respond — before being applied. An undisclosed deduction invites a dispute.",
+  },
+  {
+    id: "contra-charges-02",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is applied based on an estimated cost of rectification, before the actual rectification work has even been carried out or invoiced.",
+    options: [
+      "Check whether the subcontract allows charging based on estimated cost, and substantiate it properly — an estimate needs to be reasonable and evidenced, not just asserted",
+      "Contra charges can only ever be based on actual incurred and invoiced costs, never estimates",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some contracts do allow contra charges based on a reasonable estimate, but that estimate still needs to be genuinely substantiated — an unsupported guess is vulnerable to challenge either way.",
+  },
+  {
+    id: "contra-charges-03",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor applies a contra charge that's actually larger than the value of the subcontractor's remaining payment, resulting in the subcontractor owing money back.",
+    options: [
+      "This is legitimate in principle if properly substantiated, but the calculation and process need to be watertight given how aggressively it's likely to be challenged",
+      "A contra charge can never exceed the value of the subcontractor's remaining payment under any circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "There's no inherent cap tying a contra charge to the remaining payment value — but a charge large enough to flip the balance owed is exactly the kind of deduction that invites the closest scrutiny, so the substantiation needs to be solid.",
+  },
+  {
+    id: "contra-charges-04",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A subcontractor disputes a contra charge, but the main Contractor proceeds to deduct it anyway before the dispute is resolved.",
+    options: [
+      "Check the subcontract's dispute process — deducting a genuinely disputed charge before resolution can itself be a breach depending on what the contract requires",
+      "A contra charge can always be deducted immediately regardless of whether the subcontractor disputes it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some subcontracts require disputed deductions to be held pending resolution rather than deducted immediately — proceeding to deduct anyway can turn a legitimate charge into a separate breach if the contract required otherwise.",
+  },
+  {
+    id: "contra-charges-05",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor applies a contra charge for delay costs without demonstrating that the subcontractor's delay actually caused those specific costs.",
+    options: [
+      "Establish genuine causation before charging — a contra charge needs to show the subcontractor's default actually caused the claimed cost, not just that both happened around the same time",
+      "Any cost incurred during a period of subcontractor delay can automatically be charged back, regardless of actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Correlation isn't causation — a contra charge needs to demonstrate the subcontractor's default actually caused the specific cost being charged, not just that the cost happened to arise during a delayed period.",
+  },
+  {
+    id: "contra-charges-06",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is applied for defective work, but the subcontractor was never given the opportunity to rectify the defect itself before the main Contractor brought in someone else to fix it.",
+    options: [
+      "Check whether the subcontract requires giving the subcontractor a chance to rectify first — bypassing that step can undermine the contra charge even if the defect was real",
+      "The main Contractor can always bring in a third party to fix any defect and charge it back without giving the subcontractor a chance to fix it first",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many subcontracts require the original party to be given a genuine opportunity to rectify its own defective work before the other party brings someone else in at cost — skipping that step is a common way contra charges get successfully challenged.",
+  },
+  {
+    id: "contra-charges-07",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor lumps several unrelated contra charges together into one deduction without itemising what each charge is actually for.",
+    options: [
+      "Itemise each charge separately with its own basis and amount — a bundled, unitemised deduction is hard for the subcontractor to properly assess or challenge",
+      "A single lump-sum deduction covering multiple issues is always acceptable without itemisation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same 'itemise, don't bundle' principle that applies to variation claims applies here — an unitemised lump deduction makes it impossible for the other side to properly understand or contest what they're actually being charged for.",
+  },
+  {
+    id: "contra-charges-08",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is deducted, but months later it turns out the underlying issue was actually the main Contractor's own fault, not the subcontractor's.",
+    options: [
+      "The deduction should be reversed and repaid once the actual cause is established — a contra charge based on a mistaken premise isn't valid just because it was already deducted",
+      "Once a contra charge has been deducted, it stays deducted regardless of what's later discovered about the actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A contra charge is only ever valid to the extent its underlying premise is correct — if it turns out the fault actually lay elsewhere, the deduction was never properly justified and should be corrected.",
+  },
+
+  // --- Partial Possession / Sectional Completion ---
+  {
+    id: "partial-possession-01",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The contract has no sectional completion provisions, but the Employer wants to take partial possession of a completed portion of the works early, informally.",
+    options: [
+      "Formalise this properly, even via a side agreement, before proceeding — taking possession without addressing risk, insurance, and defects liability implications creates real ambiguity",
+      "Informal early partial possession has no real consequences as long as both parties are generally happy with the arrangement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Partial possession affects risk transfer, insurance responsibility, and often triggers partial retention release or defects liability start dates — proceeding informally without addressing these leaves real gaps that tend to surface later as disputes.",
+  },
+  {
+    id: "partial-possession-02",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "A contract does include sectional completion with separate dates and LD rates per section, but the Employer wants to apply the full LD rate for late completion of just one section.",
+    options: [
+      "Apply the specific LD rate for that section as agreed, not the full contract rate — sectional LDs are meant to be section-specific",
+      "The full contract LD rate always applies to any section that's late, regardless of what section-specific rates were agreed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Where sections have their own agreed LD rates, that's what applies to that section's lateness — using the full overall rate instead isn't supported by an agreement that specifically broke it down by section.",
+  },
+  {
+    id: "partial-possession-03",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "Partial possession of one section affects the Contractor's ability to efficiently work on an adjacent, still-incomplete section, but this wasn't accounted for when partial possession was agreed.",
+    options: [
+      "Raise this as a genuine impact worth assessing for EOT/cost purposes — knock-on disruption to adjacent ongoing work from an occupied section is a real, foreseeable consequence worth addressing",
+      "Partial possession of one section can never have any impact on adjacent, still-incomplete sections",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Handing over part of a site while work continues next door commonly creates real access, safety, and logistics constraints — this is a legitimate basis for a claim if it wasn't priced into the original arrangement.",
+  },
+  {
+    id: "partial-possession-04",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Employer takes partial possession of a section without any formal certificate specific to that section, just informally starting to use it.",
+    options: [
+      "Get a proper certificate of partial or sectional completion issued — this triggers real consequences (retention, defects liability, risk) that need a clear, documented start date",
+      "Informal use of a section without a certificate has no bearing on when defects liability or risk transfer actually starts",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Just like practical completion generally, an undocumented start to partial possession creates genuine ambiguity about exactly when related obligations — defects liability period, retention release, risk transfer — for that section actually began.",
+  },
+  {
+    id: "partial-possession-05",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "Insurance for the works isn't adjusted to reflect that part of the building is now occupied and in use by the Employer following partial possession.",
+    options: [
+      "Review and adjust insurance arrangements to reflect the change in occupation and risk — continuing unchanged 'works' insurance may not properly cover an occupied, in-use section",
+      "Insurance arrangements never need adjustment regardless of a section being occupied and used by the Employer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An occupied, in-use section has a genuinely different risk profile than an unoccupied construction site — insurance arrangements should be reviewed and adjusted to match, not left as if nothing changed.",
+  },
+  {
+    id: "partial-possession-06",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Contractor assumes retention is only released for the whole project at once, ignoring that partial possession of a section has occurred.",
+    options: [
+      "Check whether the contract provides for proportionate retention release tied to sectional or partial completion — this is common in contracts that provide for sectional possession",
+      "Retention release is always tied to the whole project regardless of any sectional or partial possession arrangements",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Where a contract provides for sectional completion, it often also provides for proportionate retention release for that section — worth checking rather than assuming retention only ever moves as one lump for the whole project.",
+  },
+  {
+    id: "partial-possession-07",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "A dispute arises about whether a specific area handed over to the Employer actually counts as a formal 'section' under the contract, or was just informal early access.",
+    options: [
+      "This distinction matters — check exactly what the contract defines as a section versus informal access, since the consequences (LDs, retention, risk) differ significantly",
+      "Any area handed over to the Employer, however informally, is automatically treated as a full contractual 'section'",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A formally defined contractual 'section' with its own completion date and consequences is a different thing from informally letting the Employer use part of the site early — the distinction genuinely matters for what obligations and rights follow.",
+  },
+  {
+    id: "partial-possession-08",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Employer wants to take partial possession of a section that's substantially, but not fully, complete, and treat it as if practical completion of that section had occurred.",
+    options: [
+      "Assess it against the same functional test as practical completion generally — beneficial use despite minor outstanding items — rather than assuming either full completion or no completion at all",
+      "Partial possession always requires the section to be 100% complete with zero outstanding items",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same practical-completion logic applies at the section level — the real question is whether the section can be beneficially used despite minor outstanding items, not whether it's mechanically 100% finished down to the last item.",
+  },
 ];

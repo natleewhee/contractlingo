@@ -117,6 +117,58 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "The defects liability period covers routine snagging, not a free pass on seriously defective work — genuinely latent defects discovered later can potentially still be pursued, subject to the contract's and law's limitation periods.",
   },
+  {
+    id: "defects-05",
+    topic: "Defects",
+    scenario:
+      "In a traditional contract where the Contractor had no design responsibility, a defect is traced back to an error in the Employer-provided design rather than the Contractor's workmanship.",
+    options: [
+      "Distinguish design defects from workmanship defects — in a traditional contract, a pure design error is generally the Employer's or designer's risk, not the Contractor's",
+      "The Contractor is always responsible for any defect discovered during the defects liability period regardless of its actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "In a traditional, non-design-and-build arrangement, the Contractor is generally only responsible for building in accordance with the design, not for the design's own adequacy — a genuine design error is a different problem with a different responsible party.",
+  },
+  {
+    id: "defects-06",
+    topic: "Defects",
+    scenario:
+      "The Employer wants to reject an entire section of work over a single minor defect, rather than requiring rectification of just that defect.",
+    options: [
+      "Check whether rejection of the whole section is proportionate — remedies for defects are generally meant to be proportionate to the actual defect, not a blanket rejection over a minor issue",
+      "A single minor defect always justifies rejecting an entire section or portion of work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Remedies for defects are generally proportionate — rectification of the specific defect is the normal expectation, and rejecting an entire section over one minor issue is usually a disproportionate response, not the automatic entitlement.",
+  },
+  {
+    id: "defects-07",
+    topic: "Defects",
+    scenario:
+      "A defect is caused by the Contractor using a substitute material without approval, but the substitute actually performs identically to the specified material.",
+    options: [
+      "This is still a compliance issue worth addressing — unauthorised substitution — even though whether it's a 'defect' in the sense of actual performance failure is a separate question",
+      "If a substitute material performs identically, there's no issue at all regardless of whether it was ever approved",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Using an unapproved substitute is a procedural non-compliance in its own right, separate from whether it happens to perform adequately — approval processes exist partly so this determination is made in advance, not retroactively excused by the outcome.",
+  },
+  {
+    id: "defects-08",
+    topic: "Defects",
+    scenario:
+      "The Contractor wants to argue that because the Employer never formally objected to a defect during a site walk-through, it has effectively waived the right to have it fixed.",
+    options: [
+      "This is a weak argument on its own — silence during an informal walk-through doesn't necessarily amount to a formal waiver of contractual rights to have defects rectified",
+      "Any failure to object to a visible defect during any site visit automatically waives the right to have it fixed later",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Waiver of a contractual right generally requires something clearer and more deliberate than not raising an issue during an informal walk-through — defects liability rights aren't easily lost by silence alone.",
+  },
 
   // --- Payment ---
   {

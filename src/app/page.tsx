@@ -1,10 +1,37 @@
-import { Button3D } from "@/components/Button3D";
+import Link from "next/link";
 import { Chip } from "@/components/Chip";
-import { HeroAvatar } from "@/components/HeroAvatar";
+import { HeroIdentity } from "@/components/HeroIdentity";
+import { NotificationPrompt } from "@/components/NotificationPrompt";
+import { getAllQuestions, getProfile, getProgress } from "@/lib/db";
 
-const TOPICS = ["Variations", "Payment", "LD", "EOT", "Notices", "Delay"];
+// Reads live data from Neon on every request - must not be statically
+// prerendered, or the streak shown would freeze at build time.
+export const dynamic = "force-dynamic";
 
-export default function Home() {
+const SESSION_LENGTHS = [5, 10, 15] as const;
+
+export default async function Home() {
+  const [profile, { streak }, questions] = await Promise.all([
+    getProfile(),
+    getProgress(),
+    getAllQuestions(),
+  ]);
+  const topics = [...new Set(questions.map((q) => q.topic))];
+
+  if (!profile.displayName) {
+    return (
+      <div className="flex flex-1 justify-center px-4 py-6">
+        <main className="flex w-full max-w-md flex-1 flex-col items-center justify-center text-center">
+          <h1 className="text-lg font-extrabold">Welcome to ContractLingo</h1>
+          <p className="mt-1 text-sm text-ink-soft">Set up your hero before your first case</p>
+          <div className="mt-4 w-full">
+            <HeroIdentity initialName={null} initialScheme={profile.avatarScheme} />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-1 justify-center px-4 py-6">
       <main className="flex w-full max-w-md flex-col">
@@ -21,43 +48,50 @@ export default function Home() {
                 fill="var(--coral)"
               />
             </svg>
-            <span className="font-display text-sm font-bold">14</span>
+            <span className="font-display text-sm font-bold">{streak}</span>
           </div>
-          <span
+          <Link
+            href="/progress"
             className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-ink-soft shadow-[0_2px_0_var(--frame-border)]"
-            aria-hidden="true"
+            aria-label="View progress"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M3 3v18h18" />
+              <path d="M7 15l4-5 3 3 5-7" />
             </svg>
-          </span>
+          </Link>
         </div>
 
-        <div className="mt-3 flex items-center gap-3">
-          <HeroAvatar size={58} />
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold">Knight-Defender</span>
-            <span className="font-display text-[0.65rem] font-medium text-ink-soft">
-              This is you
-            </span>
-          </div>
-        </div>
+        <HeroIdentity initialName={profile.displayName} initialScheme={profile.avatarScheme} />
 
-        <h1 className="mt-4 text-lg font-extrabold">12 cases due today</h1>
-        <p className="mt-0.5 text-sm text-ink-soft">
-          Pick a fight, or take the whole batch
-        </p>
+        <h1 className="mt-4 text-lg font-extrabold">How much time do you have?</h1>
+        <p className="mt-0.5 text-sm text-ink-soft">Pick a length and we&apos;ll size the batch to fit</p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {TOPICS.map((topic) => (
-            <Chip key={topic}>{topic}</Chip>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {SESSION_LENGTHS.map((minutes) => (
+            <Link
+              key={minutes}
+              href={`/session?minutes=${minutes}`}
+              className="flex flex-col items-center justify-center gap-0.5 rounded-2xl bg-card py-3 shadow-[0_3px_0_var(--frame-border)] transition-transform active:translate-y-[2px] active:shadow-[0_1px_0_var(--frame-border)]"
+            >
+              <span className="font-display text-xl font-extrabold">{minutes}</span>
+              <span className="font-display text-[0.6rem] font-semibold tracking-wide text-ink-soft">
+                MIN
+              </span>
+            </Link>
           ))}
         </div>
 
-        <Button3D tone="gold" href="/session" className="mt-6">
-          FACE THEM ALL
-        </Button3D>
+        <p className="mt-6 text-sm font-extrabold">Or pick a topic</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {topics.map((topic) => (
+            <Link key={topic} href={`/session?topic=${encodeURIComponent(topic)}`}>
+              <Chip>{topic}</Chip>
+            </Link>
+          ))}
+        </div>
+
+        <NotificationPrompt />
 
         <div className="mt-8 flex justify-around border-t border-frame-border pt-3">
           <span className="h-2 w-2 rounded-full bg-coral" aria-hidden="true" />

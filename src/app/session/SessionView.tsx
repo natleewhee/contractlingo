@@ -1,0 +1,248 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { Button3D } from "@/components/Button3D";
+import { HeroAvatar } from "@/components/HeroAvatar";
+import { MinionAvatar } from "@/components/MinionAvatar";
+import { QueueDots } from "@/components/QueueDots";
+import { recordAnswer, recordFlag, recordSessionComplete } from "@/app/actions";
+import type { Question } from "@/lib/questions";
+
+type Phase = "incoming" | "battle" | "resolution" | "recap";
+const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
+
+export function SessionView({
+  initialPool,
+  heroScheme = "coral",
+}: {
+  initialPool: Question[];
+  heroScheme?: string;
+}) {
+  const [pool] = useState(initialPool);
+  const [phase, setPhase] = useState<Phase>("incoming");
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState<0 | 1 | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [frozeStreak, setFrozeStreak] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const total = pool.length;
+  const question = pool[index];
+  const caseWord = total === 1 ? "case" : "cases";
+
+  function answer(choice: 0 | 1) {
+    setSelected(choice);
+    const isCorrect = choice === question.correctIndex;
+    if (isCorrect) setCorrectCount((c) => c + 1);
+    setPhase("resolution");
+    recordAnswer(question.id, isCorrect, question.topic).catch((err) => {
+      console.error("Failed to record answer", err);
+    });
+  }
+
+  async function next() {
+    setReportOpen(false);
+    setReportSent(false);
+    if (index + 1 < total) {
+      setIndex((i) => i + 1);
+      setSelected(null);
+      setPhase("battle");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const result = await recordSessionComplete(total);
+      setStreak(result.streak);
+      setFrozeStreak(result.frozeStreak);
+    } catch (err) {
+      console.error("Failed to record session completion", err);
+    } finally {
+      setSubmitting(false);
+    }
+    setPhase("recap");
+  }
+
+  function flag(reason: string) {
+    setReportOpen(false);
+    setReportSent(true);
+    recordFlag(question.id, reason).catch((err) => {
+      console.error("Failed to record flag", err);
+    });
+  }
+
+  return (
+    <div className="flex flex-1 justify-center px-4 py-6">
+      <main className="flex w-full max-w-md flex-col">
+        {phase === "incoming" && (
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16 text-center">
+            <span className="text-lg font-extrabold">
+              {total} {caseWord} incoming!
+            </span>
+            <div className="flex items-center justify-center gap-4">
+              <div className="flex gap-2">
+                {pool.map((q, i) => (
+                  <MinionAvatar
+                    key={q.id}
+                    size={24}
+                    className="[animation-duration:1s]"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  />
+                ))}
+              </div>
+              <div className="[transform:scaleX(-1)]">
+                <HeroAvatar size={46} scheme={heroScheme} />
+              </div>
+            </div>
+            <Button3D tone="coral" onClick={() => setPhase("battle")}>
+              DEFEND
+            </Button3D>
+          </div>
+        )}
+
+        {(phase === "battle" || phase === "resolution") && (
+          <div className="flex flex-1 flex-col py-4">
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-card text-ink-soft shadow-[0_2px_0_var(--frame-border)]"
+                aria-label="Back to home"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </Link>
+              <div className="overflow-x-auto">
+                <QueueDots total={total} currentIndex={index} />
+              </div>
+            </div>
+
+            <div className="relative mt-3 flex flex-col items-center gap-2 rounded-2xl bg-card px-4 py-5 text-center shadow-[0_3px_0_var(--frame-border)]">
+              <span className="font-display text-[0.6rem] font-semibold tracking-wide text-coral uppercase">
+                Your Call
+              </span>
+              <MinionAvatar size={42} />
+              <p className="font-extrabold">{question.scenario}</p>
+            </div>
+
+            <div className="mt-3 flex flex-col gap-2">
+              {question.options.map((opt, i) => {
+                const isAnswered = phase === "resolution";
+                const isCorrectOpt = i === question.correctIndex;
+                const isChosen = i === selected;
+
+                let tone = "bg-card text-ink-soft shadow-[0_3px_0_var(--frame-border)]";
+                if (isAnswered && isCorrectOpt) {
+                  tone = "bg-mint text-[#21284A] shadow-[0_3px_0_var(--mint-dark)]";
+                } else if (isAnswered && isChosen && !isCorrectOpt) {
+                  tone = "bg-card text-coral shadow-[0_3px_0_var(--coral)] outline outline-2 outline-[var(--coral)]";
+                }
+
+                return (
+                  <button
+                    key={opt}
+                    disabled={isAnswered}
+                    onClick={() => answer(i as 0 | 1)}
+                    className={`flex items-center justify-between rounded-2xl px-4 py-3 text-left font-display text-sm font-semibold ${tone}`}
+                  >
+                    {opt}
+                    {isAnswered && isCorrectOpt && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
+                        <path d="M4 12l5 5L20 6" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {phase === "resolution" && (
+              <div className="mt-auto rounded-t-2xl bg-mint px-4 py-4 text-[#21284A]">
+                <p className="font-display text-sm font-bold">
+                  {selected === question.correctIndex ? "Nice! That's correct." : "Not quite."}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed">{question.explanation}</p>
+
+                {!reportOpen && !reportSent && (
+                  <button
+                    onClick={() => setReportOpen(true)}
+                    className="mt-2 flex items-center gap-1 font-display text-[0.65rem] font-semibold"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                      <path d="M5 3v18M5 4h13l-3 4 3 4H5" />
+                    </svg>
+                    Something off? Report this case
+                  </button>
+                )}
+
+                {reportOpen && (
+                  <div className="mt-3 rounded-xl bg-white p-3 text-[#21284A]">
+                    <p className="text-center font-display text-xs font-semibold">
+                      What&apos;s wrong with this one?
+                    </p>
+                    <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+                      {REASONS.map((reason) => (
+                        <button
+                          key={reason}
+                          onClick={() => flag(reason)}
+                          className="rounded-full border border-[#d8d4c4] px-2.5 py-1 font-display text-[0.6rem] font-semibold text-[#5b6180]"
+                        >
+                          {reason}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {reportSent && <p className="mt-2 text-xs">Flagged — thanks, I&apos;ll take a look.</p>}
+
+                <Button3D tone="white" className="mt-3" onClick={next} disabled={submitting}>
+                  {submitting ? "..." : "CONTINUE"}
+                </Button3D>
+              </div>
+            )}
+          </div>
+        )}
+
+        {phase === "recap" && (
+          <div
+            className="relative flex flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl px-4 py-16 text-center text-[#21284A]"
+            style={{ background: "linear-gradient(180deg, var(--coral), var(--gold))" }}
+          >
+            <span className="font-display text-4xl font-bold [text-shadow:0_3px_0_rgba(0,0,0,0.08)]">
+              {correctCount}/{total}
+            </span>
+            <span className="font-display text-xs font-semibold tracking-wide uppercase">Defended</span>
+            <div className="mt-2 flex items-center gap-1.5 rounded-full bg-white/40 px-3 py-1 font-display text-xs font-semibold">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2c1 3-3 4-3 7.5A3.5 3.5 0 0012 13a3.5 3.5 0 003-5.3c1.5 1 2.5 3 2.5 5a5.5 5.5 0 11-11 0C6.5 8 9 5.5 12 2z"
+                  fill="currentColor"
+                />
+              </svg>
+              {streak} day streak
+            </div>
+            {frozeStreak && (
+              <div className="mt-1.5 flex items-center gap-1 font-display text-[0.65rem] font-semibold">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                  <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" />
+                </svg>
+                Missed a day, but your streak is protected
+              </div>
+            )}
+            <HeroAvatar size={70} scheme={heroScheme} className="mt-3" />
+            <div className="mt-4 w-full max-w-[200px]">
+              <Button3D tone="white" href="/">
+                DONE
+              </Button3D>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

@@ -25,22 +25,28 @@ export async function GET(req: NextRequest) {
   webpush.setVapidDetails(subject, publicKey, privateKey);
 
   const allQuestions = await getAllQuestions();
-  const dueIds = await getDueQuestionIds(allQuestions.map((q) => q.id));
-  if (dueIds.length === 0) {
-    return NextResponse.json({ sent: 0, skipped: "nothing due today" });
-  }
-
+  const allQuestionIds = allQuestions.map((q) => q.id);
   const subscriptions = await getAllSubscriptions();
-  const payload = JSON.stringify({
-    title: "ContractLingo",
-    body: `${dueIds.length} case${dueIds.length === 1 ? "" : "s"} waiting for you today.`,
-    url: "/session",
-  });
 
+  // Progress is per-user now, not one shared count - each subscriber gets
+  // their own due count in their own notification.
   let sent = 0;
   let removed = 0;
+  let skippedNothingDue = 0;
   await Promise.all(
     subscriptions.map(async (sub) => {
+      const dueIds = await getDueQuestionIds(sub.userId, allQuestionIds);
+      if (dueIds.length === 0) {
+        skippedNothingDue += 1;
+        return;
+      }
+
+      const payload = JSON.stringify({
+        title: "ContractLingo",
+        body: `${dueIds.length} case${dueIds.length === 1 ? "" : "s"} waiting for you today.`,
+        url: "/session",
+      });
+
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
@@ -59,5 +65,5 @@ export async function GET(req: NextRequest) {
     })
   );
 
-  return NextResponse.json({ sent, removed, dueToday: dueIds.length });
+  return NextResponse.json({ sent, removed, skippedNothingDue, totalSubscribers: subscriptions.length });
 }

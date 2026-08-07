@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HeroIdentity } from "@/components/HeroIdentity";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
 import { getProfile, getProgress } from "@/lib/db";
+import { getUserId } from "@/lib/identity";
 
 // Reads live data from Neon on every request - must not be statically
 // prerendered, or the streak shown would freeze at build time.
@@ -10,7 +11,8 @@ export const dynamic = "force-dynamic";
 const SESSION_LENGTHS = [5, 10, 15] as const;
 
 export default async function Home() {
-  const [profile, { streak }] = await Promise.all([getProfile(), getProgress()]);
+  const userId = await getUserId();
+  const [profile, { streak }] = await Promise.all([getProfile(userId), getProgress(userId)]);
 
   if (!profile.displayName) {
     return (

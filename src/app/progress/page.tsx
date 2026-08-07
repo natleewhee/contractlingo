@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
 import { getAllQuestions, getFlags, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
+import { getUserId } from "@/lib/identity";
 
 // Reads live data from Neon on every request - must not be statically
 // prerendered, same reasoning as the home page.
@@ -22,10 +23,11 @@ function last7Days(): string[] {
 }
 
 export default async function ProgressPage() {
+  const userId = await getUserId();
   const [{ streak, totalCleared }, topicStats, weekly, questions, flags] = await Promise.all([
-    getProgress(),
-    getTopicStats(),
-    getWeeklyStats(),
+    getProgress(userId),
+    getTopicStats(userId),
+    getWeeklyStats(userId),
     getAllQuestions(),
     getFlags(),
   ]);

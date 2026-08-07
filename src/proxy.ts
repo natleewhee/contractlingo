@@ -1,23 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AUTH_COOKIE_NAME, verifyAuthToken } from "@/lib/auth";
+import { USER_ID_COOKIE } from "@/lib/identity";
 
-export async function proxy(req: NextRequest) {
-  const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
-  if (await verifyAuthToken(token)) {
+// Legacy cookie from the old shared-passphrase gate, since removed - kept
+// only to migrate the original owner's browser to the 'default' user_id
+// (the id all their existing progress/history is already stored under)
+// instead of quietly starting them over as a stranger.
+const LEGACY_AUTH_COOKIE = "cl_auth";
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+
+export function proxy(req: NextRequest) {
+  if (req.cookies.get(USER_ID_COOKIE)?.value) {
     return NextResponse.next();
   }
 
-  const loginUrl = new URL("/login", req.url);
-  return NextResponse.redirect(loginUrl);
+  const userId = req.cookies.get(LEGACY_AUTH_COOKIE)?.value ? "default" : crypto.randomUUID();
+  const response = NextResponse.next();
+  response.cookies.set(USER_ID_COOKIE, userId, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: ONE_YEAR_SECONDS * 5,
+    path: "/",
+  });
+  return response;
 }
 
 export const config = {
-  // Everything except the login page itself, the cron route (which has its
-  // own CRON_SECRET Bearer check and won't present this cookie), the debug
-  // route (diagnostic-only, no secrets in its response - needs to stay
-  // reachable specifically to debug a broken login), and static assets
-  // needed before/without auth (manifest, service worker, icons).
   matcher: [
-    "/((?!login|api/cron|api/debug|_next/static|_next/image|manifest\\.webmanifest|sw\\.js|icon\\.svg|apple-icon|favicon\\.ico).*)",
+    "/((?!api/cron|_next/static|_next/image|manifest\\.webmanifest|sw\\.js|icon\\.svg|apple-icon|favicon\\.ico).*)",
   ],
 };

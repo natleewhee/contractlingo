@@ -1,4 +1,5 @@
 import { getAllQuestions, getDueQuestionIds, getProfile } from "@/lib/db";
+import { getUserId } from "@/lib/identity";
 import type { Question } from "@/lib/questions";
 import { SessionView } from "./SessionView";
 
@@ -70,7 +71,8 @@ export default async function SessionPage({
   searchParams: Promise<{ topic?: string; minutes?: string }>;
 }) {
   const { topic, minutes } = await searchParams;
-  const [profile, allQuestions] = await Promise.all([getProfile(), getAllQuestions()]);
+  const userId = await getUserId();
+  const [profile, allQuestions] = await Promise.all([getProfile(userId), getAllQuestions()]);
 
   let pool = topic ? allQuestions.filter((q) => q.topic === topic) : allQuestions;
   if (pool.length === 0) pool = allQuestions;
@@ -79,7 +81,7 @@ export default async function SessionPage({
     // "Face them all" narrows to what's actually due for spaced-repetition
     // review, falling back to the full bank if nothing is due yet so
     // there's always something to do.
-    const dueIds = await getDueQuestionIds(pool.map((q) => q.id));
+    const dueIds = await getDueQuestionIds(userId, pool.map((q) => q.id));
     const due = pool.filter((q) => dueIds.includes(q.id));
     if (due.length > 0) pool = due;
   }

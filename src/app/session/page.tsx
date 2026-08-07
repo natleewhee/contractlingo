@@ -36,12 +36,17 @@ export default async function SessionPage({
     if (due.length > 0) pool = due;
   }
 
+  // Always shuffle - questions come back from Neon in id order, which
+  // groups them sequentially by topic since ids are topic-prefixed. Without
+  // this, an uncapped or under-cap session would just play out in that
+  // same fixed order every time.
+  pool = shuffle(pool);
+
   // A picked session length (5/10/15 min) caps the batch to roughly one
-  // question per minute, shuffled so a big due pile doesn't always hand
-  // back the same first N questions every day.
+  // question per minute.
   const cap = Number(minutes);
   if (ALLOWED_MINUTES.includes(cap) && pool.length > cap) {
-    pool = shuffle(pool).slice(0, cap);
+    pool = pool.slice(0, cap);
   }
 
   return <SessionView initialPool={pool} heroScheme={profile.avatarScheme} />;

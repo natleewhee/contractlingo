@@ -128,17 +128,19 @@ export default async function ProgressPage() {
         )}
 
         <h2 className="mt-6 text-sm font-extrabold">All topics</h2>
+        <p className="mt-1 text-xs text-ink-soft">Tap a topic to practice it directly</p>
         <div className="mt-2 flex flex-col gap-1.5">
           {rows.map((r) => (
-            <div
+            <Link
               key={r.topic}
+              href={`/session?topic=${encodeURIComponent(r.topic)}`}
               className="flex items-center justify-between rounded-xl bg-card px-3 py-2 text-xs shadow-[0_1px_0_var(--frame-border)]"
             >
               <span className="font-display font-semibold">{r.topic}</span>
               <span className="text-ink-soft">
                 {r.attempts === 0 ? "Not started" : `${r.accuracy}% · ${r.correct}/${r.attempts}`}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
 

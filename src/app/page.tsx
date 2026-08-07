@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Chip } from "@/components/Chip";
 import { HeroIdentity } from "@/components/HeroIdentity";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
-import { getAllQuestions, getProfile, getProgress } from "@/lib/db";
+import { getProfile, getProgress } from "@/lib/db";
 
 // Reads live data from Neon on every request - must not be statically
 // prerendered, or the streak shown would freeze at build time.
@@ -11,12 +10,7 @@ export const dynamic = "force-dynamic";
 const SESSION_LENGTHS = [5, 10, 15] as const;
 
 export default async function Home() {
-  const [profile, { streak }, questions] = await Promise.all([
-    getProfile(),
-    getProgress(),
-    getAllQuestions(),
-  ]);
-  const topics = [...new Set(questions.map((q) => q.topic))];
+  const [profile, { streak }] = await Promise.all([getProfile(), getProgress()]);
 
   if (!profile.displayName) {
     return (
@@ -78,15 +72,6 @@ export default async function Home() {
               <span className="font-display text-[0.6rem] font-semibold tracking-wide text-ink-soft">
                 MIN
               </span>
-            </Link>
-          ))}
-        </div>
-
-        <p className="mt-6 text-sm font-extrabold">Or pick a topic</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {topics.map((topic) => (
-            <Link key={topic} href={`/session?topic=${encodeURIComponent(topic)}`}>
-              <Chip>{topic}</Chip>
             </Link>
           ))}
         </div>

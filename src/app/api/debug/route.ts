@@ -7,6 +7,7 @@ import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
 // Visit /api/debug directly and paste the JSON back.
 export async function GET() {
   const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
+  const hasAppPassword = Boolean(process.env.APP_PASSWORD);
 
   let connection: { ok: true; time: string } | { ok: false; error: string };
   try {
@@ -26,5 +27,5 @@ export async function GET() {
 
   const progress = await getProgress();
 
-  return NextResponse.json({ hasDatabaseUrl, connection, questionsTable, progress });
+  return NextResponse.json({ hasDatabaseUrl, hasAppPassword, connection, questionsTable, progress });
 }

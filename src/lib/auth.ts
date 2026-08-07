@@ -44,8 +44,12 @@ export async function verifyAuthToken(token: string | undefined): Promise<boolea
   return timingSafeEqual(token, expected);
 }
 
+// Trims both sides - a stray trailing space/newline in how APP_PASSWORD was
+// pasted into Vercel's env var UI (a textarea, not a single-line input)
+// would otherwise cause every login attempt to silently fail even with the
+// visibly "correct" password typed in.
 export async function verifyPassword(candidate: string): Promise<boolean> {
-  const password = process.env.APP_PASSWORD;
+  const password = process.env.APP_PASSWORD?.trim();
   if (!password) return false;
-  return timingSafeEqual(candidate, password);
+  return timingSafeEqual(candidate.trim(), password);
 }

@@ -127,6 +127,16 @@ export async function checkConnection(): Promise<{ time: string }> {
   return { time: raw instanceof Date ? raw.toISOString() : String(raw) };
 }
 
+// Same non-swallowing rationale as checkConnection() - lets /api/debug
+// distinguish "table exists with 0 rows" (seed didn't run/failed) from a
+// real connection error, rather than both silently looking like "0".
+export async function getQuestionsTableCount(): Promise<number> {
+  await ensureSchema();
+  const db = getSql();
+  const rows = await db`SELECT COUNT(*) as count FROM questions`;
+  return Number((rows[0] as { count: string | number }).count);
+}
+
 export type Progress = {
   streak: number;
   totalCleared: number;

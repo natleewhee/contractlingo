@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { checkConnection, getProgress } from "@/lib/db";
+import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
 
 // Unambiguous diagnostic for the Neon connection, since a "0" streak on
 // Home is indistinguishable between "genuinely no session completed yet"
@@ -16,7 +16,15 @@ export async function GET() {
     connection = { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
 
+  let questionsTable: { ok: true; rowCount: number } | { ok: false; error: string };
+  try {
+    const rowCount = await getQuestionsTableCount();
+    questionsTable = { ok: true, rowCount };
+  } catch (err) {
+    questionsTable = { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+
   const progress = await getProgress();
 
-  return NextResponse.json({ hasDatabaseUrl, connection, progress });
+  return NextResponse.json({ hasDatabaseUrl, connection, questionsTable, progress });
 }

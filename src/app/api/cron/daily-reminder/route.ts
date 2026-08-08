@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       const payload = JSON.stringify({
         title: "ContractLingo",
         body: `${dueIds.length} case${dueIds.length === 1 ? "" : "s"} waiting for you today.`,
-        url: "/session",
+        url: "/session?minutes=10",
       });
 
       try {

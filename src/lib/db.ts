@@ -166,7 +166,14 @@ function ensureSchema(): Promise<void> {
           explanation = EXCLUDED.explanation,
           updated_at = now()
       `;
-    })();
+    })().catch((err) => {
+      // Don't cache a rejected promise forever - a transient blip (e.g.
+      // Neon waking from scale-to-zero) would otherwise permanently brick
+      // this warm instance, since every future call just re-throws the
+      // same cached rejection instead of retrying.
+      schemaReady = null;
+      throw err;
+    });
   }
   return schemaReady;
 }

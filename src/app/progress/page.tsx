@@ -157,7 +157,7 @@ export default async function ProgressPage() {
           </span>
         </Link>
 
-        <Button3D tone="gold" href="/session" className="mt-4">
+        <Button3D tone="gold" href="/session?minutes=10" className="mt-4">
           FACE MORE CASES
         </Button3D>
 

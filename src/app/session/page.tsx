@@ -7,6 +7,7 @@ import { SessionView } from "./SessionView";
 export const dynamic = "force-dynamic";
 
 const ALLOWED_MINUTES = [5, 10, 15];
+const DEFAULT_CAP_MINUTES = 10;
 
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -77,26 +78,21 @@ export default async function SessionPage({
   let pool = topic ? allQuestions.filter((q) => q.topic === topic) : allQuestions;
   if (pool.length === 0) pool = allQuestions;
 
-  if (!topic) {
-    // "Face them all" narrows to what's actually due for spaced-repetition
-    // review, falling back to the full bank if nothing is due yet so
-    // there's always something to do.
-    const dueIds = await getDueQuestionIds(userId, pool.map((q) => q.id));
-    const due = pool.filter((q) => dueIds.includes(q.id));
-    if (due.length > 0) pool = due;
-  }
+  // Narrows to what's actually due for spaced-repetition review - for both
+  // "face them all" and a specific topic - falling back to the (possibly
+  // topic-filtered) full bank if nothing is due yet so there's always
+  // something to do.
+  const dueIds = await getDueQuestionIds(userId, pool.map((q) => q.id));
+  const due = pool.filter((q) => dueIds.includes(q.id));
+  if (due.length > 0) pool = due;
 
   // A picked session length (5/10/15 min) caps the batch to roughly one
   // question per minute, spread across as many distinct topics as
-  // possible. Without a cap, a plain shuffle is enough - questions come
-  // back from Neon in id order, which groups them sequentially by topic
-  // since ids are topic-prefixed, so this still avoids playing out in that
-  // same fixed order every time.
-  const cap = Number(minutes);
-  pool =
-    ALLOWED_MINUTES.includes(cap) && pool.length > cap
-      ? distributeAcrossTopics(pool, cap)
-      : shuffle(pool);
+  // possible. An unset or invalid `minutes` param still gets a default cap
+  // - there is no path that sends the whole bank into one session.
+  const parsedMinutes = Number(minutes);
+  const cap = ALLOWED_MINUTES.includes(parsedMinutes) ? parsedMinutes : DEFAULT_CAP_MINUTES;
+  pool = pool.length > cap ? distributeAcrossTopics(pool, cap) : shuffle(pool);
 
   pool = randomizeOptionOrder(pool);
 

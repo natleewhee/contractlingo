@@ -12,6 +12,8 @@ import type { Question } from "@/lib/questions";
 type Phase = "incoming" | "battle" | "resolution" | "recap";
 const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
 
+const AVATAR_PREVIEW_CAP = 8;
+
 export function SessionView({
   initialPool,
   heroScheme = "coral",
@@ -84,8 +86,8 @@ export function SessionView({
               {total} {caseWord} incoming!
             </span>
             <div className="flex items-center justify-center gap-4">
-              <div className="flex gap-2">
-                {pool.map((q, i) => (
+              <div className="flex max-w-[220px] flex-wrap justify-center gap-2">
+                {pool.slice(0, AVATAR_PREVIEW_CAP).map((q, i) => (
                   <MinionAvatar
                     key={q.id}
                     size={24}
@@ -93,6 +95,11 @@ export function SessionView({
                     style={{ animationDelay: `${i * 0.1}s` }}
                   />
                 ))}
+                {pool.length > AVATAR_PREVIEW_CAP && (
+                  <span className="flex h-6 items-center rounded-full bg-card px-2 font-display text-[0.65rem] font-bold text-ink-soft shadow-[0_2px_0_var(--frame-border)]">
+                    +{pool.length - AVATAR_PREVIEW_CAP}
+                  </span>
+                )}
               </div>
               <div className="[transform:scaleX(-1)]">
                 <HeroAvatar size={46} scheme={heroScheme} />

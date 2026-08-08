@@ -551,6 +551,31 @@ export async function saveProfile(userId: string, displayName: string, avatarSch
   `;
 }
 
+export async function isUserIdAvailable(userId: string): Promise<boolean> {
+  await ensureSchema();
+  const db = getSql();
+  const rows = await db`
+    SELECT 1 FROM profile WHERE user_id = ${userId}
+    UNION ALL
+    SELECT 1 FROM progress WHERE user_id = ${userId}
+    LIMIT 1
+  `;
+  return rows.length === 0;
+}
+
+// Migrates every row this user owns from oldId to newId, across all
+// per-user tables. Callers must check isUserIdAvailable(newId) first - this
+// doesn't guard against overwriting someone else's existing data.
+export async function changeUserId(oldId: string, newId: string): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`UPDATE progress SET user_id = ${newId} WHERE user_id = ${oldId}`;
+  await db`UPDATE profile SET user_id = ${newId} WHERE user_id = ${oldId}`;
+  await db`UPDATE question_progress SET user_id = ${newId} WHERE user_id = ${oldId}`;
+  await db`UPDATE answer_log SET user_id = ${newId} WHERE user_id = ${oldId}`;
+  await db`UPDATE push_subscriptions SET user_id = ${newId} WHERE user_id = ${oldId}`;
+}
+
 // Wipes this user's streak, totals, spaced-repetition state, and answer
 // history back to a clean slate. Deliberately leaves flags (content
 // reports) and push subscriptions alone - those aren't "progress", and

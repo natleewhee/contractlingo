@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
+import { IdentityManager } from "@/components/IdentityManager";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
 import { getAllQuestions, getFlags, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
 import { getUserId } from "@/lib/identity";
@@ -159,6 +160,8 @@ export default async function ProgressPage() {
         <Button3D tone="gold" href="/session" className="mt-4">
           FACE MORE CASES
         </Button3D>
+
+        <IdentityManager userId={userId} />
 
         <ResetProgressButton />
       </main>

@@ -91,6 +91,18 @@ function ensureSchema(): Promise<void> {
         )
       `;
 
+      // Single source of truth for "does this user id exist" - changeUserId
+      // claims a new id by inserting into this table inside a transaction,
+      // so two concurrent claims of the same id can't both succeed (the
+      // second INSERT hits the primary key and the whole transaction rolls
+      // back). See changeUserId()/isUserIdAvailable() below.
+      await db`
+        CREATE TABLE IF NOT EXISTS users (
+          user_id text PRIMARY KEY,
+          created_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
+
       // One-time migrations from the original single-user shape (id text
       // PRIMARY KEY DEFAULT 'default', no user_id column at all). Each is
       // guarded so it only runs once - on a fresh install the CREATE TABLE
@@ -139,6 +151,20 @@ function ensureSchema(): Promise<void> {
       `;
       await db`ALTER TABLE answer_log ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
       await db`ALTER TABLE push_subscriptions ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
+
+      // One-time backfill: register every user id that already has data in
+      // any per-user table (from before the `users` table existed) so
+      // isUserIdAvailable/changeUserId's claim check sees them as taken.
+      // Safe to re-run - ON CONFLICT DO NOTHING.
+      await db`
+        INSERT INTO users (user_id)
+        SELECT user_id FROM progress
+        UNION SELECT user_id FROM profile
+        UNION SELECT user_id FROM question_progress
+        UNION SELECT user_id FROM answer_log
+        UNION SELECT user_id FROM push_subscriptions
+        ON CONFLICT DO NOTHING
+      `;
 
       // The question bank is still authored in code (src/lib/questions.ts) -
       // reviewable via git, no risk of DB/code drift - but synced into Neon
@@ -558,29 +584,55 @@ export async function saveProfile(userId: string, displayName: string, avatarSch
   `;
 }
 
+// Checked against the `users` registry (see ensureSchema's backfill) plus
+// every per-user table directly, not just `users` alone - a raw anonymous
+// id can hold real data without ever having gone through an explicit claim.
 export async function isUserIdAvailable(userId: string): Promise<boolean> {
   await ensureSchema();
   const db = getSql();
   const rows = await db`
-    SELECT 1 FROM profile WHERE user_id = ${userId}
-    UNION ALL
-    SELECT 1 FROM progress WHERE user_id = ${userId}
+    SELECT 1 FROM users WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM profile WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM progress WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM question_progress WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM answer_log WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM push_subscriptions WHERE user_id = ${userId}
     LIMIT 1
   `;
   return rows.length === 0;
 }
 
-// Migrates every row this user owns from oldId to newId, across all
-// per-user tables. Callers must check isUserIdAvailable(newId) first - this
-// doesn't guard against overwriting someone else's existing data.
-export async function changeUserId(oldId: string, newId: string): Promise<void> {
+function isUniqueViolation(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "code" in err && (err as { code: unknown }).code === "23505";
+}
+
+// Atomically claims newId and migrates every row this user owns from oldId
+// to newId, across all per-user tables, in a single Postgres transaction.
+// The claim is the INSERT into `users` - its primary key is what makes this
+// safe against two concurrent renames to the same newId (an
+// isUserIdAvailable() check beforehand narrows the common case but can't
+// close that race on its own, since the check and this call are separate
+// round trips). Returns "taken" instead of throwing if newId was claimed by
+// someone else in between - callers should treat that as a normal, expected
+// outcome, not an error.
+export async function changeUserId(oldId: string, newId: string): Promise<"claimed" | "taken"> {
   await ensureSchema();
   const db = getSql();
-  await db`UPDATE progress SET user_id = ${newId} WHERE user_id = ${oldId}`;
-  await db`UPDATE profile SET user_id = ${newId} WHERE user_id = ${oldId}`;
-  await db`UPDATE question_progress SET user_id = ${newId} WHERE user_id = ${oldId}`;
-  await db`UPDATE answer_log SET user_id = ${newId} WHERE user_id = ${oldId}`;
-  await db`UPDATE push_subscriptions SET user_id = ${newId} WHERE user_id = ${oldId}`;
+  try {
+    await db.transaction([
+      db`INSERT INTO users (user_id) VALUES (${newId})`,
+      db`DELETE FROM users WHERE user_id = ${oldId}`,
+      db`UPDATE progress SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE profile SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE question_progress SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE answer_log SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE push_subscriptions SET user_id = ${newId} WHERE user_id = ${oldId}`,
+    ]);
+  } catch (err) {
+    if (isUniqueViolation(err)) return "taken";
+    throw err;
+  }
+  return "claimed";
 }
 
 // Wipes this user's streak, totals, spaced-repetition state, and answer

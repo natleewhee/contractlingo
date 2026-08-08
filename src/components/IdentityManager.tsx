@@ -57,6 +57,9 @@ export function IdentityManager({ userId }: { userId: string }) {
       <p className="mt-1 text-xs text-ink-soft">
         Copy this to pick up your progress on another device, or set a custom one to remember.
       </p>
+      <p className="mt-1 text-xs font-semibold text-ink">
+        Anyone who has this id can see and reset your progress. Treat it like a password.
+      </p>
 
       <div className="mt-2 flex items-center gap-2">
         <code className="flex-1 truncate rounded-xl bg-bg px-3 py-2 font-display text-xs text-ink">

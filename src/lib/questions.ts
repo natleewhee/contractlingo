@@ -117,6 +117,58 @@ export const SESSION_QUESTIONS: Question[] = [
     explanation:
       "The defects liability period covers routine snagging, not a free pass on seriously defective work — genuinely latent defects discovered later can potentially still be pursued, subject to the contract's and law's limitation periods.",
   },
+  {
+    id: "defects-05",
+    topic: "Defects",
+    scenario:
+      "In a traditional contract where the Contractor had no design responsibility, a defect is traced back to an error in the Employer-provided design rather than the Contractor's workmanship.",
+    options: [
+      "Distinguish design defects from workmanship defects — in a traditional contract, a pure design error is generally the Employer's or designer's risk, not the Contractor's",
+      "The Contractor is always responsible for any defect discovered during the defects liability period regardless of its actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "In a traditional, non-design-and-build arrangement, the Contractor is generally only responsible for building in accordance with the design, not for the design's own adequacy — a genuine design error is a different problem with a different responsible party.",
+  },
+  {
+    id: "defects-06",
+    topic: "Defects",
+    scenario:
+      "The Employer wants to reject an entire section of work over a single minor defect, rather than requiring rectification of just that defect.",
+    options: [
+      "Check whether rejection of the whole section is proportionate — remedies for defects are generally meant to be proportionate to the actual defect, not a blanket rejection over a minor issue",
+      "A single minor defect always justifies rejecting an entire section or portion of work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Remedies for defects are generally proportionate — rectification of the specific defect is the normal expectation, and rejecting an entire section over one minor issue is usually a disproportionate response, not the automatic entitlement.",
+  },
+  {
+    id: "defects-07",
+    topic: "Defects",
+    scenario:
+      "A defect is caused by the Contractor using a substitute material without approval, but the substitute actually performs identically to the specified material.",
+    options: [
+      "This is still a compliance issue worth addressing — unauthorised substitution — even though whether it's a 'defect' in the sense of actual performance failure is a separate question",
+      "If a substitute material performs identically, there's no issue at all regardless of whether it was ever approved",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Using an unapproved substitute is a procedural non-compliance in its own right, separate from whether it happens to perform adequately — approval processes exist partly so this determination is made in advance, not retroactively excused by the outcome.",
+  },
+  {
+    id: "defects-08",
+    topic: "Defects",
+    scenario:
+      "The Contractor wants to argue that because the Employer never formally objected to a defect during a site walk-through, it has effectively waived the right to have it fixed.",
+    options: [
+      "This is a weak argument on its own — silence during an informal walk-through doesn't necessarily amount to a formal waiver of contractual rights to have defects rectified",
+      "Any failure to object to a visible defect during any site visit automatically waives the right to have it fixed later",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Waiver of a contractual right generally requires something clearer and more deliberate than not raising an issue during an informal walk-through — defects liability rights aren't easily lost by silence alone.",
+  },
 
   // --- Payment ---
   {
@@ -1849,5 +1901,1277 @@ export const SESSION_QUESTIONS: Question[] = [
     correctIndex: 0,
     explanation:
       "Contracts often require their own terms — including procedural deadlines — to be varied only through a formal mechanism (e.g., a signed written variation). An informal email, however well-intentioned, may not actually be effective to change the contractual deadline if that mechanism isn't followed.",
+  },
+
+  // --- Bonds & Guarantees ---
+  {
+    id: "bonds-01",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Employer wants to call an on-demand performance bond immediately after a dispute arises, without first assessing whether it has actually suffered any loss.",
+    options: [
+      "Check whether the call is genuine and made in good faith under the bond's terms — on-demand bonds are largely payable on demand, but calls made in bad faith or for an improper purpose can be challenged",
+      "On-demand bonds can never be challenged once called, regardless of the circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "On-demand bonds are deliberately designed to be paid quickly with minimal underlying proof — that's their commercial value. But that doesn't put every call beyond challenge; calls made in bad faith or for a purpose the bond wasn't meant to cover can still be restrained in genuinely clear cases.",
+  },
+  {
+    id: "bonds-02",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A performance bond is due to expire at practical completion, but the Employer wants the Contractor to extend it to also cover the entire defects liability period.",
+    options: [
+      "Check what the contract actually requires — bond duration and coverage should match the contractual security period specified, not be extended informally",
+      "Bond duration can always be unilaterally extended by the Employer regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The bond's required duration and coverage is a specific contractual term — align it to what's actually agreed rather than either party informally deciding to extend or shorten it.",
+  },
+  {
+    id: "bonds-03",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Contractor's performance bond issuer becomes financially distressed, and there are real doubts about whether it could actually pay out if called.",
+    options: [
+      "This is worth raising and checking — a bond is only as good as the issuer's ability to pay, and some contracts require bonds from institutions meeting minimum credit criteria",
+      "The identity and financial strength of the bond issuer never matters once the bond document itself is in hand",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A bond is a promise to pay, and that promise is only as strong as the issuer behind it — many contracts specifically require bonds from banks or insurers meeting certain criteria for exactly this reason.",
+  },
+  {
+    id: "bonds-04",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A parent company guarantee is provided in place of a performance bond. The Contractor's parent company is later sold to a new, unrelated owner.",
+    options: [
+      "Check what happens to the guarantee's validity and enforceability after a change of ownership — this is worth verifying, not assumed to continue seamlessly",
+      "A parent company guarantee always continues in force exactly the same way regardless of who owns the parent company afterward",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether a parent company guarantee survives a change in the parent's own ownership depends on how it's drafted — a real question to check rather than assume, given how much can change in a corporate sale.",
+  },
+  {
+    id: "bonds-05",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Employer wants to call the bond for its full face value to cover a claim that's actually much smaller than that amount.",
+    options: [
+      "A bond call should still generally reflect the actual entitlement, not simply extract the maximum available regardless of the underlying claim",
+      "The full bond amount is always fair game once any valid claim exists, however small",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even where a bond is easily callable, calling for more than the genuine underlying entitlement can itself be challenged as an improper call — the bond secures actual loss, not a windfall.",
+  },
+  {
+    id: "bonds-06",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The Contractor assumes a bond automatically reduces in value as the project nears completion, without checking the bond document itself.",
+    options: [
+      "Check the bond's actual terms — some bonds do step down or reduce at defined milestones, but this isn't automatic or universal",
+      "All performance bonds automatically reduce in value as work progresses",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Bond reduction or step-down mechanisms are a specific negotiated feature, not a universal default — some bonds hold their full face value throughout, so this needs checking rather than assuming.",
+  },
+  {
+    id: "bonds-07",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "A retention bond is provided in lieu of cash retention. The Employer wants to also deduct cash retention on top of it from payments.",
+    options: [
+      "Check the contract — a retention bond is typically meant to substitute for cash retention, not sit alongside it as an additional deduction",
+      "Deducting both cash retention and holding a retention bond simultaneously is always fine",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The whole point of a retention bond is to free up the contractor's cash flow by substituting for cash retention — deducting both would effectively double the security, which isn't what these arrangements are meant to do.",
+  },
+  {
+    id: "bonds-08",
+    topic: "Bonds & Guarantees",
+    scenario:
+      "The project reaches final completion, and the Employer is slow to release the performance bond even though all conditions for release appear to have been met.",
+    options: [
+      "Follow up formally and check the contract's release trigger — bonds shouldn't be held indefinitely past the point they're due for release",
+      "Bonds can be held indefinitely at the Employer's discretion with no real trigger for release",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Bonds are usually tied to a specific release trigger and timeframe — an unreasonable delay past that point is worth chasing, the same as any other contractual entitlement that's become due.",
+  },
+
+  // --- Health & Safety ---
+  {
+    id: "safety-01",
+    topic: "Health & Safety",
+    scenario:
+      "A subcontractor's unsafe work practice is spotted by the main contractor's site supervisor, but nothing is done because it's 'the subcontractor's own responsibility.'",
+    options: [
+      "The main contractor generally retains overall site safety responsibility and should act on it, even for subcontracted work",
+      "Safety on a specific task is always solely the subcontractor's problem once work is subcontracted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Overall responsibility for site safety typically sits with the main contractor (or a designated principal contractor) regardless of who's doing the specific task — spotting an unsafe practice and doing nothing is a real exposure, not just the subcontractor's issue.",
+  },
+  {
+    id: "safety-02",
+    topic: "Health & Safety",
+    scenario:
+      "An accident occurs on site. The Contractor is unsure whether it needs to report it to the relevant authority or can just handle it internally.",
+    options: [
+      "Check the applicable regulations — many jurisdictions require statutory reporting of certain incidents regardless of how the parties want to handle it internally",
+      "Any incident can always be handled purely internally without external reporting",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Workplace safety incidents are often subject to mandatory statutory reporting thresholds independent of what the parties would prefer — check the applicable regulation rather than assuming internal handling is sufficient.",
+  },
+  {
+    id: "safety-03",
+    topic: "Health & Safety",
+    scenario:
+      "The Employer's own instructed method of work creates a safety risk the Contractor flags, but the Employer insists the Contractor proceed as instructed.",
+    options: [
+      "Raise the safety concern formally and don't proceed with something genuinely unsafe just because it was instructed — safety obligations aren't overridden by an instruction",
+      "An Employer instruction always overrides the Contractor's own safety judgement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contractual instructions don't override independent safety obligations — a contractor generally can't be compelled to carry out work it genuinely believes is unsafe, and should escalate rather than silently comply or silently refuse without documenting why.",
+  },
+  {
+    id: "safety-04",
+    topic: "Health & Safety",
+    scenario:
+      "A safety non-compliance results in a stop-work order from a regulator. The Contractor wants to claim the resulting delay as an EOT, treating it like any other Employer-caused delay.",
+    options: [
+      "Check the actual cause — a stop-work order resulting from the Contractor's own non-compliance generally wouldn't qualify as an excusable, compensable delay",
+      "Any regulatory stop-work order automatically qualifies for an EOT regardless of the underlying cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Whether a delay is excusable depends on why it happened — a stop-work order caused by the contractor's own safety failure is generally treated as the contractor's own risk, not an Employer-caused or neutral event.",
+  },
+  {
+    id: "safety-05",
+    topic: "Health & Safety",
+    scenario:
+      "The Contractor assumes that having generic, project-wide safety documentation is sufficient, without task-specific method statements for higher-risk activities.",
+    options: [
+      "Check what's actually required — many regimes and contracts require specific method statements or risk assessments for defined higher-risk activities, not just generic documentation",
+      "Generic project-wide safety documentation is always sufficient for every activity on site",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Generic safety documentation often isn't enough on its own — higher-risk activities typically need their own specific method statements and risk assessments, both as good practice and often as a regulatory requirement.",
+  },
+  {
+    id: "safety-06",
+    topic: "Health & Safety",
+    scenario:
+      "A worker is injured due to a genuine third party's negligence (for example, a delivery driver unrelated to either party). The Contractor assumes it bears no responsibility at all since it wasn't directly at fault.",
+    options: [
+      "Check the site safety and insurance obligations regardless of direct fault — the Contractor's overall site safety duties can still be relevant even where a third party was the immediate cause",
+      "No responsibility ever attaches to the Contractor if a third party was the immediate cause of an injury",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Overall site safety management duties can still be engaged even when a third party is the immediate cause — worth assessing properly (and exactly what site insurance is meant to cover) rather than assuming zero responsibility.",
+  },
+  {
+    id: "safety-07",
+    topic: "Health & Safety",
+    scenario:
+      "The Employer's representative regularly visits site without following the Contractor's site safety induction and PPE requirements.",
+    options: [
+      "Enforce the same safety requirements on all site visitors, including the Employer's representative — safety compliance shouldn't have exceptions based on seniority or relationship",
+      "Employer representatives are generally exempt from the Contractor's site safety rules",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Site safety rules generally need to apply uniformly to anyone entering the site — making informal exceptions, even for the Employer's own people, undermines the whole system and creates real liability exposure.",
+  },
+  {
+    id: "safety-08",
+    topic: "Health & Safety",
+    scenario:
+      "The Contractor treats safety training records as optional paperwork, since 'the workers already know what they're doing.'",
+    options: [
+      "Keep proper training and induction records regardless of actual competence — documentation is often what's actually checked in an audit or after an incident, not just genuine skill",
+      "Documentation of safety training is a formality that doesn't really matter if workers are actually competent",
+    ],
+    correctIndex: 0,
+    explanation:
+      "In practice, safety compliance is heavily judged on documented evidence — genuine competence without proper records can still leave a contractor exposed in an audit, inspection, or after an incident, so the paperwork matters in its own right.",
+  },
+
+  // --- Nominated Subcontractors ---
+  {
+    id: "nominated-subcontractors-01",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The Employer nominates a subcontractor for specialist work. That nominated subcontractor turns out to be persistently late, and the main Contractor wants to claim an EOT for the resulting delay.",
+    options: [
+      "This is often treated differently from an ordinary subcontractor's default — check the contract's specific provisions on nominated subcontractor delay, which can shift more risk to the Employer",
+      "Delay caused by any subcontractor, nominated or otherwise, is always entirely the main Contractor's risk",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Because nominated subcontractors are effectively imposed on the main contractor by the Employer, many standard forms treat their default differently from an ordinary, freely-chosen subcontractor's default — worth checking the specific clause rather than assuming it's treated the same.",
+  },
+  {
+    id: "nominated-subcontractors-02",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A nominated subcontractor becomes insolvent mid-project. The main Contractor isn't sure who bears responsibility for finding and engaging a replacement.",
+    options: [
+      "Check the contract's renomination mechanism — many contracts require the Employer or Engineer to nominate a replacement, rather than leaving it entirely to the main Contractor",
+      "The main Contractor is always solely responsible for finding a replacement, the same as with any subcontractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Nomination provisions often include a renomination process specifically because the Employer chose the original subcontractor — leaving the main contractor to sort it out entirely alone may not match what the contract actually provides for.",
+  },
+  {
+    id: "nominated-subcontractors-03",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The main Contractor objects to a proposed nominated subcontractor on reasonable grounds, such as known poor performance on a similar project, but the Employer insists on proceeding anyway.",
+    options: [
+      "A genuine, reasonable objection is worth raising formally and pursuing — many nomination clauses give the main Contractor some right to object to a nomination on reasonable grounds",
+      "The main Contractor has no right to object to any nomination under any circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most nomination mechanisms give the main contractor some ability to raise reasonable objections, precisely because the main contractor still carries overall responsibility for the works — a blanket 'no right to object' assumption is usually wrong.",
+  },
+  {
+    id: "nominated-subcontractors-04",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "Payment to a nominated subcontractor is meant to flow through the main Contractor, but the main Contractor is having cash flow problems and delays passing on payment already received for that subcontractor's work.",
+    options: [
+      "This is a real risk area — some contracts include direct payment mechanisms letting the Employer pay a nominated subcontractor directly if the main Contractor doesn't pass on payment properly",
+      "There's never any mechanism for the Employer to pay a nominated subcontractor directly, regardless of circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Because of exactly this risk, some standard forms provide for direct payment to nominated subcontractors if the main contractor fails to pass on payment — worth checking whether that mechanism exists in this contract.",
+  },
+  {
+    id: "nominated-subcontractors-05",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A defect is traced to a nominated subcontractor's work. The main Contractor argues it shouldn't be liable since it didn't choose that subcontractor.",
+    options: [
+      "Check the specific contract wording — the main Contractor's liability for a nominated subcontractor's work varies by contract and isn't automatically excused just because the subcontractor was nominated",
+      "Nomination automatically and completely excuses the main Contractor from any liability for that subcontractor's work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is genuinely contract-specific — some forms preserve the main contractor's full responsibility even for nominated work, others provide some relief given the lack of choice. Check the actual wording rather than assuming either extreme.",
+  },
+  {
+    id: "nominated-subcontractors-06",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The Employer wants to nominate a subcontractor for work that was originally priced and included in the main Contractor's own scope and rates.",
+    options: [
+      "This is worth querying — nominating a subcontractor for work already priced in the main Contractor's scope can create a real commercial and coordination issue worth raising before proceeding",
+      "The Employer can always nominate a subcontractor for any part of the works with no commercial consequence to the main Contractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Nominating a subcontractor for work the main contractor already priced and planned to do itself can genuinely disrupt the commercial basis of the contract — worth flagging and resolving (often via adjustment of the contract sum) rather than silently absorbed.",
+  },
+  {
+    id: "nominated-subcontractors-07",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "A nomination instruction doesn't specify the price or terms the main Contractor is meant to contract with the nominated subcontractor on.",
+    options: [
+      "Clarify the commercial terms before proceeding — a bare nomination without agreed terms creates real risk of dispute later about what the main Contractor is bound to accept",
+      "Any nomination is automatically binding on whatever commercial terms the nominated subcontractor happens to propose",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A nomination needs to come with clear terms, or a clear process for agreeing them, for the main contractor to actually contract on — proceeding on an undefined basis just defers a dispute rather than avoiding one.",
+  },
+  {
+    id: "nominated-subcontractors-08",
+    topic: "Nominated Subcontractors",
+    scenario:
+      "The main Contractor wants to pass through a nominated subcontractor's exact delay and EOT claims to the Employer without independently checking whether they're actually justified.",
+    options: [
+      "Independently assess the claim's merits before passing it through — the main Contractor's own position with the Employer shouldn't just mirror whatever the nominated subcontractor claims",
+      "Claims from a nominated subcontractor should always be passed through to the Employer exactly as received, without any independent check",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Even with a nominated subcontractor, the main contractor still stands between the subcontractor and the Employer commercially — passing through unverified claims can create liability if they turn out to be unjustified.",
+  },
+
+  // --- Testing & Commissioning ---
+  {
+    id: "testing-commissioning-01",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A system fails its first commissioning test. The Contractor wants to know whether this alone constitutes a breach entitling the Employer to reject the works.",
+    options: [
+      "Check the contract's testing and retest provisions — most contracts allow for retesting after remedial work rather than treating a single failed test as an automatic breach",
+      "Any single failed test automatically constitutes a breach entitling rejection of the works",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Testing regimes are usually built around an iterative test-fail-fix-retest cycle, not a single pass/fail moment — a first failure is normal and expected to be followed by rectification and retesting, not an automatic default.",
+  },
+  {
+    id: "testing-commissioning-02",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Employer wants to take over and start using a system before it has actually passed its commissioning tests, citing operational urgency.",
+    options: [
+      "This is worth flagging as a real risk — using an unproven system before passing tests can create ambiguity about liability if something later goes wrong",
+      "Early use before passing tests has no bearing on liability or risk allocation either way",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Putting a system into use before it's actually demonstrated to work through proper testing blurs the line on who's responsible if it fails afterward — worth documenting and agreeing on explicitly, not just proceeding informally.",
+  },
+  {
+    id: "testing-commissioning-03",
+    topic: "Testing & Commissioning",
+    scenario:
+      "Test results are recorded informally in a notebook rather than through the contract's specified test certificate process.",
+    options: [
+      "Follow the contract's actual test certification process — informal records may not be sufficient to establish that testing requirements were properly met",
+      "Any record of testing, however informal, is equally sufficient regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract specifies a particular test certification process, that's what actually establishes compliance — informal records can create real disputes later about whether proper testing genuinely occurred.",
+  },
+  {
+    id: "testing-commissioning-04",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A commissioning delay is caused by the Employer's late supply of operational data or connection to their own systems needed to complete testing.",
+    options: [
+      "This is likely an Employer-caused delay to commissioning, worth raising as such rather than absorbed as the Contractor's own testing delay",
+      "Any commissioning delay is always treated as the Contractor's own responsibility regardless of its actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Commissioning often depends on inputs only the Employer can provide — a delay genuinely caused by late Employer input is a different situation from the Contractor's own testing being behind schedule, and should be treated accordingly.",
+  },
+  {
+    id: "testing-commissioning-05",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Contractor wants to skip a specified test because it's confident the system will pass anyway, to save time.",
+    options: [
+      "Follow the specified testing procedure regardless of confidence in the outcome — skipping a required test isn't a decision to make unilaterally",
+      "Skipping a specified test is fine as long as the Contractor is confident about the result",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Specified tests exist to create an objective, agreed record of performance — confidence in the outcome doesn't substitute for actually running the required test, and skipping it can undermine the contractor's own later claim that the system works.",
+  },
+  {
+    id: "testing-commissioning-06",
+    topic: "Testing & Commissioning",
+    scenario:
+      "A test is passed, but months later the same system fails in actual operation. The Employer wants to argue the original test was somehow invalid.",
+    options: [
+      "This needs proper investigation — a later failure doesn't automatically invalidate an earlier genuinely passed test, though it's worth checking what actually changed or degraded since then",
+      "A later failure always proves retroactively that the original test must have been improperly conducted",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Equipment can genuinely degrade or fail after a valid initial pass for reasons unrelated to the original test's validity — a later failure raises a real question worth investigating, not an automatic conclusion that the earlier test was flawed.",
+  },
+  {
+    id: "testing-commissioning-07",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The commissioning specification is ambiguous about what performance threshold counts as a 'pass.' The parties disagree on the interpretation.",
+    options: [
+      "This is a genuine interpretive dispute worth resolving carefully (and often needing technical input) rather than either party unilaterally deciding its own reading is correct",
+      "Ambiguous specifications should always be read in whichever way is more favorable to the Contractor",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuinely ambiguous performance threshold is a real dispute to work through — using objective technical criteria and the parties' actual intent, not simply defaulting to whichever reading favors one side.",
+  },
+  {
+    id: "testing-commissioning-08",
+    topic: "Testing & Commissioning",
+    scenario:
+      "The Contractor's own commissioning engineer signs off on tests without the Employer's representative being present, even though the contract requires the Employer's witness.",
+    options: [
+      "Follow the contract's witnessing requirement — self-certified tests without the required witness may not be accepted as valid compliance",
+      "Self-certification by the Contractor's own engineer is always equally valid regardless of any witnessing requirement in the contract",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract specifically requires the Employer to witness testing, self-certifying without that witness present doesn't satisfy the requirement — exactly the kind of procedural step that can undermine an otherwise legitimate test result if later disputed.",
+  },
+
+  // --- Programme & Scheduling ---
+  {
+    id: "programme-01",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor submits a programme that shows an unrealistically compressed schedule just to satisfy contractual submission requirements, without genuinely planning to work to it.",
+    options: [
+      "Push back and require a realistic, achievable programme — a nominally compliant but unrealistic programme undermines the whole point of having one",
+      "Any submitted programme satisfies the contractual requirement regardless of whether it's realistic",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A programme is meant to be a genuine planning and monitoring tool — accepting an unrealistic one just to tick a submission box defeats its purpose and makes later delay analysis far harder.",
+  },
+  {
+    id: "programme-02",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor updates its programme monthly but never actually revises the critical path logic, just shifts the same bars later each time.",
+    options: [
+      "This is a red flag worth challenging — a genuine programme update should re-examine logic and critical path, not just mechanically slide dates",
+      "Shifting dates without revisiting logic is a perfectly adequate way to update a programme",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A programme update that never re-examines its own logic isn't really tracking reality — it's just recording slippage. A credible programme update reflects genuine replanning, not a mechanical date shift.",
+  },
+  {
+    id: "programme-03",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Employer's representative informally suggests resequencing part of the works during a site meeting, and the Contractor proceeds without any formal instruction or programme revision.",
+    options: [
+      "Get it confirmed formally and reflected in a revised programme before proceeding — informal suggestions shouldn't quietly become the working programme",
+      "Any informal suggestion from the Employer's representative can be treated as a binding programme change",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same discipline about formal instructions applies to programme changes — an informal suggestion, even from the right person, should be confirmed and properly reflected before it becomes the basis for how work proceeds.",
+  },
+  {
+    id: "programme-04",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor's programme shows significant float on a particular activity. The Employer argues that any delay to that activity can never support an EOT because of the float.",
+    options: [
+      "Check who owns the float and how the contract treats it — float ownership is a genuinely contested area, not a settled default in the Employer's favor",
+      "Float always belongs to the Employer, so any delay absorbed by float can never support an EOT",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Who 'owns' float — and therefore whether using it up defeats an EOT claim — is a genuinely unsettled and contract-specific question. Don't assume a default answer either way without checking the contract and the facts.",
+  },
+  {
+    id: "programme-05",
+    topic: "Programme & Scheduling",
+    scenario:
+      "A subcontractor's programme conflicts with the main programme's sequencing, but the main Contractor hasn't reconciled the two before issuing instructions to the subcontractor.",
+    options: [
+      "Reconcile the subcontractor's programme with the main programme before issuing instructions — proceeding on conflicting programmes is a recipe for disputes and inefficiency",
+      "Subcontractor programmes never need to be reconciled with the main programme as long as the subcontractor manages its own work",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An unreconciled conflict between the main and subcontractor programmes is exactly the kind of coordination failure that causes real delay and disruption — worth resolving proactively, not discovered mid-execution.",
+  },
+  {
+    id: "programme-06",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor wants to claim an EOT based on a theoretical, unbuilt 'what-if' programme rather than the actual as-built progress and the accepted baseline programme.",
+    options: [
+      "Base the claim on the accepted baseline and actual as-built progress — a purely theoretical programme is a much weaker basis for a real claim",
+      "Any programme, theoretical or actual, is an equally valid basis for an EOT claim",
+    ],
+    correctIndex: 0,
+    explanation:
+      "EOT claims are strongest when tied to what was actually agreed as the baseline and what actually happened on site — a hypothetical programme constructed after the fact to support a claim is far more vulnerable to challenge.",
+  },
+  {
+    id: "programme-07",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Employer wants to reject a Contractor's programme submission outright without giving any specific reasons, just calling it 'unsatisfactory.'",
+    options: [
+      "Request specific reasons — a vague rejection without substantive grounds is hard to act on and may not be a valid rejection under the contract's actual requirements",
+      "A programme submission can always be rejected without any reason given",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If the contract requires programme approval, a rejection generally needs to be on some substantive, communicable basis — an unexplained 'unsatisfactory' doesn't give the contractor anything to actually respond to or fix.",
+  },
+  {
+    id: "programme-08",
+    topic: "Programme & Scheduling",
+    scenario:
+      "The Contractor treats the baseline programme as fixed and never revisited, even after multiple approved variations that clearly change the sequence and duration of the works.",
+    options: [
+      "Update and re-baseline the programme to reflect approved changes — an outdated baseline makes it much harder to properly track and prove delay later",
+      "The original baseline programme should never be revised regardless of subsequent approved changes",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A baseline that no longer reflects the actual agreed scope and sequence stops being a useful reference point — it should be revised, with proper agreement, to keep delay analysis meaningful as the project evolves.",
+  },
+
+  // --- Novation ---
+  {
+    id: "novation-01",
+    topic: "Novation",
+    scenario:
+      "A design consultant is novated from the Employer to the Contractor partway through design development. The Contractor assumes it now has zero exposure for any design work already done before novation.",
+    options: [
+      "Check the novation agreement's actual terms — liability for pre-novation design work depends on how the novation is specifically drafted, not assumed automatically",
+      "Novation always completely erases any responsibility for work done before the novation date, automatically",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation agreements vary in how they treat pre-novation liability — some transfer full responsibility including for prior work, others don't. This needs checking in the specific agreement, not assumed either way.",
+  },
+  {
+    id: "novation-02",
+    topic: "Novation",
+    scenario:
+      "After novation, the newly-novated consultant continues receiving informal instructions directly from the original Employer, bypassing the Contractor who is now technically their client.",
+    options: [
+      "This should be raised and stopped — post-novation, instructions should properly flow through the new contractual relationship, not the old one informally continuing",
+      "Continuing the old informal reporting lines after novation is harmless and doesn't need addressing",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation is meant to genuinely shift the contractual relationship — old habits of direct informal instruction undermine that and can create confusion about who's actually responsible for what going forward.",
+  },
+  {
+    id: "novation-03",
+    topic: "Novation",
+    scenario:
+      "The novation agreement is silent on what happens to fees already invoiced but unpaid by the consultant to the Employer before the novation date.",
+    options: [
+      "This is a genuine gap worth resolving explicitly before signing — don't assume it's automatically covered by the novation agreement's other terms",
+      "Unpaid pre-novation fees are always automatically absorbed into the new arrangement without needing separate resolution",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A gap in the novation agreement about historic unpaid fees is a real loose end — leaving it unresolved just defers a dispute about who's actually responsible for that amount.",
+  },
+  {
+    id: "novation-04",
+    topic: "Novation",
+    scenario:
+      "The Contractor wants to hold the newly-novated consultant to the same standard of care that applied under the original Employer-consultant agreement, without checking if the novation preserved those exact terms.",
+    options: [
+      "Check the novation agreement to confirm what terms actually carried over — assuming automatic continuity of every original term isn't safe without verifying",
+      "All terms of the original consultant agreement always automatically carry over identically upon novation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation can either preserve the original terms or introduce new ones, depending on how it's drafted — confirm what actually survived the novation rather than assuming full continuity.",
+  },
+  {
+    id: "novation-05",
+    topic: "Novation",
+    scenario:
+      "A consultant refuses to be novated, preferring to keep its direct contract with the Employer, even though the Employer and Contractor have already agreed novation should happen.",
+    options: [
+      "The consultant's own consent is generally required for a valid novation — this needs to be resolved with the consultant directly, not assumed automatic",
+      "Novation can be forced on a consultant without its consent as long as the Employer and Contractor agree",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation is a three-party arrangement requiring the consent of all three parties, including the party being novated — the Employer and Contractor agreeing between themselves isn't enough on its own.",
+  },
+  {
+    id: "novation-06",
+    topic: "Novation",
+    scenario:
+      "Design errors are discovered that trace back to work done by the consultant before novation, but the defect only becomes apparent after novation and well into construction.",
+    options: [
+      "This needs careful analysis of the novation agreement's liability allocation — timing of discovery doesn't necessarily determine which party bears responsibility for a pre-novation design error",
+      "Responsibility always automatically follows whoever currently holds the consultant's contract at the time the defect is actually discovered",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Liability typically attaches to when the error was actually made, not when it happens to be discovered — but how the novation agreement allocates responsibility for pre-novation errors is the real thing to check.",
+  },
+  {
+    id: "novation-07",
+    topic: "Novation",
+    scenario:
+      "The Contractor wants to novate a consultant it never chose and has concerns about, purely because the Employer originally engaged them.",
+    options: [
+      "Raise concerns and review the consultant's track record before proceeding — accepting a novation doesn't have to be a rubber stamp if there are genuine concerns",
+      "A proposed novation must always be accepted exactly as presented, regardless of any concerns about the consultant",
+    ],
+    correctIndex: 0,
+    explanation:
+      "While novation is often a standard part of a design-and-build arrangement, genuine concerns about the specific consultant are worth raising and addressing before accepting — it's not purely a formality to wave through.",
+  },
+  {
+    id: "novation-08",
+    topic: "Novation",
+    scenario:
+      "Insurance coverage for the consultant's professional liability is not addressed at all in the novation agreement.",
+    options: [
+      "This is a real gap worth resolving — confirm whether the consultant's professional indemnity insurance continues to respond to pre- and post-novation work appropriately",
+      "Insurance coverage is never affected by novation and doesn't need any specific attention",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Novation can have real implications for how professional indemnity insurance responds to claims, particularly for errors that straddle the novation date — this is worth explicitly confirming, not left as an assumption.",
+  },
+
+  // --- Contra Charges / Back-Charging ---
+  {
+    id: "contra-charges-01",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor wants to deduct a contra charge from a subcontractor's payment for alleged extra costs caused by the subcontractor's delay, without any prior notice to the subcontractor.",
+    options: [
+      "Check the subcontract for the required notice or process before deducting — an undocumented, unnotified deduction is easy for the subcontractor to successfully challenge",
+      "Contra charges can always be deducted unilaterally without any notice requirement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Like most deductions, contra charges typically need to follow a specific contractual process — notifying the other party and giving it a chance to respond — before being applied. An undisclosed deduction invites a dispute.",
+  },
+  {
+    id: "contra-charges-02",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is applied based on an estimated cost of rectification, before the actual rectification work has even been carried out or invoiced.",
+    options: [
+      "Check whether the subcontract allows charging based on estimated cost, and substantiate it properly — an estimate needs to be reasonable and evidenced, not just asserted",
+      "Contra charges can only ever be based on actual incurred and invoiced costs, never estimates",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some contracts do allow contra charges based on a reasonable estimate, but that estimate still needs to be genuinely substantiated — an unsupported guess is vulnerable to challenge either way.",
+  },
+  {
+    id: "contra-charges-03",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor applies a contra charge that's actually larger than the value of the subcontractor's remaining payment, resulting in the subcontractor owing money back.",
+    options: [
+      "This is legitimate in principle if properly substantiated, but the calculation and process need to be watertight given how aggressively it's likely to be challenged",
+      "A contra charge can never exceed the value of the subcontractor's remaining payment under any circumstances",
+    ],
+    correctIndex: 0,
+    explanation:
+      "There's no inherent cap tying a contra charge to the remaining payment value — but a charge large enough to flip the balance owed is exactly the kind of deduction that invites the closest scrutiny, so the substantiation needs to be solid.",
+  },
+  {
+    id: "contra-charges-04",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A subcontractor disputes a contra charge, but the main Contractor proceeds to deduct it anyway before the dispute is resolved.",
+    options: [
+      "Check the subcontract's dispute process — deducting a genuinely disputed charge before resolution can itself be a breach depending on what the contract requires",
+      "A contra charge can always be deducted immediately regardless of whether the subcontractor disputes it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some subcontracts require disputed deductions to be held pending resolution rather than deducted immediately — proceeding to deduct anyway can turn a legitimate charge into a separate breach if the contract required otherwise.",
+  },
+  {
+    id: "contra-charges-05",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor applies a contra charge for delay costs without demonstrating that the subcontractor's delay actually caused those specific costs.",
+    options: [
+      "Establish genuine causation before charging — a contra charge needs to show the subcontractor's default actually caused the claimed cost, not just that both happened around the same time",
+      "Any cost incurred during a period of subcontractor delay can automatically be charged back, regardless of actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Correlation isn't causation — a contra charge needs to demonstrate the subcontractor's default actually caused the specific cost being charged, not just that the cost happened to arise during a delayed period.",
+  },
+  {
+    id: "contra-charges-06",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is applied for defective work, but the subcontractor was never given the opportunity to rectify the defect itself before the main Contractor brought in someone else to fix it.",
+    options: [
+      "Check whether the subcontract requires giving the subcontractor a chance to rectify first — bypassing that step can undermine the contra charge even if the defect was real",
+      "The main Contractor can always bring in a third party to fix any defect and charge it back without giving the subcontractor a chance to fix it first",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many subcontracts require the original party to be given a genuine opportunity to rectify its own defective work before the other party brings someone else in at cost — skipping that step is a common way contra charges get successfully challenged.",
+  },
+  {
+    id: "contra-charges-07",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "The main Contractor lumps several unrelated contra charges together into one deduction without itemising what each charge is actually for.",
+    options: [
+      "Itemise each charge separately with its own basis and amount — a bundled, unitemised deduction is hard for the subcontractor to properly assess or challenge",
+      "A single lump-sum deduction covering multiple issues is always acceptable without itemisation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same 'itemise, don't bundle' principle that applies to variation claims applies here — an unitemised lump deduction makes it impossible for the other side to properly understand or contest what they're actually being charged for.",
+  },
+  {
+    id: "contra-charges-08",
+    topic: "Contra Charges / Back-Charging",
+    scenario:
+      "A contra charge is deducted, but months later it turns out the underlying issue was actually the main Contractor's own fault, not the subcontractor's.",
+    options: [
+      "The deduction should be reversed and repaid once the actual cause is established — a contra charge based on a mistaken premise isn't valid just because it was already deducted",
+      "Once a contra charge has been deducted, it stays deducted regardless of what's later discovered about the actual cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A contra charge is only ever valid to the extent its underlying premise is correct — if it turns out the fault actually lay elsewhere, the deduction was never properly justified and should be corrected.",
+  },
+
+  // --- Partial Possession / Sectional Completion ---
+  {
+    id: "partial-possession-01",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The contract has no sectional completion provisions, but the Employer wants to take partial possession of a completed portion of the works early, informally.",
+    options: [
+      "Formalise this properly, even via a side agreement, before proceeding — taking possession without addressing risk, insurance, and defects liability implications creates real ambiguity",
+      "Informal early partial possession has no real consequences as long as both parties are generally happy with the arrangement",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Partial possession affects risk transfer, insurance responsibility, and often triggers partial retention release or defects liability start dates — proceeding informally without addressing these leaves real gaps that tend to surface later as disputes.",
+  },
+  {
+    id: "partial-possession-02",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "A contract does include sectional completion with separate dates and LD rates per section, but the Employer wants to apply the full LD rate for late completion of just one section.",
+    options: [
+      "Apply the specific LD rate for that section as agreed, not the full contract rate — sectional LDs are meant to be section-specific",
+      "The full contract LD rate always applies to any section that's late, regardless of what section-specific rates were agreed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Where sections have their own agreed LD rates, that's what applies to that section's lateness — using the full overall rate instead isn't supported by an agreement that specifically broke it down by section.",
+  },
+  {
+    id: "partial-possession-03",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "Partial possession of one section affects the Contractor's ability to efficiently work on an adjacent, still-incomplete section, but this wasn't accounted for when partial possession was agreed.",
+    options: [
+      "Raise this as a genuine impact worth assessing for EOT/cost purposes — knock-on disruption to adjacent ongoing work from an occupied section is a real, foreseeable consequence worth addressing",
+      "Partial possession of one section can never have any impact on adjacent, still-incomplete sections",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Handing over part of a site while work continues next door commonly creates real access, safety, and logistics constraints — this is a legitimate basis for a claim if it wasn't priced into the original arrangement.",
+  },
+  {
+    id: "partial-possession-04",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Employer takes partial possession of a section without any formal certificate specific to that section, just informally starting to use it.",
+    options: [
+      "Get a proper certificate of partial or sectional completion issued — this triggers real consequences (retention, defects liability, risk) that need a clear, documented start date",
+      "Informal use of a section without a certificate has no bearing on when defects liability or risk transfer actually starts",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Just like practical completion generally, an undocumented start to partial possession creates genuine ambiguity about exactly when related obligations — defects liability period, retention release, risk transfer — for that section actually began.",
+  },
+  {
+    id: "partial-possession-05",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "Insurance for the works isn't adjusted to reflect that part of the building is now occupied and in use by the Employer following partial possession.",
+    options: [
+      "Review and adjust insurance arrangements to reflect the change in occupation and risk — continuing unchanged 'works' insurance may not properly cover an occupied, in-use section",
+      "Insurance arrangements never need adjustment regardless of a section being occupied and used by the Employer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "An occupied, in-use section has a genuinely different risk profile than an unoccupied construction site — insurance arrangements should be reviewed and adjusted to match, not left as if nothing changed.",
+  },
+  {
+    id: "partial-possession-06",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Contractor assumes retention is only released for the whole project at once, ignoring that partial possession of a section has occurred.",
+    options: [
+      "Check whether the contract provides for proportionate retention release tied to sectional or partial completion — this is common in contracts that provide for sectional possession",
+      "Retention release is always tied to the whole project regardless of any sectional or partial possession arrangements",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Where a contract provides for sectional completion, it often also provides for proportionate retention release for that section — worth checking rather than assuming retention only ever moves as one lump for the whole project.",
+  },
+  {
+    id: "partial-possession-07",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "A dispute arises about whether a specific area handed over to the Employer actually counts as a formal 'section' under the contract, or was just informal early access.",
+    options: [
+      "This distinction matters — check exactly what the contract defines as a section versus informal access, since the consequences (LDs, retention, risk) differ significantly",
+      "Any area handed over to the Employer, however informally, is automatically treated as a full contractual 'section'",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A formally defined contractual 'section' with its own completion date and consequences is a different thing from informally letting the Employer use part of the site early — the distinction genuinely matters for what obligations and rights follow.",
+  },
+  {
+    id: "partial-possession-08",
+    topic: "Partial Possession / Sectional Completion",
+    scenario:
+      "The Employer wants to take partial possession of a section that's substantially, but not fully, complete, and treat it as if practical completion of that section had occurred.",
+    options: [
+      "Assess it against the same functional test as practical completion generally — beneficial use despite minor outstanding items — rather than assuming either full completion or no completion at all",
+      "Partial possession always requires the section to be 100% complete with zero outstanding items",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same practical-completion logic applies at the section level — the real question is whether the section can be beneficially used despite minor outstanding items, not whether it's mechanically 100% finished down to the last item.",
+  },
+
+  // --- Confidentiality & Intellectual Property ---
+  {
+    id: "confidentiality-ip-01",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor wants to reuse a bespoke design created for this project on a future unrelated project for a different client, without checking who owns the IP.",
+    options: [
+      "Check the contract's IP ownership and licence terms first — bespoke project designs are often owned by or exclusively licensed to the Employer, not freely reusable",
+      "Any design created by the Contractor is automatically free to reuse on future projects regardless of contract terms",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Who owns the intellectual property in project-specific design work is a specific contractual question — many contracts vest ownership, or an exclusive licence, in the Employer for exactly this project, meaning reuse elsewhere needs separate permission.",
+  },
+  {
+    id: "confidentiality-ip-02",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "An employee who worked on a confidential project moves to a competing contractor shortly after, taking detailed knowledge of the Employer's proprietary processes with them.",
+    options: [
+      "Check what confidentiality obligations actually survive and apply here — a genuine risk area worth addressing through contract terms and internal controls, not assumed to sort itself out",
+      "Confidentiality obligations always automatically end the moment an employee changes company",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Confidentiality obligations are often deliberately drafted to survive the underlying relationship and bind individuals, not just companies — a real risk that needs proactive management, not an assumption that it stops mattering once someone moves on.",
+  },
+  {
+    id: "confidentiality-ip-03",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor wants to include photos of the completed project in its own marketing materials, without checking if there are any confidentiality restrictions in the contract.",
+    options: [
+      "Check the contract for confidentiality or publicity restrictions before using project photos in marketing — some contracts specifically limit this",
+      "Using project photos in marketing is always fine regardless of what the contract says about confidentiality",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Some contracts include specific confidentiality or non-disclosure provisions that would restrict even something as seemingly harmless as marketing photos — worth checking rather than assuming it's unrestricted.",
+  },
+  {
+    id: "confidentiality-ip-04",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Employer wants access to the Contractor's proprietary internal cost breakdowns and methodology as part of a value engineering exercise.",
+    options: [
+      "Consider what's actually necessary to share versus genuinely proprietary and confidential — full disclosure isn't automatically required just because it would be helpful to the Employer",
+      "The Contractor must always disclose all of its internal proprietary information whenever the Employer requests it",
+    ],
+    correctIndex: 0,
+    explanation:
+      "There's a difference between what's needed to properly evaluate a proposal and a contractor's genuinely proprietary internal methodology — worth navigating carefully rather than either party assuming full access is automatic.",
+  },
+  {
+    id: "confidentiality-ip-05",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "A dispute arises, and one party wants to use confidential project information obtained during the works as evidence in an unrelated matter against the other party.",
+    options: [
+      "Check the confidentiality clause's scope — using confidential information obtained under this contract for an unrelated purpose may breach the confidentiality obligation itself",
+      "Information obtained during a project can always be freely used for any other purpose once the project relationship exists",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Confidentiality obligations often apply broadly to how information can be used, not just whether it can be shared with third parties — repurposing it for an unrelated dispute can itself raise a separate breach issue.",
+  },
+  {
+    id: "confidentiality-ip-06",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Contractor develops a novel construction technique while working on this project and wants to patent it, unsure whether the Employer has any claim to it.",
+    options: [
+      "Check the contract's IP provisions specifically — ownership of innovations developed during the works can be allocated either way depending on what's agreed",
+      "Any innovation developed during a project automatically belongs entirely to whichever party physically invented it, regardless of contract terms",
+    ],
+    correctIndex: 0,
+    explanation:
+      "IP ownership for innovations developed during a project is a specific negotiated term, not a default rule — check what the contract actually says rather than assuming inventorship alone settles ownership.",
+  },
+  {
+    id: "confidentiality-ip-07",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "The Employer shares confidential commercial information with the Contractor during negotiations, but no formal confidentiality agreement was ever signed before the contract itself.",
+    options: [
+      "Check whether pre-contract information sharing was covered by an implied or separate confidentiality obligation, or whether it's genuinely unprotected",
+      "Information shared before a formal contract is signed is never subject to any confidentiality obligation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Pre-contract confidentiality can sometimes be protected through other means, like a standalone NDA or in some cases implied obligations, even without formal contract terms yet in place — worth checking rather than assuming zero protection existed.",
+  },
+  {
+    id: "confidentiality-ip-08",
+    topic: "Confidentiality & Intellectual Property",
+    scenario:
+      "A subcontractor is given access to confidential Employer information necessary to do its work, but the subcontract doesn't include any confidentiality obligations mirroring the main contract's requirements.",
+    options: [
+      "This is a real gap worth fixing — confidentiality obligations should generally flow down to subcontractors who have access to the same sensitive information",
+      "Confidentiality obligations in the main contract automatically bind subcontractors without needing to be separately included in the subcontract",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Contractual obligations generally don't automatically bind third parties like subcontractors — if subcontractors need access to confidential information, matching confidentiality terms need to be deliberately flowed down into the subcontract.",
+  },
+
+  // --- Change in Law ---
+  {
+    id: "change-in-law-01",
+    topic: "Change in Law",
+    scenario:
+      "A new building code requirement comes into force after the contract is signed but before completion, requiring the Contractor to change its already-designed approach.",
+    options: [
+      "Check the contract's change-in-law provisions — genuine post-contract legal changes are often treated as a compensable event distinct from an ordinary design change",
+      "Any legal change, whenever it occurs, is automatically the Contractor's own risk to absorb",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Many contracts specifically address 'change in law' as its own category, recognising that genuinely new legal requirements arising after contract signature are outside either party's original pricing assumptions — worth checking whether this contract does the same.",
+  },
+  {
+    id: "change-in-law-02",
+    topic: "Change in Law",
+    scenario:
+      "A change in law affects only a small, non-critical part of the works, and the Contractor wants to claim it as a major compensable event regardless of actual impact.",
+    options: [
+      "The claim should be scaled to the actual impact — a change-in-law claim still needs to be substantiated against what genuinely changed, not treated as a blanket windfall",
+      "Any change in law automatically entitles the Contractor to a major claim regardless of its actual scope of impact",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Change-in-law relief is generally proportionate to actual impact, the same as any other compensable event — a minor legal change affecting a small part of the works doesn't automatically justify treating the whole claim as major.",
+  },
+  {
+    id: "change-in-law-03",
+    topic: "Change in Law",
+    scenario:
+      "A change in law was actually publicly announced and known well before the contract was signed, but the Contractor claims it as an unforeseen change-in-law event anyway.",
+    options: [
+      "Check the timing carefully — a change that was reasonably foreseeable or already known at contract signing generally wouldn't qualify as an unforeseen change-in-law event",
+      "Any change in law that comes into legal force after signing qualifies for relief regardless of whether it was actually known about beforehand",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The key distinction in most change-in-law clauses is genuine unforeseeability at the time of contracting, not simply the formal effective date — a change already publicly known and pricable at signing generally doesn't qualify.",
+  },
+  {
+    id: "change-in-law-04",
+    topic: "Change in Law",
+    scenario:
+      "A change in law reduces the scope or cost of compliance needed, for example relaxing a previous requirement, but the Contractor doesn't mention this and continues billing as if the old requirement still applied.",
+    options: [
+      "Change-in-law provisions typically work both ways — a cost-reducing change should also be reflected, not just cost-increasing ones",
+      "Change-in-law relief only ever applies when costs increase, never when they decrease",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Most well-drafted change-in-law clauses are symmetrical — they adjust for both cost increases and cost decreases resulting from legal changes. Only reporting the increases and staying quiet about decreases isn't consistent with how the mechanism is meant to work.",
+  },
+  {
+    id: "change-in-law-05",
+    topic: "Change in Law",
+    scenario:
+      "A change in law requires a permit or approval process that takes significantly longer than expected, delaying the works. The Contractor wants to claim this delay.",
+    options: [
+      "This is worth raising as a genuine change-in-law delay if the process itself is new or changed — substantiate the actual time impact of the new legal requirement",
+      "Delays caused by permit or approval processes are never eligible for any kind of relief regardless of cause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "If a new legal or regulatory requirement genuinely adds time to the process — a new permit step, a new approval body — that delay can be a legitimate consequence of the change in law, worth substantiating properly as such.",
+  },
+  {
+    id: "change-in-law-06",
+    topic: "Change in Law",
+    scenario:
+      "The parties disagree about whether a new local authority guideline, not a formal law or regulation, counts as a 'change in law' under the contract's specific definition.",
+    options: [
+      "Check the contract's actual defined scope of 'change in law' — some definitions are narrow (only binding legislation) while others are broader (including binding guidelines or codes)",
+      "Any guidance from any authority, however informal, always automatically counts as a change in law",
+    ],
+    correctIndex: 0,
+    explanation:
+      "'Change in law' clauses often have a precisely defined scope — some are narrow and limited to actual legislation or regulation, others are drafted more broadly. This needs checking against the actual defined term, not assumed either way.",
+  },
+  {
+    id: "change-in-law-07",
+    topic: "Change in Law",
+    scenario:
+      "A change in law happens mid-project, and the Contractor wants to apply it retroactively to work already completed and accepted before the change came into force.",
+    options: [
+      "This generally doesn't apply retroactively — a change-in-law claim would typically only affect work still to be done, not work already properly completed under the prior requirements",
+      "Any change in law automatically applies retroactively to all project work regardless of when it was completed",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Change-in-law relief is generally forward-looking from the date the change takes effect — work validly completed under the requirements that applied at the time wouldn't typically need to be redone or reclaimed retroactively.",
+  },
+  {
+    id: "change-in-law-08",
+    topic: "Change in Law",
+    scenario:
+      "The Contractor assumes a change in tax law, such as a new levy, is automatically covered by the general change-in-law clause without checking if tax changes are specifically excluded.",
+    options: [
+      "Check the clause carefully — some change-in-law provisions specifically exclude tax changes, which may be dealt with separately or left as the Contractor's own risk",
+      "Tax law changes are always automatically covered by any general change-in-law clause",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Tax is often carved out and dealt with separately, or explicitly excluded, in change-in-law clauses, precisely because tax risk is sometimes meant to sit differently from general regulatory risk — check the specific wording rather than assuming blanket coverage.",
+  },
+
+  // --- Dispute Resolution (Arbitration/Litigation) ---
+  {
+    id: "dispute-resolution-01",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute arises, and one party wants to go straight to arbitration without first following the contract's required mediation or negotiation steps.",
+    options: [
+      "Follow the contract's tiered dispute resolution process in order — skipping required preliminary steps can be challenged and may delay or complicate the actual arbitration",
+      "Any party can always go straight to arbitration or litigation regardless of what preliminary steps the contract requires",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Multi-tiered dispute resolution clauses — negotiation, then mediation, then arbitration — are common precisely to encourage earlier resolution. Skipping a required step can be raised as a jurisdictional or procedural objection, creating its own delay.",
+  },
+  {
+    id: "dispute-resolution-02",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The contract specifies arbitration in a particular seat or location, but one party wants to commence court litigation in a more convenient jurisdiction instead.",
+    options: [
+      "Follow the contract's chosen dispute resolution forum — commencing proceedings in a different forum than agreed can be challenged and is often unsuccessful",
+      "A party can always choose whatever forum is most convenient regardless of what the contract specifies",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Arbitration clauses, and forum or jurisdiction clauses generally, are usually enforced according to what was actually agreed — courts frequently decline jurisdiction or stay proceedings where a valid arbitration agreement specifies a different forum.",
+  },
+  {
+    id: "dispute-resolution-03",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A party wants to introduce new evidence at arbitration that wasn't disclosed during the earlier mandatory mediation stage.",
+    options: [
+      "Check the arbitration's procedural rules on evidence — generally new evidence can be introduced at arbitration itself, but check for any specific restrictions this contract or tribunal imposes",
+      "No new evidence can ever be introduced at arbitration if it wasn't first raised during mediation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Mediation and arbitration are generally distinct processes with different evidentiary rules — arbitration typically allows a fuller evidentiary process, though it's worth checking the specific rules governing this arbitration for any unusual restrictions.",
+  },
+  {
+    id: "dispute-resolution-04",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The losing party at arbitration wants to appeal the arbitrator's decision to a court purely because they disagree with the outcome.",
+    options: [
+      "Check the very limited grounds for challenging an arbitral award — awards are generally final and binding, with only narrow grounds like serious procedural irregularity for court intervention",
+      "Any arbitration award can always be appealed to a court simply because a party disagrees with the result",
+    ],
+    correctIndex: 0,
+    explanation:
+      "One of arbitration's core features is finality — awards are generally not appealable on the merits, and courts will only intervene on narrow, specific grounds like a serious procedural defect, not just because a party thinks the outcome was wrong.",
+  },
+  {
+    id: "dispute-resolution-05",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute resolution clause requires disputes to be referred to a Dispute Adjudication Board first, but the Contractor wants to skip straight to arbitration to save time.",
+    options: [
+      "Follow the contractual sequence — bypassing a required Dispute Adjudication Board step can be a valid objection to the arbitration's jurisdiction at this stage",
+      "Any intermediate dispute resolution step required by the contract can always be skipped if a party feels it would be faster to go straight to arbitration",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same principle as skipping mediation applies here — a required Dispute Adjudication Board (or similar) step is a genuine precondition in many contracts, and skipping it risks the whole arbitration being challenged as premature.",
+  },
+  {
+    id: "dispute-resolution-06",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "The parties want to keep the dispute proceedings and outcome confidential, but haven't checked whether their chosen dispute resolution method actually supports that.",
+    options: [
+      "Check this specifically — arbitration is generally private and can be more readily kept confidential, while court litigation is typically a matter of public record",
+      "Confidentiality of dispute proceedings is identical regardless of whether arbitration or litigation is used",
+    ],
+    correctIndex: 0,
+    explanation:
+      "This is a genuine practical difference between the two — arbitration proceedings are typically private, while litigation generally becomes part of the public court record, which matters a lot if confidentiality of the dispute itself is a priority.",
+  },
+  {
+    id: "dispute-resolution-07",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "A dispute resolution clause names a specific arbitral institution and rules, but the parties want to use a different set of rules informally because they're more familiar with them.",
+    options: [
+      "Follow what's actually specified in the contract — using different rules than what's agreed can create real questions about the validity of the whole process",
+      "The parties can always informally agree to use different arbitration rules than the ones specified in the contract without any consequence",
+    ],
+    correctIndex: 0,
+    explanation:
+      "While parties can generally agree to vary their arbitration agreement, doing so needs proper mutual agreement, often written confirmation, not an informal assumption — proceeding on the wrong rules can create real challenges to the resulting award's validity.",
+  },
+  {
+    id: "dispute-resolution-08",
+    topic: "Dispute Resolution (Arbitration/Litigation)",
+    scenario:
+      "One party wants to enforce a foreign arbitration award in a different country where the other party's assets are located, and isn't sure how straightforward that will be.",
+    options: [
+      "This is generally more straightforward than enforcing a foreign court judgment, thanks to widely-adopted international arbitration enforcement treaties — but still worth confirming based on the specific countries involved",
+      "Enforcing a foreign arbitration award is always exactly as difficult as enforcing a foreign court judgment, with no meaningful difference",
+    ],
+    correctIndex: 0,
+    explanation:
+      "One of arbitration's practical advantages is broader international enforceability through widely-adopted treaties, generally making cross-border enforcement smoother than enforcing a foreign court judgment — though the specifics still depend on the countries involved.",
+  },
+
+  // --- Value Engineering ---
+  {
+    id: "value-engineering-01",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor proposes a value engineering change that reduces cost but also reduces the specified quality or performance standard, without clearly flagging the trade-off to the Employer.",
+    options: [
+      "Clearly disclose the trade-off before proceeding — a value engineering proposal that quietly lowers standards without flagging it isn't a fair or transparent proposal",
+      "Any cost-saving proposal is automatically acceptable as long as it saves money, regardless of quality trade-offs",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Genuine value engineering is about finding better value, not just cutting cost at the expense of undisclosed quality reduction — any trade-off needs to be made transparent so the Employer can make an informed decision.",
+  },
+  {
+    id: "value-engineering-02",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering saving is proposed and accepted by the Employer, and the Contractor wants to keep 100% of the savings without any agreed sharing mechanism.",
+    options: [
+      "Check what the contract or the specific VE proposal agreement says about how savings are shared — this varies and isn't automatically 100% to either party",
+      "Value engineering savings always automatically belong entirely to whichever party proposed the change",
+    ],
+    correctIndex: 0,
+    explanation:
+      "How VE savings are shared between the parties is a specific commercial term, sometimes split, sometimes fully to one party, that should be clearly agreed as part of accepting the proposal — not defaulted to either extreme without agreement.",
+  },
+  {
+    id: "value-engineering-03",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor's value engineering proposal changes a specified material to a cheaper alternative without checking whether it still meets the underlying performance specification.",
+    options: [
+      "Verify the alternative genuinely meets the performance specification before proposing it — a cheaper substitute that doesn't actually perform equivalently isn't real value engineering",
+      "Any cheaper alternative material is an acceptable value engineering proposal as long as it's cheaper",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A valid value engineering proposal needs to still meet the actual performance requirements — proposing something cheaper that doesn't functionally perform the same job just shifts risk onto the Employer rather than creating genuine value.",
+  },
+  {
+    id: "value-engineering-04",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering change is implemented without formal instruction or variation documentation, based on a verbal agreement in a meeting.",
+    options: [
+      "Get it formally documented as a variation or instruction before implementing — an undocumented change, even if verbally agreed, creates real risk about what was actually approved",
+      "Verbal agreement in a meeting is always sufficient to implement a value engineering change without further documentation",
+    ],
+    correctIndex: 0,
+    explanation:
+      "The same formal-documentation discipline that applies to variations generally applies to value engineering changes — implementing based on an undocumented verbal agreement risks disputes later about exactly what was approved and on what basis.",
+  },
+  {
+    id: "value-engineering-05",
+    topic: "Value Engineering",
+    scenario:
+      "The Employer rejects a value engineering proposal without giving any reason, and the Contractor assumes this means the proposal was inadequate.",
+    options: [
+      "Ask for the actual reason rather than assuming — value engineering proposals can be rejected for many reasons unrelated to the proposal's technical adequacy, such as aesthetic preference or risk appetite",
+      "A rejected value engineering proposal always means the proposal itself was technically deficient",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Employers might reject a perfectly sound VE proposal for reasons that have nothing to do with its technical merit — understanding the actual reason helps determine whether it's worth refining and resubmitting or genuinely a closed door.",
+  },
+  {
+    id: "value-engineering-06",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering change reduces upfront cost but increases the building's long-term operating or maintenance cost significantly.",
+    options: [
+      "Flag the whole-life cost impact clearly, not just the upfront saving — a proposal that shifts cost to the operational phase isn't automatically a net benefit to the Employer",
+      "Only the upfront capital cost saving matters when evaluating a value engineering proposal",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A genuinely good value engineering proposal should consider whole-life cost, not just capital cost — a change that saves money now but costs more to operate and maintain over time may not actually represent better value overall.",
+  },
+  {
+    id: "value-engineering-07",
+    topic: "Value Engineering",
+    scenario:
+      "The Contractor proposes a value engineering change to a system designed by a specialist consultant, without involving that consultant in reviewing whether the change is sound.",
+    options: [
+      "Involve the original design consultant in reviewing the proposed change — bypassing the specialist who designed the system risks missing something the original design was specifically addressing",
+      "Value engineering changes to a specialist-designed system never need input from the original designer",
+    ],
+    correctIndex: 0,
+    explanation:
+      "A specialist design often addresses considerations that aren't obvious from the outside — proposing a change without the original consultant's input risks unintentionally undermining something the design was specifically solving for.",
+  },
+  {
+    id: "value-engineering-08",
+    topic: "Value Engineering",
+    scenario:
+      "A value engineering proposal is accepted, but its impact on the project programme, positive or negative, is never assessed before implementation.",
+    options: [
+      "Assess programme impact as part of evaluating any VE proposal — a change that saves cost but disrupts the programme isn't a straightforward win without weighing that trade-off too",
+      "Programme impact is irrelevant to evaluating a value engineering proposal, which should be judged on cost alone",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Cost isn't the only variable — a VE change that inadvertently delays the programme, or alternatively could also accelerate it, needs to be assessed as part of the overall picture, not evaluated purely on cost saving in isolation.",
   },
 ];

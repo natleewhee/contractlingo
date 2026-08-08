@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
+import { getUserId } from "@/lib/identity";
 
 // Unambiguous diagnostic for the Neon connection, since a "0" streak on
 // Home is indistinguishable between "genuinely no session completed yet"
@@ -7,6 +8,7 @@ import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
 // Visit /api/debug directly and paste the JSON back.
 export async function GET() {
   const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
+  const userId = await getUserId();
 
   let connection: { ok: true; time: string } | { ok: false; error: string };
   try {
@@ -24,7 +26,7 @@ export async function GET() {
     questionsTable = { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
 
-  const progress = await getProgress();
+  const progress = await getProgress(userId);
 
-  return NextResponse.json({ hasDatabaseUrl, connection, questionsTable, progress });
+  return NextResponse.json({ hasDatabaseUrl, userId, connection, questionsTable, progress });
 }

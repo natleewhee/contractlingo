@@ -1,10 +1,19 @@
-const CACHE_NAME = "contractlingo-v1";
-const APP_SHELL = ["/", "/session", "/manifest.webmanifest"];
+const CACHE_NAME = "contractlingo-v2";
+
+// Every page in this app (/, /session, /progress, /flags) is force-dynamic,
+// per-user HTML - none of it is safe to cache. v1 of this file cached
+// navigations stale-while-revalidate, which meant the streak and onboarding
+// state visibly reverted to a stale snapshot on every reload. Only cache
+// same-origin static assets: hashed /_next/static files, plus a short list
+// of unhashed-but-static file types.
+function isCacheableAsset(url) {
+  if (url.origin !== self.location.origin) return false;
+  if (url.pathname.startsWith("/_next/static/")) return true;
+  return /\.(?:css|js|mjs|svg|png|jpg|jpeg|webp|ico|woff2?)$/.test(url.pathname);
+}
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.add("/manifest.webmanifest")));
   self.skipWaiting();
 });
 
@@ -19,11 +28,16 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Stale-while-revalidate: serve from cache immediately when available,
-// refresh the cache in the background, and fall back to cache if the
-// network is unreachable (offline).
+// Stale-while-revalidate, but only for the static assets above. Page
+// navigations and RSC data requests (`?_rsc=`) always go to the network -
+// they carry per-user state that must never be served from a stale cache.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (event.request.mode === "navigate") return;
+
+  const url = new URL(event.request.url);
+  if (url.searchParams.has("_rsc")) return;
+  if (!isCacheableAsset(url)) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {

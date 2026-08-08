@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
+import { IdentityManager } from "@/components/IdentityManager";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
-import { getAllQuestions, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
+import { getAllQuestions, getFlags, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
+import { getUserId } from "@/lib/identity";
 
 // Reads live data from Neon on every request - must not be statically
 // prerendered, same reasoning as the home page.
@@ -22,11 +24,13 @@ function last7Days(): string[] {
 }
 
 export default async function ProgressPage() {
-  const [{ streak, totalCleared }, topicStats, weekly, questions] = await Promise.all([
-    getProgress(),
-    getTopicStats(),
-    getWeeklyStats(),
+  const userId = await getUserId();
+  const [{ streak, totalCleared }, topicStats, weekly, questions, flags] = await Promise.all([
+    getProgress(userId),
+    getTopicStats(userId),
+    getWeeklyStats(userId),
     getAllQuestions(),
+    getFlags(),
   ]);
   const week = last7Days();
   const allTopics = [...new Set(questions.map((q) => q.topic))];
@@ -127,23 +131,37 @@ export default async function ProgressPage() {
         )}
 
         <h2 className="mt-6 text-sm font-extrabold">All topics</h2>
+        <p className="mt-1 text-xs text-ink-soft">Tap a topic to practice it directly</p>
         <div className="mt-2 flex flex-col gap-1.5">
           {rows.map((r) => (
-            <div
+            <Link
               key={r.topic}
+              href={`/session?topic=${encodeURIComponent(r.topic)}`}
               className="flex items-center justify-between rounded-xl bg-card px-3 py-2 text-xs shadow-[0_1px_0_var(--frame-border)]"
             >
               <span className="font-display font-semibold">{r.topic}</span>
               <span className="text-ink-soft">
                 {r.attempts === 0 ? "Not started" : `${r.accuracy}% · ${r.correct}/${r.attempts}`}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
 
-        <Button3D tone="gold" href="/session" className="mt-6">
+        <Link
+          href="/flags"
+          className="mt-6 flex items-center justify-between rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]"
+        >
+          <span className="font-display text-sm font-bold">Reported cases</span>
+          <span className="rounded-full bg-coral px-2.5 py-1 font-display text-[0.65rem] font-bold text-[#21284A]">
+            {flags.length}
+          </span>
+        </Link>
+
+        <Button3D tone="gold" href="/session?minutes=10" className="mt-4">
           FACE MORE CASES
         </Button3D>
+
+        <IdentityManager userId={userId} />
 
         <ResetProgressButton />
       </main>

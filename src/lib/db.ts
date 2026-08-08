@@ -22,9 +22,10 @@ function ensureSchema(): Promise<void> {
   if (!schemaReady) {
     const db = getSql();
     schemaReady = (async () => {
+      // Final shape for a fresh install - already user_id-keyed.
       await db`
         CREATE TABLE IF NOT EXISTS progress (
-          id text PRIMARY KEY DEFAULT 'default',
+          user_id text PRIMARY KEY,
           streak integer NOT NULL DEFAULT 0,
           total_cleared integer NOT NULL DEFAULT 0,
           last_completed_date date,
@@ -41,17 +42,20 @@ function ensureSchema(): Promise<void> {
       `;
       await db`
         CREATE TABLE IF NOT EXISTS question_progress (
-          question_id text PRIMARY KEY,
+          user_id text NOT NULL,
+          question_id text NOT NULL,
           due_date date NOT NULL DEFAULT CURRENT_DATE,
           interval_days integer NOT NULL DEFAULT 1,
           ease_factor real NOT NULL DEFAULT 2.5,
           reps integer NOT NULL DEFAULT 0,
-          updated_at timestamptz NOT NULL DEFAULT now()
+          updated_at timestamptz NOT NULL DEFAULT now(),
+          PRIMARY KEY (user_id, question_id)
         )
       `;
       await db`
         CREATE TABLE IF NOT EXISTS push_subscriptions (
           endpoint text PRIMARY KEY,
+          user_id text NOT NULL DEFAULT 'default',
           p256dh text NOT NULL,
           auth text NOT NULL,
           created_at timestamptz NOT NULL DEFAULT now()
@@ -60,6 +64,7 @@ function ensureSchema(): Promise<void> {
       await db`
         CREATE TABLE IF NOT EXISTS answer_log (
           id bigserial PRIMARY KEY,
+          user_id text NOT NULL DEFAULT 'default',
           question_id text NOT NULL,
           topic text NOT NULL,
           correct boolean NOT NULL,
@@ -68,7 +73,7 @@ function ensureSchema(): Promise<void> {
       `;
       await db`
         CREATE TABLE IF NOT EXISTS profile (
-          id text PRIMARY KEY DEFAULT 'default',
+          user_id text PRIMARY KEY,
           display_name text,
           avatar_scheme text NOT NULL DEFAULT 'coral',
           updated_at timestamptz NOT NULL DEFAULT now()
@@ -85,6 +90,82 @@ function ensureSchema(): Promise<void> {
           updated_at timestamptz NOT NULL DEFAULT now()
         )
       `;
+
+      // Single source of truth for "does this user id exist" - changeUserId
+      // claims a new id by inserting into this table inside a transaction,
+      // so two concurrent claims of the same id can't both succeed (the
+      // second INSERT hits the primary key and the whole transaction rolls
+      // back). See changeUserId()/isUserIdAvailable() below.
+      await db`
+        CREATE TABLE IF NOT EXISTS users (
+          user_id text PRIMARY KEY,
+          created_at timestamptz NOT NULL DEFAULT now()
+        )
+      `;
+
+      // One-time migrations from the original single-user shape (id text
+      // PRIMARY KEY DEFAULT 'default', no user_id column at all). Each is
+      // guarded so it only runs once - on a fresh install the CREATE TABLE
+      // statements above already produce the final shape, so these no-op.
+      // Verified against a local Postgres copy of the live schema,
+      // including that re-running is a safe no-op.
+      await db`
+        DO $$
+        BEGIN
+          IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'id')
+             AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'user_id') THEN
+            ALTER TABLE progress ADD COLUMN user_id text;
+            UPDATE progress SET user_id = id;
+            ALTER TABLE progress ALTER COLUMN user_id SET NOT NULL;
+            ALTER TABLE progress DROP CONSTRAINT progress_pkey;
+            ALTER TABLE progress ADD PRIMARY KEY (user_id);
+            ALTER TABLE progress DROP COLUMN id;
+          END IF;
+        END $$
+      `;
+      await db`
+        DO $$
+        BEGIN
+          IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'id')
+             AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'user_id') THEN
+            ALTER TABLE profile ADD COLUMN user_id text;
+            UPDATE profile SET user_id = id;
+            ALTER TABLE profile ALTER COLUMN user_id SET NOT NULL;
+            ALTER TABLE profile DROP CONSTRAINT profile_pkey;
+            ALTER TABLE profile ADD PRIMARY KEY (user_id);
+            ALTER TABLE profile DROP COLUMN id;
+          END IF;
+        END $$
+      `;
+      await db`
+        DO $$
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'question_progress' AND column_name = 'user_id') THEN
+            ALTER TABLE question_progress ADD COLUMN user_id text;
+            UPDATE question_progress SET user_id = 'default';
+            ALTER TABLE question_progress ALTER COLUMN user_id SET NOT NULL;
+            ALTER TABLE question_progress DROP CONSTRAINT question_progress_pkey;
+            ALTER TABLE question_progress ADD PRIMARY KEY (user_id, question_id);
+          END IF;
+        END $$
+      `;
+      await db`ALTER TABLE answer_log ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
+      await db`ALTER TABLE push_subscriptions ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
+
+      // One-time backfill: register every user id that already has data in
+      // any per-user table (from before the `users` table existed) so
+      // isUserIdAvailable/changeUserId's claim check sees them as taken.
+      // Safe to re-run - ON CONFLICT DO NOTHING.
+      await db`
+        INSERT INTO users (user_id)
+        SELECT user_id FROM progress
+        UNION SELECT user_id FROM profile
+        UNION SELECT user_id FROM question_progress
+        UNION SELECT user_id FROM answer_log
+        UNION SELECT user_id FROM push_subscriptions
+        ON CONFLICT DO NOTHING
+      `;
+
       // The question bank is still authored in code (src/lib/questions.ts) -
       // reviewable via git, no risk of DB/code drift - but synced into Neon
       // here on every cold start so it's genuinely queryable there too, and
@@ -111,7 +192,14 @@ function ensureSchema(): Promise<void> {
           explanation = EXCLUDED.explanation,
           updated_at = now()
       `;
-    })();
+    })().catch((err) => {
+      // Don't cache a rejected promise forever - a transient blip (e.g.
+      // Neon waking from scale-to-zero) would otherwise permanently brick
+      // this warm instance, since every future call just re-throws the
+      // same cached rejection instead of retrying.
+      schemaReady = null;
+      throw err;
+    });
   }
   return schemaReady;
 }
@@ -175,14 +263,17 @@ function normalizeDateKey(value: unknown): string | null {
   return String(value).slice(0, 10);
 }
 
-// Single-user app, single row - no auth/user id needed for V1.
-export async function getProgress(): Promise<Progress> {
+// Every visitor gets their own anonymous, cookie-scoped user_id (see
+// src/proxy.ts and src/lib/identity.ts) - no login, no shared data. Every
+// function below is scoped to a specific userId rather than a single
+// global row.
+export async function getProgress(userId: string): Promise<Progress> {
   try {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
       SELECT streak, total_cleared, last_completed_date
-      FROM progress WHERE id = 'default'
+      FROM progress WHERE user_id = ${userId}
     `;
     if (rows.length === 0) return DEFAULT_PROGRESS;
     const row = rows[0] as {
@@ -208,10 +299,13 @@ export type SessionCompleteResult = Progress & { frozeStreak: boolean };
 // reset the streak - it's forgiven once (the freeze), so a two-day-old
 // last-completed-date still counts as a continuation. A gap of two or more
 // full missed days still resets to 1.
-export async function recordSessionComplete(clearedCount: number): Promise<SessionCompleteResult> {
+export async function recordSessionComplete(
+  userId: string,
+  clearedCount: number
+): Promise<SessionCompleteResult> {
   await ensureSchema();
   const db = getSql();
-  const current = await getProgress();
+  const current = await getProgress(userId);
   const today = todayKey();
 
   let streak = current.streak;
@@ -230,9 +324,9 @@ export async function recordSessionComplete(clearedCount: number): Promise<Sessi
   const totalCleared = current.totalCleared + clearedCount;
 
   await db`
-    INSERT INTO progress (id, streak, total_cleared, last_completed_date, updated_at)
-    VALUES ('default', ${streak}, ${totalCleared}, ${today}, now())
-    ON CONFLICT (id) DO UPDATE SET
+    INSERT INTO progress (user_id, streak, total_cleared, last_completed_date, updated_at)
+    VALUES (${userId}, ${streak}, ${totalCleared}, ${today}, now())
+    ON CONFLICT (user_id) DO UPDATE SET
       streak = EXCLUDED.streak,
       total_cleared = EXCLUDED.total_cleared,
       last_completed_date = EXCLUDED.last_completed_date,
@@ -243,6 +337,8 @@ export async function recordSessionComplete(clearedCount: number): Promise<Sessi
 }
 
 // Best-effort - "report this case" should never break the session flow.
+// Content reports stay global (not per-user) - they're about the question
+// bank itself, not anyone's personal progress.
 export async function recordFlag(questionId: string, reason: string): Promise<void> {
   try {
     await ensureSchema();
@@ -253,17 +349,48 @@ export async function recordFlag(questionId: string, reason: string): Promise<vo
   }
 }
 
-// Filters `allIds` down to the ones due for review today - either never
-// attempted before, or due_date has arrived. Fails open (returns everything)
-// on error, since showing too much is far better than showing nothing.
-export async function getDueQuestionIds(allIds: string[]): Promise<string[]> {
+export type Flag = {
+  id: number;
+  questionId: string;
+  reason: string;
+  createdAt: string; // ISO
+};
+
+// Powers /flags - the only way to see reported content is otherwise a
+// direct Neon query, which defeats the point of the in-app report button.
+export async function getFlags(): Promise<Flag[]> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT id, question_id, reason, created_at FROM flags ORDER BY created_at DESC
+    `;
+    return (rows as { id: number; question_id: string; reason: string; created_at: unknown }[]).map(
+      (row) => ({
+        id: row.id,
+        questionId: row.question_id,
+        reason: row.reason,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : String(row.created_at),
+      })
+    );
+  } catch (err) {
+    console.error("getFlags failed", err);
+    return [];
+  }
+}
+
+// Filters `allIds` down to the ones due for this user's review today -
+// either never attempted before, or due_date has arrived. Fails open
+// (returns everything) on error, since showing too much is far better than
+// showing nothing.
+export async function getDueQuestionIds(userId: string, allIds: string[]): Promise<string[]> {
   if (allIds.length === 0) return [];
   try {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
       SELECT question_id, due_date FROM question_progress
-      WHERE question_id = ANY(${allIds})
+      WHERE user_id = ${userId} AND question_id = ANY(${allIds})
     `;
     const dueDateById = new Map<string, string | null>();
     for (const row of rows as { question_id: string; due_date: unknown }[]) {
@@ -284,13 +411,22 @@ export async function getDueQuestionIds(allIds: string[]): Promise<string[]> {
 // interval * ease from there); any miss resets the question to come back
 // tomorrow. Best-effort, matching recordFlag - a scheduling hiccup should
 // never break the session.
-export async function recordAnswer(questionId: string, correct: boolean, topic: string): Promise<void> {
+export async function recordAnswer(
+  userId: string,
+  questionId: string,
+  correct: boolean,
+  topic: string
+): Promise<void> {
   try {
     await ensureSchema();
     const db = getSql();
-    await db`INSERT INTO answer_log (question_id, topic, correct) VALUES (${questionId}, ${topic}, ${correct})`;
+    await db`
+      INSERT INTO answer_log (user_id, question_id, topic, correct)
+      VALUES (${userId}, ${questionId}, ${topic}, ${correct})
+    `;
     const rows = await db`
-      SELECT interval_days, ease_factor, reps FROM question_progress WHERE question_id = ${questionId}
+      SELECT interval_days, ease_factor, reps FROM question_progress
+      WHERE user_id = ${userId} AND question_id = ${questionId}
     `;
     const current = rows[0] as
       | { interval_days: number; ease_factor: number; reps: number }
@@ -317,9 +453,9 @@ export async function recordAnswer(questionId: string, correct: boolean, topic: 
     const dueDate = due.toISOString().slice(0, 10);
 
     await db`
-      INSERT INTO question_progress (question_id, due_date, interval_days, ease_factor, reps, updated_at)
-      VALUES (${questionId}, ${dueDate}, ${intervalDays}, ${easeFactor}, ${reps}, now())
-      ON CONFLICT (question_id) DO UPDATE SET
+      INSERT INTO question_progress (user_id, question_id, due_date, interval_days, ease_factor, reps, updated_at)
+      VALUES (${userId}, ${questionId}, ${dueDate}, ${intervalDays}, ${easeFactor}, ${reps}, now())
+      ON CONFLICT (user_id, question_id) DO UPDATE SET
         due_date = EXCLUDED.due_date,
         interval_days = EXCLUDED.interval_days,
         ease_factor = EXCLUDED.ease_factor,
@@ -337,13 +473,13 @@ export type PushSubscriptionRecord = {
   auth: string;
 };
 
-export async function saveSubscription(sub: PushSubscriptionRecord): Promise<void> {
+export async function saveSubscription(userId: string, sub: PushSubscriptionRecord): Promise<void> {
   await ensureSchema();
   const db = getSql();
   await db`
-    INSERT INTO push_subscriptions (endpoint, p256dh, auth)
-    VALUES (${sub.endpoint}, ${sub.p256dh}, ${sub.auth})
-    ON CONFLICT (endpoint) DO UPDATE SET p256dh = EXCLUDED.p256dh, auth = EXCLUDED.auth
+    INSERT INTO push_subscriptions (endpoint, user_id, p256dh, auth)
+    VALUES (${sub.endpoint}, ${userId}, ${sub.p256dh}, ${sub.auth})
+    ON CONFLICT (endpoint) DO UPDATE SET user_id = EXCLUDED.user_id, p256dh = EXCLUDED.p256dh, auth = EXCLUDED.auth
   `;
 }
 
@@ -360,11 +496,20 @@ export async function getSubscription(endpoint: string): Promise<boolean> {
   return rows.length > 0;
 }
 
-export async function getAllSubscriptions(): Promise<PushSubscriptionRecord[]> {
+export type PushSubscriptionWithUser = PushSubscriptionRecord & { userId: string };
+
+// Used by the daily cron - each subscriber gets their own due-count message
+// now that progress is per-user, not one shared count for everyone.
+export async function getAllSubscriptions(): Promise<PushSubscriptionWithUser[]> {
   await ensureSchema();
   const db = getSql();
-  const rows = await db`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
-  return rows as PushSubscriptionRecord[];
+  const rows = await db`SELECT endpoint, user_id, p256dh, auth FROM push_subscriptions`;
+  return (rows as { endpoint: string; user_id: string; p256dh: string; auth: string }[]).map((row) => ({
+    endpoint: row.endpoint,
+    userId: row.user_id,
+    p256dh: row.p256dh,
+    auth: row.auth,
+  }));
 }
 
 // Reads the live question bank from Neon (kept in sync from
@@ -412,11 +557,11 @@ const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: "coral" };
 
 // A null displayName means onboarding hasn't happened yet - the home page
 // uses that to gate the dashboard behind the name/avatar picker.
-export async function getProfile(): Promise<Profile> {
+export async function getProfile(userId: string): Promise<Profile> {
   try {
     await ensureSchema();
     const db = getSql();
-    const rows = await db`SELECT display_name, avatar_scheme FROM profile WHERE id = 'default'`;
+    const rows = await db`SELECT display_name, avatar_scheme FROM profile WHERE user_id = ${userId}`;
     if (rows.length === 0) return DEFAULT_PROFILE;
     const row = rows[0] as { display_name: string | null; avatar_scheme: string };
     return { displayName: row.display_name, avatarScheme: row.avatar_scheme };
@@ -426,28 +571,80 @@ export async function getProfile(): Promise<Profile> {
   }
 }
 
-export async function saveProfile(displayName: string, avatarScheme: string): Promise<void> {
+export async function saveProfile(userId: string, displayName: string, avatarScheme: string): Promise<void> {
   await ensureSchema();
   const db = getSql();
   await db`
-    INSERT INTO profile (id, display_name, avatar_scheme, updated_at)
-    VALUES ('default', ${displayName}, ${avatarScheme}, now())
-    ON CONFLICT (id) DO UPDATE SET
+    INSERT INTO profile (user_id, display_name, avatar_scheme, updated_at)
+    VALUES (${userId}, ${displayName}, ${avatarScheme}, now())
+    ON CONFLICT (user_id) DO UPDATE SET
       display_name = EXCLUDED.display_name,
       avatar_scheme = EXCLUDED.avatar_scheme,
       updated_at = now()
   `;
 }
 
-// Wipes streak, totals, spaced-repetition state, and answer history back to
-// a clean slate. Deliberately leaves flags (content reports) and push
-// subscriptions alone - those aren't "progress".
-export async function resetProgress(): Promise<void> {
+// Checked against the `users` registry (see ensureSchema's backfill) plus
+// every per-user table directly, not just `users` alone - a raw anonymous
+// id can hold real data without ever having gone through an explicit claim.
+export async function isUserIdAvailable(userId: string): Promise<boolean> {
   await ensureSchema();
   const db = getSql();
-  await db`DELETE FROM answer_log`;
-  await db`DELETE FROM question_progress`;
-  await db`DELETE FROM progress WHERE id = 'default'`;
+  const rows = await db`
+    SELECT 1 FROM users WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM profile WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM progress WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM question_progress WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM answer_log WHERE user_id = ${userId}
+    UNION ALL SELECT 1 FROM push_subscriptions WHERE user_id = ${userId}
+    LIMIT 1
+  `;
+  return rows.length === 0;
+}
+
+function isUniqueViolation(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "code" in err && (err as { code: unknown }).code === "23505";
+}
+
+// Atomically claims newId and migrates every row this user owns from oldId
+// to newId, across all per-user tables, in a single Postgres transaction.
+// The claim is the INSERT into `users` - its primary key is what makes this
+// safe against two concurrent renames to the same newId (an
+// isUserIdAvailable() check beforehand narrows the common case but can't
+// close that race on its own, since the check and this call are separate
+// round trips). Returns "taken" instead of throwing if newId was claimed by
+// someone else in between - callers should treat that as a normal, expected
+// outcome, not an error.
+export async function changeUserId(oldId: string, newId: string): Promise<"claimed" | "taken"> {
+  await ensureSchema();
+  const db = getSql();
+  try {
+    await db.transaction([
+      db`INSERT INTO users (user_id) VALUES (${newId})`,
+      db`DELETE FROM users WHERE user_id = ${oldId}`,
+      db`UPDATE progress SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE profile SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE question_progress SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE answer_log SET user_id = ${newId} WHERE user_id = ${oldId}`,
+      db`UPDATE push_subscriptions SET user_id = ${newId} WHERE user_id = ${oldId}`,
+    ]);
+  } catch (err) {
+    if (isUniqueViolation(err)) return "taken";
+    throw err;
+  }
+  return "claimed";
+}
+
+// Wipes this user's streak, totals, spaced-repetition state, and answer
+// history back to a clean slate. Deliberately leaves flags (content
+// reports) and push subscriptions alone - those aren't "progress", and
+// flags are global, not per-user.
+export async function resetProgress(userId: string): Promise<void> {
+  await ensureSchema();
+  const db = getSql();
+  await db`DELETE FROM answer_log WHERE user_id = ${userId}`;
+  await db`DELETE FROM question_progress WHERE user_id = ${userId}`;
+  await db`DELETE FROM progress WHERE user_id = ${userId}`;
 }
 
 export type TopicStat = {
@@ -460,13 +657,14 @@ export type TopicStat = {
 // Powers the PRD's "weak topics" progress view. Fails open to an empty list
 // on error - the progress page just shows no weak-topic callouts rather than
 // crashing.
-export async function getTopicStats(): Promise<TopicStat[]> {
+export async function getTopicStats(userId: string): Promise<TopicStat[]> {
   try {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
       SELECT topic, COUNT(*) as attempts, COUNT(*) FILTER (WHERE correct) as correct
       FROM answer_log
+      WHERE user_id = ${userId}
       GROUP BY topic
     `;
     return (rows as { topic: string; attempts: string | number; correct: string | number }[]).map((row) => {
@@ -495,13 +693,13 @@ const EMPTY_WEEKLY_STATS: WeeklyStats = { activeDays: [], casesThisWeek: 0, accu
 
 // Powers the home screen's weekly recap - ties directly to the PRD's stated
 // success metric (7-day streak retention), not just vanity accuracy stats.
-export async function getWeeklyStats(): Promise<WeeklyStats> {
+export async function getWeeklyStats(userId: string): Promise<WeeklyStats> {
   try {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
       SELECT created_at, correct FROM answer_log
-      WHERE created_at >= now() - interval '7 days'
+      WHERE user_id = ${userId} AND created_at >= now() - interval '7 days'
     `;
     const activeDays = new Set<string>();
     let correct = 0;

@@ -2,10 +2,12 @@
 
 import { cookies } from "next/headers";
 import * as db from "@/lib/db";
-import { getUserId, USER_ID_COOKIE } from "@/lib/identity";
+import { requireUserId, USER_ID_COOKIE, USER_ID_COOKIE_OPTIONS } from "@/lib/identity";
+import { AVATAR_SCHEMES, DEFAULT_AVATAR_SCHEME } from "@/lib/avatarSchemes";
+import { FLAG_REASONS, type FlagReason } from "@/lib/flagReasons";
 
 const ID_PATTERN = /^[a-zA-Z0-9_-]{3,40}$/;
-const ID_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 5; // 5 years, matches proxy.ts's initial assignment
+const MAX_DISPLAY_NAME_LENGTH = 24;
 
 // Names nobody should be able to claim or resume as - "default" especially,
 // since it's the id proxy.ts silently migrates the original single-user
@@ -31,13 +33,7 @@ const RESERVED_IDS = new Set([
 
 async function setUserIdCookie(id: string) {
   const cookieStore = await cookies();
-  cookieStore.set(USER_ID_COOKIE, id, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: ID_COOKIE_MAX_AGE,
-    path: "/",
-  });
+  cookieStore.set(USER_ID_COOKIE, id, USER_ID_COOKIE_OPTIONS);
 }
 
 // Renames the current visitor's id, migrating their existing data to it.
@@ -52,7 +48,7 @@ export async function changeUserId(newIdRaw: string): Promise<{ ok: boolean; err
     return { ok: false, error: "That id isn't available" };
   }
 
-  const currentId = await getUserId();
+  const currentId = await requireUserId();
   if (newId === currentId) return { ok: true };
 
   // A pre-check narrows the common case with a clearer error, but the real
@@ -95,38 +91,51 @@ export async function resumeUserId(idRaw: string): Promise<{ ok: boolean; error?
 }
 
 export async function recordSessionComplete(clearedCount: number) {
-  const userId = await getUserId();
+  const userId = await requireUserId();
   return db.recordSessionComplete(userId, clearedCount);
 }
 
+// questionId and reason are both validated server-side - a Server Action is
+// a public POST endpoint regardless of what the report-this-case UI offers,
+// so nothing stops a direct caller from sending an arbitrary question id or
+// an unlimited freeform reason string otherwise.
 export async function recordFlag(questionId: string, reason: string) {
+  if (!FLAG_REASONS.includes(reason as FlagReason)) return;
+  const question = await db.getQuestionById(questionId);
+  if (!question) return;
   await db.recordFlag(questionId, reason);
 }
 
 export async function resetProgress() {
-  const userId = await getUserId();
+  const userId = await requireUserId();
   await db.resetProgress(userId);
 }
 
 export async function saveProfile(displayName: string, avatarScheme: string) {
-  const userId = await getUserId();
-  await db.saveProfile(userId, displayName, avatarScheme);
+  const userId = await requireUserId();
+  const trimmedName = displayName.trim().slice(0, MAX_DISPLAY_NAME_LENGTH);
+  const scheme = AVATAR_SCHEMES.some((s) => s.id === avatarScheme) ? avatarScheme : DEFAULT_AVATAR_SCHEME;
+  await db.saveProfile(userId, trimmedName, scheme);
 }
 
-export async function recordAnswer(questionId: string, correct: boolean, topic: string) {
-  const userId = await getUserId();
-  await db.recordAnswer(userId, questionId, correct, topic);
+// Takes the selected option's text, not a boolean/topic the caller asserts
+// - correctness and topic are both derived here from the canonical question
+// record, never trusted from the client. selectedOption is matched against
+// the bank's own (non-randomized) option text, so this works regardless of
+// how the session randomized display order for this particular load.
+export async function recordAnswer(questionId: string, selectedOption: string) {
+  const userId = await requireUserId();
+  const question = await db.getQuestionById(questionId);
+  if (!question) return;
+  const correct = question.options[question.correctIndex] === selectedOption;
+  await db.recordAnswer(userId, questionId, correct, question.topic);
 }
 
 export async function subscribeToPush(sub: db.PushSubscriptionRecord) {
-  const userId = await getUserId();
+  const userId = await requireUserId();
   await db.saveSubscription(userId, sub);
 }
 
 export async function unsubscribeFromPush(endpoint: string) {
   await db.removeSubscription(endpoint);
-}
-
-export async function isSubscribedToPush(endpoint: string) {
-  return db.getSubscription(endpoint);
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllQuestions, getFlags } from "@/lib/db";
+import { isAdminSecretValid } from "@/lib/adminAuth";
 
 // Reads live data from Neon on every request.
 export const dynamic = "force-dynamic";
@@ -9,7 +10,24 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
-export default async function FlagsPage() {
+// Operator tool, not a user feature - content reports from every visitor,
+// unfiltered. Visit with ?key=<ADMIN_SECRET>.
+export default async function FlagsPage({ searchParams }: { searchParams: Promise<{ key?: string }> }) {
+  const { key } = await searchParams;
+  if (!isAdminSecretValid(key)) {
+    return (
+      <div className="flex flex-1 justify-center px-4 py-6">
+        <main className="flex w-full max-w-md flex-col items-center gap-2 py-16 text-center">
+          <p className="font-display text-sm font-bold">Not available</p>
+          <p className="text-xs text-ink-soft">This page needs an operator key.</p>
+          <Link href="/progress" className="mt-2 text-xs font-semibold text-ink-soft underline">
+            Back to progress
+          </Link>
+        </main>
+      </div>
+    );
+  }
+
   const [flags, questions] = await Promise.all([getFlags(), getAllQuestions()]);
   const questionById = new Map(questions.map((q) => [q.id, q]));
 

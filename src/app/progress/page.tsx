@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button3D } from "@/components/Button3D";
 import { IdentityManager } from "@/components/IdentityManager";
 import { ResetProgressButton } from "@/components/ResetProgressButton";
-import { getAllQuestions, getFlags, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
+import { getAllQuestions, getProgress, getTopicStats, getWeeklyStats } from "@/lib/db";
 import { getUserId } from "@/lib/identity";
 
 // Reads live data from Neon on every request - must not be statically
@@ -25,12 +25,11 @@ function last7Days(): string[] {
 
 export default async function ProgressPage() {
   const userId = await getUserId();
-  const [{ streak, totalCleared }, topicStats, weekly, questions, flags] = await Promise.all([
+  const [{ streak, totalCleared }, topicStats, weekly, questions] = await Promise.all([
     getProgress(userId),
     getTopicStats(userId),
     getWeeklyStats(userId),
     getAllQuestions(),
-    getFlags(),
   ]);
   const week = last7Days();
   const allTopics = [...new Set(questions.map((q) => q.topic))];
@@ -146,16 +145,6 @@ export default async function ProgressPage() {
             </Link>
           ))}
         </div>
-
-        <Link
-          href="/flags"
-          className="mt-6 flex items-center justify-between rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]"
-        >
-          <span className="font-display text-sm font-bold">Reported cases</span>
-          <span className="rounded-full bg-coral px-2.5 py-1 font-display text-[0.65rem] font-bold text-[#21284A]">
-            {flags.length}
-          </span>
-        </Link>
 
         <Button3D tone="gold" href="/session?minutes=10" className="mt-4">
           FACE MORE CASES

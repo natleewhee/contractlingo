@@ -489,13 +489,6 @@ export async function removeSubscription(endpoint: string): Promise<void> {
   await db`DELETE FROM push_subscriptions WHERE endpoint = ${endpoint}`;
 }
 
-export async function getSubscription(endpoint: string): Promise<boolean> {
-  await ensureSchema();
-  const db = getSql();
-  const rows = await db`SELECT 1 FROM push_subscriptions WHERE endpoint = ${endpoint}`;
-  return rows.length > 0;
-}
-
 export type PushSubscriptionWithUser = PushSubscriptionRecord & { userId: string };
 
 // Used by the daily cron - each subscriber gets their own due-count message
@@ -548,6 +541,41 @@ export async function getAllQuestions(): Promise<Question[]> {
   }
 }
 
+// Single-row lookup used by recordAnswer/recordFlag to derive correctness
+// and topic from the canonical bank server-side, rather than trusting
+// whatever a Server Action's caller claims. Falls back to the code copy on
+// DB error, same as getAllQuestions.
+export async function getQuestionById(id: string): Promise<Question | null> {
+  try {
+    await ensureSchema();
+    const db = getSql();
+    const rows = await db`
+      SELECT id, topic, scenario, options, correct_index, explanation
+      FROM questions WHERE id = ${id}
+    `;
+    if (rows.length === 0) return SESSION_QUESTIONS.find((q) => q.id === id) ?? null;
+    const row = rows[0] as {
+      id: string;
+      topic: string;
+      scenario: string;
+      options: [string, string];
+      correct_index: 0 | 1;
+      explanation: string;
+    };
+    return {
+      id: row.id,
+      topic: row.topic,
+      scenario: row.scenario,
+      options: row.options,
+      correctIndex: row.correct_index,
+      explanation: row.explanation,
+    };
+  } catch (err) {
+    console.error("getQuestionById failed", err);
+    return SESSION_QUESTIONS.find((q) => q.id === id) ?? null;
+  }
+}
+
 export type Profile = {
   displayName: string | null;
   avatarScheme: string;
@@ -582,6 +610,72 @@ export async function saveProfile(userId: string, displayName: string, avatarSch
       avatar_scheme = EXCLUDED.avatar_scheme,
       updated_at = now()
   `;
+}
+
+export type AdminStats = {
+  totalUsers: number;
+  active1d: number;
+  active7d: number;
+  active30d: number;
+  totalFlags: number;
+  hardestQuestions: { questionId: string; attempts: number; accuracy: number }[];
+};
+
+const MIN_ATTEMPTS_FOR_DIFFICULTY = 5;
+
+// Cheap operator-only visibility into who's using this and which content is
+// misfiring - otherwise there's no way to answer "did anyone come back on
+// day 2" (the PRD's own primary success metric) short of a manual Neon
+// query. Gated behind ADMIN_SECRET at the route level (see
+// /api/admin/stats), never exposed to regular users.
+export async function getAdminStats(): Promise<AdminStats> {
+  await ensureSchema();
+  const db = getSql();
+
+  const [userRows, activityRows, flagRows, hardestRows] = await Promise.all([
+    db`
+      SELECT count(*)::int AS total FROM (
+        SELECT user_id FROM profile
+        UNION SELECT user_id FROM progress
+        UNION SELECT user_id FROM question_progress
+        UNION SELECT user_id FROM answer_log
+        UNION SELECT user_id FROM push_subscriptions
+      ) u
+    `,
+    db`
+      SELECT
+        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE) AS active_1d,
+        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE - 6) AS active_7d,
+        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE - 29) AS active_30d
+      FROM progress
+    `,
+    db`SELECT count(*)::int AS total FROM flags`,
+    db`
+      SELECT question_id, count(*)::int AS attempts, avg(correct::int) AS accuracy
+      FROM answer_log
+      GROUP BY question_id
+      HAVING count(*) >= ${MIN_ATTEMPTS_FOR_DIFFICULTY}
+      ORDER BY accuracy ASC
+      LIMIT 10
+    `,
+  ]);
+
+  const activity = activityRows[0] as
+    | { active_1d: string | number; active_7d: string | number; active_30d: string | number }
+    | undefined;
+
+  return {
+    totalUsers: Number((userRows[0] as { total: number } | undefined)?.total ?? 0),
+    active1d: Number(activity?.active_1d ?? 0),
+    active7d: Number(activity?.active_7d ?? 0),
+    active30d: Number(activity?.active_30d ?? 0),
+    totalFlags: Number((flagRows[0] as { total: number } | undefined)?.total ?? 0),
+    hardestQuestions: (hardestRows as { question_id: string; attempts: number; accuracy: number }[]).map((r) => ({
+      questionId: r.question_id,
+      attempts: Number(r.attempts),
+      accuracy: Math.round(Number(r.accuracy) * 100),
+    })),
+  };
 }
 
 // Checked against the `users` registry (see ensureSchema's backfill) plus

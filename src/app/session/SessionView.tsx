@@ -7,10 +7,10 @@ import { HeroAvatar } from "@/components/HeroAvatar";
 import { MinionAvatar } from "@/components/MinionAvatar";
 import { QueueDots } from "@/components/QueueDots";
 import { recordAnswer, recordFlag, recordSessionComplete } from "@/app/actions";
+import { FLAG_REASONS } from "@/lib/flagReasons";
 import type { Question } from "@/lib/questions";
 
 type Phase = "incoming" | "battle" | "resolution" | "recap";
-const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
 
 const AVATAR_PREVIEW_CAP = 8;
 
@@ -41,7 +41,11 @@ export function SessionView({
     const isCorrect = choice === question.correctIndex;
     if (isCorrect) setCorrectCount((c) => c + 1);
     setPhase("resolution");
-    recordAnswer(question.id, isCorrect, question.topic).catch((err) => {
+    // Sends the selected option's text, not a client-asserted "was this
+    // right" boolean - the server derives correctness itself from the
+    // canonical (non-randomized) question record. isCorrect above is only
+    // ever used for this device's own immediate UI feedback.
+    recordAnswer(question.id, question.options[choice]).catch((err) => {
       console.error("Failed to record answer", err);
     });
   }
@@ -192,7 +196,7 @@ export function SessionView({
                       What&apos;s wrong with this one?
                     </p>
                     <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-                      {REASONS.map((reason) => (
+                      {FLAG_REASONS.map((reason) => (
                         <button
                           key={reason}
                           onClick={() => flag(reason)}

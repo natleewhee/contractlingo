@@ -1,12 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
 import { getUserId } from "@/lib/identity";
+import { isAdminRequest } from "@/lib/adminAuth";
 
 // Unambiguous diagnostic for the Neon connection, since a "0" streak on
 // Home is indistinguishable between "genuinely no session completed yet"
 // and "the DB call is silently failing and falling back to defaults".
-// Visit /api/debug directly and paste the JSON back.
-export async function GET() {
+// Visit /api/debug?key=<ADMIN_SECRET> and paste the JSON back - this used
+// to be wide open, which leaked raw driver error text (hostnames, whether
+// DATABASE_URL is set at all) to any anonymous visitor.
+export async function GET(req: NextRequest) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
   const userId = await getUserId();
 

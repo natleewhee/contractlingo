@@ -7,10 +7,12 @@ import { HeroAvatar } from "@/components/HeroAvatar";
 import { MinionAvatar } from "@/components/MinionAvatar";
 import { QueueDots } from "@/components/QueueDots";
 import { recordAnswer, recordFlag, recordSessionComplete } from "@/app/actions";
+import { FLAG_REASONS } from "@/lib/flagReasons";
 import type { Question } from "@/lib/questions";
 
 type Phase = "incoming" | "battle" | "resolution" | "recap";
-const REASONS = ["Answer feels wrong", "Too easy", "Not relevant", "Other"];
+
+const AVATAR_PREVIEW_CAP = 8;
 
 export function SessionView({
   initialPool,
@@ -39,7 +41,11 @@ export function SessionView({
     const isCorrect = choice === question.correctIndex;
     if (isCorrect) setCorrectCount((c) => c + 1);
     setPhase("resolution");
-    recordAnswer(question.id, isCorrect, question.topic).catch((err) => {
+    // Sends the selected option's text, not a client-asserted "was this
+    // right" boolean - the server derives correctness itself from the
+    // canonical (non-randomized) question record. isCorrect above is only
+    // ever used for this device's own immediate UI feedback.
+    recordAnswer(question.id, question.options[choice]).catch((err) => {
       console.error("Failed to record answer", err);
     });
   }
@@ -84,8 +90,8 @@ export function SessionView({
               {total} {caseWord} incoming!
             </span>
             <div className="flex items-center justify-center gap-4">
-              <div className="flex gap-2">
-                {pool.map((q, i) => (
+              <div className="flex max-w-[220px] flex-wrap justify-center gap-2">
+                {pool.slice(0, AVATAR_PREVIEW_CAP).map((q, i) => (
                   <MinionAvatar
                     key={q.id}
                     size={24}
@@ -93,6 +99,11 @@ export function SessionView({
                     style={{ animationDelay: `${i * 0.1}s` }}
                   />
                 ))}
+                {pool.length > AVATAR_PREVIEW_CAP && (
+                  <span className="flex h-6 items-center rounded-full bg-card px-2 font-display text-[0.65rem] font-bold text-ink-soft shadow-[0_2px_0_var(--frame-border)]">
+                    +{pool.length - AVATAR_PREVIEW_CAP}
+                  </span>
+                )}
               </div>
               <div className="[transform:scaleX(-1)]">
                 <HeroAvatar size={46} scheme={heroScheme} />
@@ -185,7 +196,7 @@ export function SessionView({
                       What&apos;s wrong with this one?
                     </p>
                     <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-                      {REASONS.map((reason) => (
+                      {FLAG_REASONS.map((reason) => (
                         <button
                           key={reason}
                           onClick={() => flag(reason)}

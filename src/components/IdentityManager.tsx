@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { changeUserId, resumeUserId } from "@/app/actions";
 
@@ -8,6 +8,7 @@ type Mode = "view" | "rename" | "resume";
 
 export function IdentityManager({ userId }: { userId: string }) {
   const router = useRouter();
+  const idInputId = useId();
   const [mode, setMode] = useState<Mode>("view");
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +53,7 @@ export function IdentityManager({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="mt-6 rounded-2xl bg-card p-4 shadow-[0_2px_0_var(--frame-border)]">
+    <div className="mt-6 rounded-2xl border border-frame-border bg-card p-4">
       <h2 className="font-display text-sm font-bold">Your id</h2>
       <p className="mt-1 text-xs text-ink-soft">
         Copy this to pick up your progress on another device, or set a custom one to remember.
@@ -67,7 +68,7 @@ export function IdentityManager({ userId }: { userId: string }) {
         </code>
         <button
           onClick={copyId}
-          className="shrink-0 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[#21284A]"
+          className="min-h-11 shrink-0 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[var(--accent-text)]"
         >
           {copied ? "Copied" : "Copy"}
         </button>
@@ -77,13 +78,13 @@ export function IdentityManager({ userId }: { userId: string }) {
         <div className="mt-2 flex gap-3">
           <button
             onClick={() => openMode("rename")}
-            className="font-display text-[0.68rem] font-semibold text-ink-soft underline decoration-dotted"
+            className="flex min-h-11 items-center font-display text-[0.68rem] font-semibold text-ink-soft underline decoration-dotted"
           >
             Set a custom id
           </button>
           <button
             onClick={() => openMode("resume")}
-            className="font-display text-[0.68rem] font-semibold text-ink-soft underline decoration-dotted"
+            className="flex min-h-11 items-center font-display text-[0.68rem] font-semibold text-ink-soft underline decoration-dotted"
           >
             Resume a different id
           </button>
@@ -97,27 +98,31 @@ export function IdentityManager({ userId }: { userId: string }) {
               ? "Pick something memorable — this becomes your new id, and your current progress moves with it."
               : "Enter an id you've used before to switch this device to it."}
           </p>
+          <label htmlFor={idInputId} className="sr-only">
+            {mode === "rename" ? "New id" : "Id to resume"}
+          </label>
           <input
+            id={idInputId}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={mode === "rename" ? "your-custom-id" : "id to resume"}
             maxLength={40}
             autoFocus
-            className="rounded-xl border border-frame-border bg-bg px-3 py-2 font-display text-sm font-semibold text-ink outline-none"
+            className="rounded-xl border border-frame-border bg-bg px-3 py-2.5 font-display text-sm font-semibold text-ink outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
           />
           {error && <p className="text-xs font-semibold text-coral">{error}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={busy || !input.trim()}
-              className="flex-1 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[#21284A] disabled:opacity-60"
+              className="min-h-11 flex-1 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[var(--accent-text)] disabled:opacity-60"
             >
               {busy ? "Saving…" : mode === "rename" ? "Save" : "Resume"}
             </button>
             <button
               type="button"
               onClick={() => openMode("view")}
-              className="rounded-xl px-3 py-2 font-display text-xs font-semibold text-ink-soft"
+              className="min-h-11 rounded-xl px-3 py-2 font-display text-xs font-semibold text-ink-soft"
             >
               Cancel
             </button>

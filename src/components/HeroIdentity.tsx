@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HeroAvatar } from "@/components/HeroAvatar";
 import { saveProfile } from "@/app/actions";
@@ -13,6 +13,7 @@ type Props = {
 
 export function HeroIdentity({ initialName, initialScheme }: Props) {
   const router = useRouter();
+  const nameInputId = useId();
   const isFirstRun = initialName === null;
   const [editing, setEditing] = useState(isFirstRun);
   const [name, setName] = useState(initialName ?? "");
@@ -40,14 +41,14 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
   if (!editing) {
     return (
       <div className="mt-3 flex items-center gap-3">
-        <HeroAvatar size={58} scheme={initialScheme} />
+        <HeroAvatar size={52} scheme={initialScheme} />
         <div className="flex flex-col">
           <span className="font-display text-sm font-bold">{initialName}</span>
           <button
             onClick={() => setEditing(true)}
-            className="text-left font-display text-[0.65rem] font-medium text-ink-soft underline decoration-dotted"
+            className="flex min-h-11 items-center text-left font-display text-[0.68rem] font-medium text-ink-soft underline decoration-dotted"
           >
-            Edit hero
+            Edit badge
           </button>
         </div>
       </div>
@@ -55,16 +56,22 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
   }
 
   return (
-    <div className="mt-3 flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-[0_2px_0_var(--frame-border)]">
+    <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-frame-border bg-card p-4">
       <div className="flex items-center gap-3">
-        <HeroAvatar size={50} scheme={scheme} />
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
-          maxLength={24}
-          className="flex-1 rounded-xl border border-frame-border bg-bg px-3 py-2 font-display text-sm font-semibold text-ink outline-none"
-        />
+        <HeroAvatar size={48} scheme={scheme} />
+        <div className="flex-1">
+          <label htmlFor={nameInputId} className="sr-only">
+            Your name
+          </label>
+          <input
+            id={nameInputId}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            maxLength={24}
+            className="w-full rounded-xl border border-frame-border bg-bg px-3 py-2.5 font-display text-sm font-semibold text-ink outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -74,11 +81,11 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
             onClick={() => setScheme(s.id)}
             aria-label={s.label}
             aria-pressed={scheme === s.id}
-            className={`flex h-11 w-11 items-center justify-center rounded-full bg-bg ${
-              scheme === s.id ? "outline outline-2 outline-offset-2 outline-[var(--gold)]" : ""
+            className={`flex h-11 w-11 items-center justify-center rounded-full bg-bg outline-offset-2 ${
+              scheme === s.id ? "outline outline-2 outline-gold" : ""
             }`}
           >
-            <HeroAvatar size={30} scheme={s.id} animate={false} cape={false} />
+            <HeroAvatar size={30} scheme={s.id} />
           </button>
         ))}
       </div>
@@ -89,9 +96,9 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
         <button
           onClick={save}
           disabled={saving || !name.trim()}
-          className="flex-1 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[#21284A] disabled:opacity-60"
+          className="min-h-11 flex-1 rounded-xl bg-gold px-3 py-2 font-display text-xs font-bold text-[var(--accent-text)] disabled:opacity-60"
         >
-          {saving ? "Saving…" : isFirstRun ? "Start defending" : "Save"}
+          {saving ? "Saving…" : isFirstRun ? "Start logging" : "Save"}
         </button>
         {!isFirstRun && (
           <button
@@ -100,7 +107,7 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
               setScheme(initialScheme);
               setEditing(false);
             }}
-            className="rounded-xl px-3 py-2 font-display text-xs font-semibold text-ink-soft"
+            className="min-h-11 rounded-xl px-3 py-2 font-display text-xs font-semibold text-ink-soft"
           >
             Cancel
           </button>

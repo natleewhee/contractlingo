@@ -50,9 +50,9 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-4">
-      <div className="flex w-full max-w-md items-center gap-3 rounded-2xl bg-card px-4 py-3 shadow-[0_3px_0_var(--frame-border)]">
+      <div className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-frame-border bg-card px-4 py-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21284A" strokeWidth="2.4">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-text)" strokeWidth="2.4">
             <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 17v2a2 2 0 002 2h10a2 2 0 002-2v-2" />
           </svg>
         </span>
@@ -62,13 +62,13 @@ export function InstallPrompt() {
         <div className="flex shrink-0 flex-col gap-1">
           <button
             onClick={install}
-            className="rounded-xl bg-gold px-3 py-1.5 font-display text-[0.65rem] font-bold text-[#21284A]"
+            className="min-h-11 rounded-xl bg-gold px-3 py-1.5 font-display text-[0.65rem] font-bold text-[var(--accent-text)]"
           >
             Install
           </button>
           <button
             onClick={dismiss}
-            className="font-display text-[0.6rem] font-semibold text-ink-soft"
+            className="min-h-11 font-display text-[0.6rem] font-semibold text-ink-soft"
           >
             Not now
           </button>

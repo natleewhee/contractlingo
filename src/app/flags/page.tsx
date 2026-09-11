@@ -37,7 +37,7 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
         <div className="flex items-center gap-2">
           <Link
             href="/progress"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-ink-soft shadow-[0_2px_0_var(--frame-border)]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-frame-border bg-card text-ink-soft"
             aria-label="Back to progress"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
@@ -56,10 +56,10 @@ export default async function FlagsPage({ searchParams }: { searchParams: Promis
             return (
               <div
                 key={flag.id}
-                className="rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]"
+                className="rounded-2xl border border-frame-border bg-card px-4 py-3"
               >
                 <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-coral px-2.5 py-1 font-display text-[0.6rem] font-bold text-[#21284A]">
+                  <span className="rounded-full border border-coral px-2.5 py-1 font-display text-[0.6rem] font-bold text-coral">
                     {flag.reason}
                   </span>
                   <span className="text-[0.65rem] text-ink-soft">{formatDate(flag.createdAt)}</span>

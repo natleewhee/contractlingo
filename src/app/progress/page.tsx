@@ -34,11 +34,19 @@ export default async function ProgressPage() {
   const allTopics = [...new Set(questions.map((q) => q.topic))];
 
   const statsByTopic = new Map(topicStats.map((s) => [s.topic, s]));
-  const rows = allTopics.map((topic) => statsByTopic.get(topic) ?? { topic, attempts: 0, correct: 0, accuracy: 100 })
+  const withStats = allTopics.map(
+    (topic) => statsByTopic.get(topic) ?? { topic, attempts: 0, correct: 0, accuracy: 100 }
+  );
+
+  const weakTopics = withStats
+    .filter((r) => r.attempts >= MIN_ATTEMPTS_TO_JUDGE && r.accuracy < WEAK_THRESHOLD)
     .sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts);
 
-  const weakTopics = rows.filter(
-    (r) => r.attempts >= MIN_ATTEMPTS_TO_JUDGE && r.accuracy < WEAK_THRESHOLD
+  // Attempts first (your own topics surface), then alphabetical - the old
+  // sort (accuracy asc) put a single 0/1 topic above a 0/8 one and buried
+  // every untouched topic behind it in an arbitrary order.
+  const allTopicsSorted = [...withStats].sort(
+    (a, b) => b.attempts - a.attempts || a.topic.localeCompare(b.topic)
   );
 
   return (
@@ -47,7 +55,7 @@ export default async function ProgressPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-ink-soft shadow-[0_2px_0_var(--frame-border)]"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-frame-border bg-card text-ink-soft"
             aria-label="Back to home"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
@@ -58,18 +66,20 @@ export default async function ProgressPage() {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]">
+          <div className="rounded-2xl border border-frame-border bg-card px-4 py-3">
             <span className="font-display text-2xl font-bold">{streak}</span>
             <p className="text-xs text-ink-soft">day streak</p>
           </div>
-          <div className="rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]">
+          <div className="rounded-2xl border border-frame-border bg-card px-4 py-3">
             <span className="font-display text-2xl font-bold">{totalCleared}</span>
             <p className="text-xs text-ink-soft">cases faced</p>
           </div>
         </div>
 
+        <IdentityManager userId={userId} />
+
         <h2 className="mt-6 text-sm font-extrabold">This week</h2>
-        <div className="mt-2 rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]">
+        <div className="mt-2 rounded-2xl border border-frame-border bg-card px-4 py-3">
           <div className="flex justify-between">
             {week.map((day) => {
               const active = weekly.activeDays.includes(day);
@@ -81,11 +91,9 @@ export default async function ProgressPage() {
                     {DAY_LABELS[dayOfWeek]}
                   </span>
                   <span
-                    className={`h-6 w-6 rounded-full ${
-                      active
-                        ? "bg-mint shadow-[0_2px_0_var(--mint-dark)]"
-                        : "bg-bg shadow-[0_1px_0_var(--frame-border)]"
-                    } ${isToday ? "outline outline-2 outline-offset-2 outline-[var(--gold)]" : ""}`}
+                    className={`h-6 w-6 rounded-full border ${
+                      active ? "border-mint-dark bg-mint" : "border-frame-border bg-bg"
+                    } ${isToday ? "outline outline-2 outline-offset-2 outline-gold" : ""}`}
                     aria-label={active ? "Practiced" : "No session"}
                   />
                 </div>
@@ -110,7 +118,7 @@ export default async function ProgressPage() {
             {weakTopics.map((r) => (
               <div
                 key={r.topic}
-                className="flex items-center justify-between rounded-2xl bg-card px-4 py-3 shadow-[0_2px_0_var(--frame-border)]"
+                className="flex items-center justify-between rounded-2xl border border-frame-border bg-card px-4 py-3"
               >
                 <div>
                   <p className="font-display text-sm font-bold">{r.topic}</p>
@@ -118,40 +126,72 @@ export default async function ProgressPage() {
                     {r.accuracy}% correct · {r.correct}/{r.attempts}
                   </p>
                 </div>
-                <Link href={`/session?topic=${encodeURIComponent(r.topic)}`}>
-                  <span className="rounded-full bg-coral px-3 py-1.5 font-display text-[0.65rem] font-bold text-[#21284A]">
-                    Practice
-                  </span>
+                <Link
+                  href={`/session?topic=${encodeURIComponent(r.topic)}`}
+                  className="flex min-h-11 items-center rounded-full border-2 border-coral bg-coral/15 px-3 font-display text-[0.65rem] font-bold text-ink"
+                >
+                  Practice
                 </Link>
               </div>
             ))}
           </div>
         )}
 
-        <h2 className="mt-6 text-sm font-extrabold">All topics</h2>
-        <p className="mt-1 text-xs text-ink-soft">Tap a topic to practice it directly</p>
-        <div className="mt-2 flex flex-col gap-1.5">
-          {rows.map((r) => (
-            <Link
-              key={r.topic}
-              href={`/session?topic=${encodeURIComponent(r.topic)}`}
-              className="flex items-center justify-between rounded-xl bg-card px-3 py-2 text-xs shadow-[0_1px_0_var(--frame-border)]"
+        <details className="mt-6 group">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-sm font-extrabold">
+            All topics
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              className="text-ink-soft transition-transform group-open:rotate-180"
             >
-              <span className="font-display font-semibold">{r.topic}</span>
-              <span className="text-ink-soft">
-                {r.attempts === 0 ? "Not started" : `${r.accuracy}% · ${r.correct}/${r.attempts}`}
-              </span>
-            </Link>
-          ))}
-        </div>
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </summary>
+          <p className="mt-1 text-xs text-ink-soft">Tap a topic to practice it directly</p>
+          <div className="mt-2 flex flex-col gap-1.5">
+            {allTopicsSorted.map((r) => (
+              <Link
+                key={r.topic}
+                href={`/session?topic=${encodeURIComponent(r.topic)}`}
+                className="flex min-h-11 items-center justify-between rounded-xl border border-frame-border bg-card px-3 text-xs"
+              >
+                <span className="font-display font-semibold">{r.topic}</span>
+                <span className="text-ink-soft">
+                  {r.attempts === 0 ? "Not started" : `${r.accuracy}% · ${r.correct}/${r.attempts}`}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </details>
 
         <Button3D tone="gold" href="/session?minutes=10" className="mt-4">
           FACE MORE CASES
         </Button3D>
 
-        <IdentityManager userId={userId} />
-
-        <ResetProgressButton />
+        <details className="mt-6 group">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-sm font-extrabold text-ink-soft">
+            Settings
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              className="transition-transform group-open:rotate-180"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </summary>
+          <div className="mt-3 flex justify-center">
+            <ResetProgressButton />
+          </div>
+        </details>
       </main>
     </div>
   );

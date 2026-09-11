@@ -29,7 +29,7 @@ export function ResetProgressButton() {
     <button
       onClick={handleClick}
       disabled={busy}
-      className="mt-6 self-center font-display text-[0.68rem] font-semibold text-coral disabled:opacity-60"
+      className="flex min-h-11 items-center self-center font-display text-[0.68rem] font-semibold text-coral disabled:opacity-60"
     >
       {busy ? "Resetting…" : "Reset all progress"}
     </button>

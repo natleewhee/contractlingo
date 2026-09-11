@@ -14,6 +14,21 @@ export default async function Home() {
   const userId = await getUserId();
   const [profile, { streak }] = await Promise.all([getProfile(userId), getProgress(userId)]);
 
+  // A DB hiccup and "never onboarded" both leave displayName null - without
+  // this check the two were indistinguishable, so an established user hit
+  // by a transient Neon error would see "set up your hero" and a save that
+  // silently does nothing, indistinguishable from having lost their account.
+  if (profile.status === "unavailable") {
+    return (
+      <div className="flex flex-1 justify-center px-4 py-6">
+        <main className="flex w-full max-w-md flex-1 flex-col items-center justify-center gap-1 text-center">
+          <h1 className="text-lg font-extrabold">Can&apos;t reach the server</h1>
+          <p className="text-sm text-ink-soft">Your progress is safe - try reloading in a moment.</p>
+        </main>
+      </div>
+    );
+  }
+
   if (!profile.displayName) {
     return (
       <div className="flex flex-1 justify-center px-4 py-6">

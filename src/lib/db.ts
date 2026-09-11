@@ -1,5 +1,6 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
+import { daysAgoKey, todayKey } from "@/lib/date";
 
 // Constructed lazily (not at module load) so a missing DATABASE_URL only
 // throws when actually queried, never during build/static analysis.
@@ -16,190 +17,177 @@ function getSql(): NeonQueryFunction<false, false> {
 
 let schemaReady: Promise<void> | null = null;
 
+// Arbitrary constant - just needs to be unique within this database, since
+// nothing else here takes advisory locks. Scoped to the transaction below
+// (pg_advisory_xact_lock), not a session-level lock: it releases itself on
+// commit/rollback, which matters because Neon's HTTP driver doesn't give
+// separate `await db\`...\`` calls a shared session to unlock from later.
+const SCHEMA_MIGRATION_LOCK_KEY = 84172;
+
 // Idempotent - safe to call on every request. Cached per server instance so
-// it only actually hits the database once per cold start.
+// it only actually hits the database once per cold start. All the DDL runs
+// as ONE transaction guarded by an advisory lock: reproduced against a
+// fresh local Postgres, 12 concurrent cold starts against untouched tables
+// used to fail 11/12 with a duplicate-key error on table creation
+// (CREATE TABLE IF NOT EXISTS isn't safe against real concurrent races) -
+// the lock serializes them instead of letting them race.
 function ensureSchema(): Promise<void> {
   if (!schemaReady) {
     const db = getSql();
-    schemaReady = (async () => {
-      // Final shape for a fresh install - already user_id-keyed.
-      await db`
-        CREATE TABLE IF NOT EXISTS progress (
-          user_id text PRIMARY KEY,
-          streak integer NOT NULL DEFAULT 0,
-          total_cleared integer NOT NULL DEFAULT 0,
-          last_completed_date date,
-          updated_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS flags (
-          id bigserial PRIMARY KEY,
-          question_id text NOT NULL,
-          reason text NOT NULL,
-          created_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS question_progress (
-          user_id text NOT NULL,
-          question_id text NOT NULL,
-          due_date date NOT NULL DEFAULT CURRENT_DATE,
-          interval_days integer NOT NULL DEFAULT 1,
-          ease_factor real NOT NULL DEFAULT 2.5,
-          reps integer NOT NULL DEFAULT 0,
-          updated_at timestamptz NOT NULL DEFAULT now(),
-          PRIMARY KEY (user_id, question_id)
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS push_subscriptions (
-          endpoint text PRIMARY KEY,
-          user_id text NOT NULL DEFAULT 'default',
-          p256dh text NOT NULL,
-          auth text NOT NULL,
-          created_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS answer_log (
-          id bigserial PRIMARY KEY,
-          user_id text NOT NULL DEFAULT 'default',
-          question_id text NOT NULL,
-          topic text NOT NULL,
-          correct boolean NOT NULL,
-          created_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS profile (
-          user_id text PRIMARY KEY,
-          display_name text,
-          avatar_scheme text NOT NULL DEFAULT 'coral',
-          updated_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
-      await db`
-        CREATE TABLE IF NOT EXISTS questions (
-          id text PRIMARY KEY,
-          topic text NOT NULL,
-          scenario text NOT NULL,
-          options jsonb NOT NULL,
-          correct_index integer NOT NULL,
-          explanation text NOT NULL,
-          updated_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
+    schemaReady = db
+      .transaction([
+        db`SELECT pg_advisory_xact_lock(${SCHEMA_MIGRATION_LOCK_KEY})`,
 
-      // Single source of truth for "does this user id exist" - changeUserId
-      // claims a new id by inserting into this table inside a transaction,
-      // so two concurrent claims of the same id can't both succeed (the
-      // second INSERT hits the primary key and the whole transaction rolls
-      // back). See changeUserId()/isUserIdAvailable() below.
-      await db`
-        CREATE TABLE IF NOT EXISTS users (
-          user_id text PRIMARY KEY,
-          created_at timestamptz NOT NULL DEFAULT now()
-        )
-      `;
+        // Final shape for a fresh install - already user_id-keyed.
+        db`
+          CREATE TABLE IF NOT EXISTS progress (
+            user_id text PRIMARY KEY,
+            streak integer NOT NULL DEFAULT 0,
+            total_cleared integer NOT NULL DEFAULT 0,
+            last_completed_date date,
+            updated_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
+        db`
+          CREATE TABLE IF NOT EXISTS flags (
+            id bigserial PRIMARY KEY,
+            question_id text NOT NULL,
+            reason text NOT NULL,
+            created_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
+        db`
+          CREATE TABLE IF NOT EXISTS question_progress (
+            user_id text NOT NULL,
+            question_id text NOT NULL,
+            due_date date NOT NULL DEFAULT CURRENT_DATE,
+            interval_days integer NOT NULL DEFAULT 1,
+            ease_factor real NOT NULL DEFAULT 2.5,
+            reps integer NOT NULL DEFAULT 0,
+            updated_at timestamptz NOT NULL DEFAULT now(),
+            PRIMARY KEY (user_id, question_id)
+          )
+        `,
+        db`
+          CREATE TABLE IF NOT EXISTS push_subscriptions (
+            endpoint text PRIMARY KEY,
+            user_id text NOT NULL DEFAULT 'default',
+            p256dh text NOT NULL,
+            auth text NOT NULL,
+            created_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
+        db`
+          CREATE TABLE IF NOT EXISTS answer_log (
+            id bigserial PRIMARY KEY,
+            user_id text NOT NULL DEFAULT 'default',
+            question_id text NOT NULL,
+            topic text NOT NULL,
+            correct boolean NOT NULL,
+            created_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
+        db`
+          CREATE TABLE IF NOT EXISTS profile (
+            user_id text PRIMARY KEY,
+            display_name text,
+            avatar_scheme text NOT NULL DEFAULT 'coral',
+            updated_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
 
-      // One-time migrations from the original single-user shape (id text
-      // PRIMARY KEY DEFAULT 'default', no user_id column at all). Each is
-      // guarded so it only runs once - on a fresh install the CREATE TABLE
-      // statements above already produce the final shape, so these no-op.
-      // Verified against a local Postgres copy of the live schema,
-      // including that re-running is a safe no-op.
-      await db`
-        DO $$
-        BEGIN
-          IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'id')
-             AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'user_id') THEN
-            ALTER TABLE progress ADD COLUMN user_id text;
-            UPDATE progress SET user_id = id;
-            ALTER TABLE progress ALTER COLUMN user_id SET NOT NULL;
-            ALTER TABLE progress DROP CONSTRAINT progress_pkey;
-            ALTER TABLE progress ADD PRIMARY KEY (user_id);
-            ALTER TABLE progress DROP COLUMN id;
-          END IF;
-        END $$
-      `;
-      await db`
-        DO $$
-        BEGIN
-          IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'id')
-             AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'user_id') THEN
-            ALTER TABLE profile ADD COLUMN user_id text;
-            UPDATE profile SET user_id = id;
-            ALTER TABLE profile ALTER COLUMN user_id SET NOT NULL;
-            ALTER TABLE profile DROP CONSTRAINT profile_pkey;
-            ALTER TABLE profile ADD PRIMARY KEY (user_id);
-            ALTER TABLE profile DROP COLUMN id;
-          END IF;
-        END $$
-      `;
-      await db`
-        DO $$
-        BEGIN
-          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'question_progress' AND column_name = 'user_id') THEN
-            ALTER TABLE question_progress ADD COLUMN user_id text;
-            UPDATE question_progress SET user_id = 'default';
-            ALTER TABLE question_progress ALTER COLUMN user_id SET NOT NULL;
-            ALTER TABLE question_progress DROP CONSTRAINT question_progress_pkey;
-            ALTER TABLE question_progress ADD PRIMARY KEY (user_id, question_id);
-          END IF;
-        END $$
-      `;
-      await db`ALTER TABLE answer_log ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
-      await db`ALTER TABLE push_subscriptions ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`;
+        // Single source of truth for "does this user id exist" - changeUserId
+        // claims a new id by inserting into this table inside a transaction,
+        // so two concurrent claims of the same id can't both succeed (the
+        // second INSERT hits the primary key and the whole transaction rolls
+        // back). See changeUserId()/isUserIdAvailable() below.
+        db`
+          CREATE TABLE IF NOT EXISTS users (
+            user_id text PRIMARY KEY,
+            created_at timestamptz NOT NULL DEFAULT now()
+          )
+        `,
 
-      // One-time backfill: register every user id that already has data in
-      // any per-user table (from before the `users` table existed) so
-      // isUserIdAvailable/changeUserId's claim check sees them as taken.
-      // Safe to re-run - ON CONFLICT DO NOTHING.
-      await db`
-        INSERT INTO users (user_id)
-        SELECT user_id FROM progress
-        UNION SELECT user_id FROM profile
-        UNION SELECT user_id FROM question_progress
-        UNION SELECT user_id FROM answer_log
-        UNION SELECT user_id FROM push_subscriptions
-        ON CONFLICT DO NOTHING
-      `;
+        // Answer_log/flags are queried by (user_id, created_at) and
+        // (created_at) respectively (getTopicStats/getWeeklyStats/getFlags
+        // below) - without these, both are full sequential scans that get
+        // more expensive as the tables grow. Cheap to keep in the same
+        // migration transaction as everything else.
+        db`CREATE INDEX IF NOT EXISTS answer_log_user_created_idx ON answer_log (user_id, created_at DESC)`,
+        db`CREATE INDEX IF NOT EXISTS flags_created_idx ON flags (created_at DESC)`,
 
-      // The question bank is still authored in code (src/lib/questions.ts) -
-      // reviewable via git, no risk of DB/code drift - but synced into Neon
-      // here on every cold start so it's genuinely queryable there too, and
-      // getAllQuestions() below reads from this table. One bulk upsert via
-      // jsonb_to_recordset, not one round trip per question.
-      const seedRows = SESSION_QUESTIONS.map((q) => ({
-        id: q.id,
-        topic: q.topic,
-        scenario: q.scenario,
-        options: q.options,
-        correct_index: q.correctIndex,
-        explanation: q.explanation,
-      }));
-      await db`
-        INSERT INTO questions (id, topic, scenario, options, correct_index, explanation)
-        SELECT id, topic, scenario, options, correct_index, explanation
-        FROM jsonb_to_recordset(${JSON.stringify(seedRows)}::jsonb)
-          AS x(id text, topic text, scenario text, options jsonb, correct_index integer, explanation text)
-        ON CONFLICT (id) DO UPDATE SET
-          topic = EXCLUDED.topic,
-          scenario = EXCLUDED.scenario,
-          options = EXCLUDED.options,
-          correct_index = EXCLUDED.correct_index,
-          explanation = EXCLUDED.explanation,
-          updated_at = now()
-      `;
-    })().catch((err) => {
-      // Don't cache a rejected promise forever - a transient blip (e.g.
-      // Neon waking from scale-to-zero) would otherwise permanently brick
-      // this warm instance, since every future call just re-throws the
-      // same cached rejection instead of retrying.
-      schemaReady = null;
-      throw err;
-    });
+        // One-time migrations from the original single-user shape (id text
+        // PRIMARY KEY DEFAULT 'default', no user_id column at all). Each is
+        // guarded so it only runs once - on a fresh install the CREATE TABLE
+        // statements above already produce the final shape, so these no-op.
+        // Verified against a local Postgres copy of the live schema,
+        // including that re-running is a safe no-op.
+        db`
+          DO $$
+          BEGIN
+            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'id')
+               AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'progress' AND column_name = 'user_id') THEN
+              ALTER TABLE progress ADD COLUMN user_id text;
+              UPDATE progress SET user_id = id;
+              ALTER TABLE progress ALTER COLUMN user_id SET NOT NULL;
+              ALTER TABLE progress DROP CONSTRAINT progress_pkey;
+              ALTER TABLE progress ADD PRIMARY KEY (user_id);
+              ALTER TABLE progress DROP COLUMN id;
+            END IF;
+          END $$
+        `,
+        db`
+          DO $$
+          BEGIN
+            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'id')
+               AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profile' AND column_name = 'user_id') THEN
+              ALTER TABLE profile ADD COLUMN user_id text;
+              UPDATE profile SET user_id = id;
+              ALTER TABLE profile ALTER COLUMN user_id SET NOT NULL;
+              ALTER TABLE profile DROP CONSTRAINT profile_pkey;
+              ALTER TABLE profile ADD PRIMARY KEY (user_id);
+              ALTER TABLE profile DROP COLUMN id;
+            END IF;
+          END $$
+        `,
+        db`
+          DO $$
+          BEGIN
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'question_progress' AND column_name = 'user_id') THEN
+              ALTER TABLE question_progress ADD COLUMN user_id text;
+              UPDATE question_progress SET user_id = 'default';
+              ALTER TABLE question_progress ALTER COLUMN user_id SET NOT NULL;
+              ALTER TABLE question_progress DROP CONSTRAINT question_progress_pkey;
+              ALTER TABLE question_progress ADD PRIMARY KEY (user_id, question_id);
+            END IF;
+          END $$
+        `,
+        db`ALTER TABLE answer_log ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`,
+        db`ALTER TABLE push_subscriptions ADD COLUMN IF NOT EXISTS user_id text NOT NULL DEFAULT 'default'`,
+
+        // One-time backfill: register every user id that already has data in
+        // any per-user table (from before the `users` table existed) so
+        // isUserIdAvailable/changeUserId's claim check sees them as taken.
+        // Safe to re-run - ON CONFLICT DO NOTHING.
+        db`
+          INSERT INTO users (user_id)
+          SELECT user_id FROM progress
+          UNION SELECT user_id FROM profile
+          UNION SELECT user_id FROM question_progress
+          UNION SELECT user_id FROM answer_log
+          UNION SELECT user_id FROM push_subscriptions
+          ON CONFLICT DO NOTHING
+        `,
+      ])
+      .then(() => undefined)
+      .catch((err) => {
+        // Don't cache a rejected promise forever - a transient blip (e.g.
+        // Neon waking from scale-to-zero) would otherwise permanently brick
+        // this warm instance, since every future call just re-throws the
+        // same cached rejection instead of retrying.
+        schemaReady = null;
+        throw err;
+      });
   }
   return schemaReady;
 }
@@ -215,14 +203,12 @@ export async function checkConnection(): Promise<{ time: string }> {
   return { time: raw instanceof Date ? raw.toISOString() : String(raw) };
 }
 
-// Same non-swallowing rationale as checkConnection() - lets /api/debug
-// distinguish "table exists with 0 rows" (seed didn't run/failed) from a
-// real connection error, rather than both silently looking like "0".
-export async function getQuestionsTableCount(): Promise<number> {
-  await ensureSchema();
-  const db = getSql();
-  const rows = await db`SELECT COUNT(*) as count FROM questions`;
-  return Number((rows[0] as { count: string | number }).count);
+// The question bank lives only in code now (src/lib/questions.ts) - it's
+// never synced into Neon, so this is just a sanity check that the code
+// bundle loaded, not a database call. Kept as a function (not a plain
+// export) so /api/debug's shape didn't need to change.
+export async function getQuestionBankCount(): Promise<number> {
+  return SESSION_QUESTIONS.length;
 }
 
 export type Progress = {
@@ -236,22 +222,6 @@ const DEFAULT_PROGRESS: Progress = {
   totalCleared: 0,
   lastCompletedDate: null,
 };
-
-function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function yesterdayKey(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d.toISOString().slice(0, 10);
-}
-
-function twoDaysAgoKey(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 2);
-  return d.toISOString().slice(0, 10);
-}
 
 // The Neon driver returns `date` columns as JS Date objects, not strings -
 // String(dateObject) gives Date's default toString() ("Thu Aug 06 2026 ..."),
@@ -312,9 +282,9 @@ export async function recordSessionComplete(
   let frozeStreak = false;
   if (current.lastCompletedDate === today) {
     // Already logged a session today - streak doesn't move twice in a day.
-  } else if (current.lastCompletedDate === yesterdayKey()) {
+  } else if (current.lastCompletedDate === daysAgoKey(1)) {
     streak += 1;
-  } else if (current.lastCompletedDate === twoDaysAgoKey()) {
+  } else if (current.lastCompletedDate === daysAgoKey(2)) {
     streak += 1;
     frozeStreak = true;
   } else {
@@ -356,6 +326,8 @@ export type Flag = {
   createdAt: string; // ISO
 };
 
+const MAX_FLAGS_RETURNED = 200;
+
 // Powers /flags - the only way to see reported content is otherwise a
 // direct Neon query, which defeats the point of the in-app report button.
 export async function getFlags(): Promise<Flag[]> {
@@ -363,7 +335,9 @@ export async function getFlags(): Promise<Flag[]> {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
-      SELECT id, question_id, reason, created_at FROM flags ORDER BY created_at DESC
+      SELECT id, question_id, reason, created_at FROM flags
+      ORDER BY created_at DESC
+      LIMIT ${MAX_FLAGS_RETURNED}
     `;
     return (rows as { id: number; question_id: string; reason: string; created_at: unknown }[]).map(
       (row) => ({
@@ -489,102 +463,75 @@ export async function removeSubscription(endpoint: string): Promise<void> {
   await db`DELETE FROM push_subscriptions WHERE endpoint = ${endpoint}`;
 }
 
-export type PushSubscriptionWithUser = PushSubscriptionRecord & { userId: string };
+export type SubscriptionDue = PushSubscriptionRecord & { userId: string; dueCount: number };
 
-// Used by the daily cron - each subscriber gets their own due-count message
-// now that progress is per-user, not one shared count for everyone.
-export async function getAllSubscriptions(): Promise<PushSubscriptionWithUser[]> {
+// Used by the daily cron. One grouped query for every subscriber's due
+// count, instead of a separate getDueQuestionIds round trip per subscriber
+// (each of which sent the full ~240-id question bank as a query parameter
+// - N concurrent queries, no batching). due = the full bank size minus
+// however many of this user's question_progress rows aren't due yet -
+// matches the definition getDueQuestionIds used: a question with no
+// question_progress row at all (never attempted) counts as due.
+export async function getSubscriptionsWithDueCounts(totalQuestions: number): Promise<SubscriptionDue[]> {
   await ensureSchema();
   const db = getSql();
-  const rows = await db`SELECT endpoint, user_id, p256dh, auth FROM push_subscriptions`;
-  return (rows as { endpoint: string; user_id: string; p256dh: string; auth: string }[]).map((row) => ({
+  const today = todayKey();
+  const rows = await db`
+    SELECT ps.endpoint, ps.user_id, ps.p256dh, ps.auth,
+      GREATEST(${totalQuestions}::int - COALESCE(fd.future_count, 0), 0) AS due_count
+    FROM push_subscriptions ps
+    LEFT JOIN (
+      SELECT user_id, count(*)::int AS future_count
+      FROM question_progress
+      WHERE due_date > ${today}::date
+      GROUP BY user_id
+    ) fd ON fd.user_id = ps.user_id
+  `;
+  return (
+    rows as { endpoint: string; user_id: string; p256dh: string; auth: string; due_count: number }[]
+  ).map((row) => ({
     endpoint: row.endpoint,
     userId: row.user_id,
     p256dh: row.p256dh,
     auth: row.auth,
+    dueCount: Number(row.due_count),
   }));
 }
 
-// Reads the live question bank from Neon (kept in sync from
-// src/lib/questions.ts by ensureSchema's seed step). Falls back to the
-// code copy on any DB error, same fail-open pattern as the rest of this
-// file - a Neon hiccup should never leave the app with no questions.
+// The question bank is authored in code (src/lib/questions.ts) and served
+// straight from there - it used to be mirrored into a Neon `questions`
+// table on every cold start (13 round trips, ~180KB re-uploaded, every
+// time) purely so this function could read it back over the network. The
+// code array already is the reviewable, canonical copy; reading it
+// directly removes that whole round trip, the reseed cost, and a source of
+// drift (a retired question used to linger in the table forever since
+// nothing ever deleted rows). See docs/solutions/.
 export async function getAllQuestions(): Promise<Question[]> {
-  try {
-    await ensureSchema();
-    const db = getSql();
-    const rows = await db`
-      SELECT id, topic, scenario, options, correct_index, explanation
-      FROM questions ORDER BY id
-    `;
-    if (rows.length === 0) return SESSION_QUESTIONS;
-    return (
-      rows as {
-        id: string;
-        topic: string;
-        scenario: string;
-        options: [string, string];
-        correct_index: 0 | 1;
-        explanation: string;
-      }[]
-    ).map((row) => ({
-      id: row.id,
-      topic: row.topic,
-      scenario: row.scenario,
-      options: row.options,
-      correctIndex: row.correct_index,
-      explanation: row.explanation,
-    }));
-  } catch (err) {
-    console.error("getAllQuestions failed", err);
-    return SESSION_QUESTIONS;
-  }
+  return SESSION_QUESTIONS;
 }
 
-// Single-row lookup used by recordAnswer/recordFlag to derive correctness
-// and topic from the canonical bank server-side, rather than trusting
-// whatever a Server Action's caller claims. Falls back to the code copy on
-// DB error, same as getAllQuestions.
+// Used by recordAnswer/recordFlag to derive correctness and topic from the
+// canonical bank server-side, rather than trusting whatever a Server
+// Action's caller claims.
 export async function getQuestionById(id: string): Promise<Question | null> {
-  try {
-    await ensureSchema();
-    const db = getSql();
-    const rows = await db`
-      SELECT id, topic, scenario, options, correct_index, explanation
-      FROM questions WHERE id = ${id}
-    `;
-    if (rows.length === 0) return SESSION_QUESTIONS.find((q) => q.id === id) ?? null;
-    const row = rows[0] as {
-      id: string;
-      topic: string;
-      scenario: string;
-      options: [string, string];
-      correct_index: 0 | 1;
-      explanation: string;
-    };
-    return {
-      id: row.id,
-      topic: row.topic,
-      scenario: row.scenario,
-      options: row.options,
-      correctIndex: row.correct_index,
-      explanation: row.explanation,
-    };
-  } catch (err) {
-    console.error("getQuestionById failed", err);
-    return SESSION_QUESTIONS.find((q) => q.id === id) ?? null;
-  }
+  return SESSION_QUESTIONS.find((q) => q.id === id) ?? null;
 }
 
 export type Profile = {
   displayName: string | null;
   avatarScheme: string;
+  // "ok": the query ran - a null displayName genuinely means onboarding
+  // hasn't happened yet. "unavailable": the query itself failed (a DB
+  // hiccup), so displayName being null here does NOT mean "never
+  // onboarded" - callers must not show the onboarding flow for this case,
+  // or an established user sees "welcome, set up your hero" every time
+  // Neon has a blip and quietly loses the ability to tell the difference.
+  status: "ok" | "unavailable";
 };
 
-const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: "coral" };
+const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: "coral", status: "ok" };
+const UNAVAILABLE_PROFILE: Profile = { displayName: null, avatarScheme: "coral", status: "unavailable" };
 
-// A null displayName means onboarding hasn't happened yet - the home page
-// uses that to gate the dashboard behind the name/avatar picker.
 export async function getProfile(userId: string): Promise<Profile> {
   try {
     await ensureSchema();
@@ -592,10 +539,10 @@ export async function getProfile(userId: string): Promise<Profile> {
     const rows = await db`SELECT display_name, avatar_scheme FROM profile WHERE user_id = ${userId}`;
     if (rows.length === 0) return DEFAULT_PROFILE;
     const row = rows[0] as { display_name: string | null; avatar_scheme: string };
-    return { displayName: row.display_name, avatarScheme: row.avatar_scheme };
+    return { displayName: row.display_name, avatarScheme: row.avatar_scheme, status: "ok" };
   } catch (err) {
     console.error("getProfile failed", err);
-    return DEFAULT_PROFILE;
+    return UNAVAILABLE_PROFILE;
   }
 }
 
@@ -631,6 +578,13 @@ const MIN_ATTEMPTS_FOR_DIFFICULTY = 5;
 export async function getAdminStats(): Promise<AdminStats> {
   await ensureSchema();
   const db = getSql();
+  // Bound as app-timezone date strings rather than Postgres's own
+  // CURRENT_DATE (server/session timezone, not necessarily Asia/Singapore)
+  // - last_completed_date is itself written from the same app-timezone
+  // clock (see src/lib/date.ts), so the comparison has to use it too.
+  const today = todayKey();
+  const sevenDaysAgo = daysAgoKey(6);
+  const thirtyDaysAgo = daysAgoKey(29);
 
   const [userRows, activityRows, flagRows, hardestRows] = await Promise.all([
     db`
@@ -644,9 +598,9 @@ export async function getAdminStats(): Promise<AdminStats> {
     `,
     db`
       SELECT
-        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE) AS active_1d,
-        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE - 6) AS active_7d,
-        count(*) FILTER (WHERE last_completed_date >= CURRENT_DATE - 29) AS active_30d
+        count(*) FILTER (WHERE last_completed_date >= ${today}::date) AS active_1d,
+        count(*) FILTER (WHERE last_completed_date >= ${sevenDaysAgo}::date) AS active_7d,
+        count(*) FILTER (WHERE last_completed_date >= ${thirtyDaysAgo}::date) AS active_30d
       FROM progress
     `,
     db`SELECT count(*)::int AS total FROM flags`,
@@ -787,25 +741,31 @@ const EMPTY_WEEKLY_STATS: WeeklyStats = { activeDays: [], casesThisWeek: 0, accu
 
 // Powers the home screen's weekly recap - ties directly to the PRD's stated
 // success metric (7-day streak retention), not just vanity accuracy stats.
+// Aggregated in SQL rather than pulling every row into Node - the count and
+// accuracy were already pushed down, but the previous version still fetched
+// every row just to bucket it into calendar days in JS. Bucketing now
+// happens in Postgres too, converted into the app's timezone (Asia/
+// Singapore) rather than the UTC calendar day `created_at`'s own date would
+// give - see src/lib/date.ts and docs/solutions/ for the bug that fixed.
 export async function getWeeklyStats(userId: string): Promise<WeeklyStats> {
   try {
     await ensureSchema();
     const db = getSql();
     const rows = await db`
-      SELECT created_at, correct FROM answer_log
+      SELECT
+        count(*)::int AS total,
+        count(*) FILTER (WHERE correct)::int AS correct,
+        jsonb_agg(DISTINCT to_char(created_at AT TIME ZONE 'Asia/Singapore', 'YYYY-MM-DD')) AS active_days
+      FROM answer_log
       WHERE user_id = ${userId} AND created_at >= now() - interval '7 days'
     `;
-    const activeDays = new Set<string>();
-    let correct = 0;
-    for (const row of rows as { created_at: unknown; correct: boolean }[]) {
-      const day = normalizeDateKey(row.created_at);
-      if (day) activeDays.add(day);
-      if (row.correct) correct += 1;
-    }
+    const row = rows[0] as { total: number; correct: number; active_days: string[] | null } | undefined;
+    const total = row?.total ?? 0;
+    const correct = row?.correct ?? 0;
     return {
-      activeDays: [...activeDays],
-      casesThisWeek: rows.length,
-      accuracyThisWeek: rows.length === 0 ? 100 : Math.round((correct / rows.length) * 100),
+      activeDays: row?.active_days ?? [],
+      casesThisWeek: total,
+      accuracyThisWeek: total === 0 ? 100 : Math.round((correct / total) * 100),
     };
   } catch (err) {
     console.error("getWeeklyStats failed", err);

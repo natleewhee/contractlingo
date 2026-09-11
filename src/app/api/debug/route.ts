@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkConnection, getProgress, getQuestionsTableCount } from "@/lib/db";
+import { checkConnection, getProgress, getQuestionBankCount } from "@/lib/db";
 import { getUserId } from "@/lib/identity";
 import { isAdminRequest } from "@/lib/adminAuth";
 
@@ -24,15 +24,9 @@ export async function GET(req: NextRequest) {
     connection = { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
 
-  let questionsTable: { ok: true; rowCount: number } | { ok: false; error: string };
-  try {
-    const rowCount = await getQuestionsTableCount();
-    questionsTable = { ok: true, rowCount };
-  } catch (err) {
-    questionsTable = { ok: false, error: err instanceof Error ? err.message : String(err) };
-  }
+  const questionBank = { ok: true as const, rowCount: await getQuestionBankCount(), source: "code" as const };
 
   const progress = await getProgress(userId);
 
-  return NextResponse.json({ hasDatabaseUrl, userId, connection, questionsTable, progress });
+  return NextResponse.json({ hasDatabaseUrl, userId, connection, questionBank, progress });
 }

@@ -18,17 +18,20 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
   const [name, setName] = useState(initialName ?? "");
   const [scheme, setScheme] = useState(initialScheme);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function save() {
     const trimmed = name.trim();
     if (!trimmed) return;
     setSaving(true);
+    setError(null);
     try {
       await saveProfile(trimmed, scheme);
       setEditing(false);
       router.refresh();
     } catch (err) {
       console.error("Failed to save profile", err);
+      setError("Couldn't save right now - try again in a moment.");
     } finally {
       setSaving(false);
     }
@@ -79,6 +82,8 @@ export function HeroIdentity({ initialName, initialScheme }: Props) {
           </button>
         ))}
       </div>
+
+      {error && <p className="text-xs font-semibold text-ink">{error}</p>}
 
       <div className="flex gap-2">
         <button

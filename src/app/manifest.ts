@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "5 minutes a day to think like a contracts manager.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f7f4ea",
-    theme_color: "#ffc93c",
+    background_color: "#e4dac2",
+    theme_color: "#d9a62e",
     icons: [
       {
         src: "/icon.svg",

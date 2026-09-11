@@ -9,18 +9,22 @@ type Button3DProps = {
   disabled?: boolean;
 };
 
-// None of these backgrounds flip with the page's light/dark theme, so their
-// text can't use the `--ink` token — it flips to a light colour in dark
-// mode and would go near-invisible (or, for white text on these already-
-// bright backgrounds, fail contrast in both themes — measured ~2:1 against
-// WCAG's 4.5:1 minimum). All tones use a fixed dark navy instead.
+// Stamp-bordered paper buttons - see DESIGN.md. gold is a solid fill that
+// stays similarly light in both themes, so its text uses the fixed
+// --accent-text color (var(--ink) flips to a light color in dark mode and
+// would go near-invisible against an unchanging mid-tone fill). coral and
+// mint are "ink" colors instead - tuned to work as TEXT on paper (dark in
+// light mode, brightened in dark mode), which means neither a fixed light
+// nor a fixed dark text color reliably contrasts against them as a fill in
+// both themes. A light tint of the fill plus var(--ink) text (which does
+// flip correctly) sidesteps that instead of picking a text color that's
+// only safe in one theme. white ("paper") flips fully with the theme, so
+// it uses var(--ink) and var(--frame-border) directly.
 const TONE_CLASSES: Record<NonNullable<Button3DProps["tone"]>, string> = {
-  gold: "bg-gold text-[#21284A] shadow-[0_4px_0_var(--gold-dark)] active:shadow-[0_1px_0_var(--gold-dark)]",
-  coral:
-    "bg-coral text-[#21284A] shadow-[0_4px_0_var(--coral-dark)] active:shadow-[0_1px_0_var(--coral-dark)]",
-  mint: "bg-mint text-[#21284A] shadow-[0_4px_0_var(--mint-dark)] active:shadow-[0_1px_0_var(--mint-dark)]",
-  white:
-    "bg-white text-[#21284A] shadow-[0_3px_0_rgba(0,0,0,0.15)] active:shadow-[0_1px_0_rgba(0,0,0,0.15)]",
+  gold: "bg-gold border-2 border-gold-dark text-[var(--accent-text)]",
+  coral: "bg-coral/15 border-2 border-coral text-ink",
+  mint: "bg-mint/15 border-2 border-mint text-ink",
+  white: "bg-card border-2 border-frame-border text-ink",
 };
 
 export function Button3D({
@@ -31,7 +35,7 @@ export function Button3D({
   href,
   disabled = false,
 }: Button3DProps) {
-  const classes = `block w-full rounded-2xl px-4 py-3 text-center font-display text-sm font-semibold tracking-wide transition-transform active:translate-y-[3px] disabled:opacity-60 disabled:active:translate-y-0 ${TONE_CLASSES[tone]} ${className}`;
+  const classes = `block min-h-11 w-full rounded-xl px-4 py-3.5 text-center font-display text-sm font-bold tracking-wide transition-transform active:translate-y-[2px] disabled:opacity-60 ${TONE_CLASSES[tone]} ${className}`;
 
   if (href) {
     return (

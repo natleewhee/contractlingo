@@ -1,19 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Fredoka, Nunito } from "next/font/google";
+import { Public_Sans, PT_Serif, Special_Elite } from "next/font/google";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const fredoka = Fredoka({
-  variable: "--font-fredoka",
+// Three fonts, one role each - see DESIGN.md. Special Elite only ships a
+// single static weight; bold is browser-synthesized where used, which is
+// fine for its short, all-caps use (stamps, entry metadata).
+const specialElite = Special_Elite({
+  variable: "--font-special-elite",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "400",
 });
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const ptSerif = PT_Serif({
+  variable: "--font-pt-serif",
   subsets: ["latin"],
-  weight: ["400", "700", "800"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
+
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -22,14 +32,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffc93c",
+  themeColor: "#d9a62e",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
+      className={`${specialElite.variable} ${ptSerif.variable} ${publicSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}

@@ -1,40 +1,48 @@
 @import "tailwindcss";
 
+/* Site Diary - see DESIGN.md. Token NAMES are mostly kept from the previous
+   palette (--bg, --card, --ink, --ink-soft, --frame-border, --gold,
+   --coral, --mint) to avoid touching every className in the app; their
+   VALUES and what they mean have changed:
+   --bg/--card    kraft page background / paper card surface
+   --ink/--ink-soft  ink on paper
+   --frame-border    hairline / shadow color ("--line" in DESIGN.md)
+   --gold            the customizable accent fill (was the primary CTA gold)
+   --mint            the "APPROVED" stamp ink (was the correct-answer green)
+   --coral           the "QUERIED" stamp ink (was the wrong-answer coral)
+   --accent-text     fixed dark text for on-accent fills - never var(--ink),
+                     which flips between themes and won't reliably contrast
+                     against a mid-tone accent in both (see DESIGN.md). */
 :root {
-  --bg: #f7f4ea;
-  --ink: #21284a;
-  --ink-soft: #5b6180;
-  --card: #ffffff;
-  --gold: #ffc93c;
-  --gold-dark: #e6a600;
-  --coral: #ff8a5b;
-  --coral-dark: #e85a3b;
-  --mint: #34c77b;
-  --mint-dark: #1e9c5a;
-  --minion: #9089d6;
-  --minion-dark: #6d66b3;
-  --grey: #dad5c8;
-  --grey-dark: #b7b2a4;
-  --frame-border: #ece6d6;
+  --bg: #e4dac2;
+  --card: #f4eedd;
+  --card-alt: #ede4cc;
+  --ink: #2b241c;
+  --ink-soft: #5a5143;
+  --frame-border: #c9bc9c;
+  --gold: #d9a62e;
+  --gold-dark: #c4922a;
+  --coral: #a63a2c;
+  --coral-dark: #8a2f23;
+  --mint: #2f5d52;
+  --mint-dark: #254a41;
+  --accent-text: #241d14;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #151a2c;
-    --ink: #f2f0e6;
-    --ink-soft: #a7acc8;
-    --card: #212847;
-    --gold: #ffce52;
-    --gold-dark: #d89a00;
-    --coral: #ff9a70;
-    --coral-dark: #db5b3b;
-    --mint: #3fdb8e;
-    --mint-dark: #1c8c51;
-    --minion: #a69de8;
-    --minion-dark: #7d74c4;
-    --grey: #363d63;
-    --grey-dark: #252b48;
-    --frame-border: #2b3157;
+    --bg: #1c1712;
+    --card: #26201a;
+    --card-alt: #2e271f;
+    --ink: #ede3cf;
+    --ink-soft: #b2a78f;
+    --frame-border: #4a4032;
+    --gold: #d9a44c;
+    --gold-dark: #c4934a;
+    --coral: #e37a63;
+    --coral-dark: #c96a55;
+    --mint: #5fa491;
+    --mint-dark: #4c8879;
   }
 }
 
@@ -43,25 +51,23 @@
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-card: var(--card);
+  --color-card-alt: var(--card-alt);
   --color-gold: var(--gold);
   --color-gold-dark: var(--gold-dark);
   --color-coral: var(--coral);
   --color-coral-dark: var(--coral-dark);
   --color-mint: var(--mint);
   --color-mint-dark: var(--mint-dark);
-  --color-minion: var(--minion);
-  --color-minion-dark: var(--minion-dark);
-  --color-grey: var(--grey);
-  --color-grey-dark: var(--grey-dark);
   --color-frame-border: var(--frame-border);
-  --font-display: var(--font-fredoka);
-  --font-body: var(--font-nunito);
+  --font-display: var(--font-public-sans);
+  --font-stamp: var(--font-special-elite);
+  --font-body: var(--font-pt-serif);
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-body), Georgia, serif;
 }
 
 @keyframes flicker {
@@ -76,57 +82,14 @@ body {
     transform: scale(0.95, 1.06) rotate(3deg);
   }
 }
-@keyframes blink {
-  0%,
-  92%,
-  100% {
-    transform: scaleY(1);
-  }
-  95% {
-    transform: scaleY(0.12);
-  }
-}
-@keyframes bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-5px) rotate(-2deg);
-  }
-}
-@keyframes pop {
-  0% {
-    transform: scale(0);
-  }
-  70% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 
 .animate-flicker {
   animation: flicker 1.6s ease-in-out infinite;
   transform-origin: 50% 90%;
 }
-.animate-blink-eyes {
-  animation: blink 4.2s ease-in-out infinite;
-  transform-origin: center;
-}
-.animate-bob {
-  animation: bob 2.4s ease-in-out infinite;
-}
-.animate-pop {
-  animation: pop 0.4s backwards;
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-flicker,
-  .animate-blink-eyes,
-  .animate-bob,
-  .animate-pop {
+  .animate-flicker {
     animation: none;
   }
 }

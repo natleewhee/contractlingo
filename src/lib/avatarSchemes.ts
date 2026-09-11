@@ -1,61 +1,23 @@
-export type AvatarSchemeId = "coral" | "mint" | "violet" | "golden" | "slate";
+// The personnel badge's accent stripe / "hard-hat color" - the one
+// user-customizable visual token (see DESIGN.md). All four are picked to
+// clear 4.5:1 contrast against the fixed dark text used on accent fills
+// (#241D14, see globals.css's --accent-text) in both themes.
+export type AvatarSchemeId = "marker-yellow" | "marker-orange" | "marker-coral" | "marker-honey";
 
 export type AvatarScheme = {
   id: AvatarSchemeId;
   label: string;
-  body: string;
-  bodyDark: string;
-  helmet: string;
-  helmetDark: string;
+  color: string;
 };
 
-// Reuses the app's existing design tokens (already theme-flipped for
-// light/dark in globals.css) instead of inventing new colors that would
-// need their own dark-mode variants.
 export const AVATAR_SCHEMES: AvatarScheme[] = [
-  {
-    id: "coral",
-    label: "Coral",
-    body: "var(--coral)",
-    bodyDark: "var(--coral-dark)",
-    helmet: "var(--gold)",
-    helmetDark: "var(--gold-dark)",
-  },
-  {
-    id: "mint",
-    label: "Mint",
-    body: "var(--mint)",
-    bodyDark: "var(--mint-dark)",
-    helmet: "var(--gold)",
-    helmetDark: "var(--gold-dark)",
-  },
-  {
-    id: "violet",
-    label: "Violet",
-    body: "var(--minion)",
-    bodyDark: "var(--minion-dark)",
-    helmet: "var(--gold)",
-    helmetDark: "var(--gold-dark)",
-  },
-  {
-    id: "golden",
-    label: "Golden",
-    body: "var(--gold)",
-    bodyDark: "var(--gold-dark)",
-    helmet: "var(--coral)",
-    helmetDark: "var(--coral-dark)",
-  },
-  {
-    id: "slate",
-    label: "Slate",
-    body: "var(--grey)",
-    bodyDark: "var(--grey-dark)",
-    helmet: "var(--coral)",
-    helmetDark: "var(--coral-dark)",
-  },
+  { id: "marker-yellow", label: "Yellow", color: "#d9a62e" },
+  { id: "marker-orange", label: "Orange", color: "#d98a3d" },
+  { id: "marker-coral", label: "Coral", color: "#ce7052" },
+  { id: "marker-honey", label: "Honey", color: "#c99a4a" },
 ];
 
-export const DEFAULT_AVATAR_SCHEME: AvatarSchemeId = "coral";
+export const DEFAULT_AVATAR_SCHEME: AvatarSchemeId = "marker-yellow";
 
 export function getAvatarScheme(id: string): AvatarScheme {
   return AVATAR_SCHEMES.find((s) => s.id === id) ?? AVATAR_SCHEMES[0];

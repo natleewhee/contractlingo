@@ -1,6 +1,7 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import { SESSION_QUESTIONS, type Question } from "@/lib/questions";
 import { daysAgoKey, todayKey } from "@/lib/date";
+import { DEFAULT_AVATAR_SCHEME } from "@/lib/avatarSchemes";
 
 // Constructed lazily (not at module load) so a missing DATABASE_URL only
 // throws when actually queried, never during build/static analysis.
@@ -91,7 +92,10 @@ function ensureSchema(): Promise<void> {
           CREATE TABLE IF NOT EXISTS profile (
             user_id text PRIMARY KEY,
             display_name text,
-            avatar_scheme text NOT NULL DEFAULT 'coral',
+            -- Keep this literal in sync with DEFAULT_AVATAR_SCHEME in
+            -- src/lib/avatarSchemes.ts - can't reference a JS constant from
+            -- inside DDL text.
+            avatar_scheme text NOT NULL DEFAULT 'marker-yellow',
             updated_at timestamptz NOT NULL DEFAULT now()
           )
         `,
@@ -177,6 +181,40 @@ function ensureSchema(): Promise<void> {
           UNION SELECT user_id FROM answer_log
           UNION SELECT user_id FROM push_subscriptions
           ON CONFLICT DO NOTHING
+        `,
+
+        // 'coral' was the accidental default before the Site Diary redesign
+        // renamed every avatar scheme id (see avatarSchemes.ts) - it no
+        // longer matches any valid scheme, so getAvatarScheme() was
+        // silently falling back for every row stuck on it. Re-point them
+        // at the real default. Safe to re-run - no-ops once no rows match.
+        db`UPDATE profile SET avatar_scheme = 'marker-yellow' WHERE avatar_scheme = 'coral'`,
+
+        // Belt-and-suspenders data integrity - these values are already
+        // never set to something invalid by the application code, but a
+        // CHECK constraint catches a future bug at the database instead of
+        // silently storing (say) a negative streak. ADD CONSTRAINT has no
+        // IF NOT EXISTS, so guard each with a pg_constraint lookup to stay
+        // idempotent across every cold start.
+        db`
+          DO $$
+          BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'progress_streak_nonneg') THEN
+              ALTER TABLE progress ADD CONSTRAINT progress_streak_nonneg CHECK (streak >= 0);
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'progress_total_cleared_nonneg') THEN
+              ALTER TABLE progress ADD CONSTRAINT progress_total_cleared_nonneg CHECK (total_cleared >= 0);
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'question_progress_interval_positive') THEN
+              ALTER TABLE question_progress ADD CONSTRAINT question_progress_interval_positive CHECK (interval_days > 0);
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'question_progress_ease_positive') THEN
+              ALTER TABLE question_progress ADD CONSTRAINT question_progress_ease_positive CHECK (ease_factor > 0);
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'question_progress_reps_nonneg') THEN
+              ALTER TABLE question_progress ADD CONSTRAINT question_progress_reps_nonneg CHECK (reps >= 0);
+            END IF;
+          END $$
         `,
       ])
       .then(() => undefined)
@@ -529,8 +567,8 @@ export type Profile = {
   status: "ok" | "unavailable";
 };
 
-const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: "coral", status: "ok" };
-const UNAVAILABLE_PROFILE: Profile = { displayName: null, avatarScheme: "coral", status: "unavailable" };
+const DEFAULT_PROFILE: Profile = { displayName: null, avatarScheme: DEFAULT_AVATAR_SCHEME, status: "ok" };
+const UNAVAILABLE_PROFILE: Profile = { displayName: null, avatarScheme: DEFAULT_AVATAR_SCHEME, status: "unavailable" };
 
 export async function getProfile(userId: string): Promise<Profile> {
   try {

@@ -20,5 +20,8 @@ export const AVATAR_SCHEMES: AvatarScheme[] = [
 export const DEFAULT_AVATAR_SCHEME: AvatarSchemeId = "marker-yellow";
 
 export function getAvatarScheme(id: string): AvatarScheme {
-  return AVATAR_SCHEMES.find((s) => s.id === id) ?? AVATAR_SCHEMES[0];
+  return (
+    AVATAR_SCHEMES.find((s) => s.id === id) ??
+    AVATAR_SCHEMES.find((s) => s.id === DEFAULT_AVATAR_SCHEME)!
+  );
 }

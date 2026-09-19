@@ -38,6 +38,11 @@ export default async function Home() {
             Five minutes a day of real PSSCOC judgment calls - no login, no course. Your progress
             lives in this browser as an id you can copy to another device later.
           </p>
+          <p className="mt-2 font-body text-xs leading-relaxed text-ink-soft">
+            Built for practicing judgment, not as legal advice - content isn&apos;t verified
+            against current PSSCOC clause text, so check the actual contract before relying on
+            anything here.
+          </p>
           <div className="mt-5 w-full">
             <HeroIdentity initialName={null} initialScheme={profile.avatarScheme} />
           </div>
@@ -97,6 +102,11 @@ export default async function Home() {
         </div>
 
         <NotificationPrompt />
+
+        <p className="mt-6 text-center font-body text-[0.7rem] leading-relaxed text-ink-soft">
+          For practicing judgment, not legal advice - not verified against current PSSCOC clause
+          text.
+        </p>
       </main>
     </div>
   );
